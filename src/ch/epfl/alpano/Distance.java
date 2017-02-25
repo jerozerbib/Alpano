@@ -1,8 +1,8 @@
 package ch.epfl.alpano;
 
 /**
- * @author Etienne Caquot
- * @author : Jeremy Zerbib  (257715)
+ * @author : Jeremy Zerbib (257715)
+ * @author : Etienne Caquot (249949)
  */
 
 public interface Distance {
@@ -10,19 +10,23 @@ public interface Distance {
 
     /**
      * Convert a value in meters to radians.
+     * 
      * @param distanceInMeters
-     * @return double
+     *            the distance in meters
+     * @return the converted ditance in radians
      */
-    static double toRadians(double distanceInMeters){
-        return distanceInMeters/EARTH_RADIUS;
+    static double toRadians(double distanceInMeters) {
+        return distanceInMeters / EARTH_RADIUS;
     }
 
     /**
      * Convert a value in radians to meters.
+     * 
      * @param distanceInRadians
-     * @return double
+     *            the distance in radians
+     * @return the converted distance in meters
      */
-    static double toMeters(double distanceInRadians){
-        return distanceInRadians*EARTH_RADIUS;
+    static double toMeters(double distanceInRadians) {
+        return distanceInRadians * EARTH_RADIUS;
     }
 }

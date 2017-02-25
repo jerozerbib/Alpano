@@ -4,7 +4,7 @@ import java.util.Objects;
 
 /**
  * @author : Jeremy Zerbib (257715)
- * @author : Etienne Caquot
+ * @author : Etienne Caquot (249949)
  */
 public final class Interval2D {
     private final Interval1D iX;
@@ -13,7 +13,9 @@ public final class Interval2D {
     /**
      * Interval2D's constructor
      * @param iX
+     * the first interval
      * @param iY
+     * the second interval
      */
     public Interval2D(Interval1D iX, Interval1D iY){
         if (iX == null || iY == null){
@@ -25,7 +27,7 @@ public final class Interval2D {
 
     /**
      * Gets the first interval
-     * @return Interval1D
+     * @return the first interval
      */
     public Interval1D iX(){
         return iX;
@@ -33,7 +35,7 @@ public final class Interval2D {
 
     /**
      * Gets the second interval
-     * @return Interval1D
+     * @return the second interval
      */
     public Interval1D iY(){
         return iY;
@@ -42,8 +44,11 @@ public final class Interval2D {
     /**
      * Checks if x and y are a part of the bidimensional interval
      * @param x
+     * the first parameter to check in the first interval
      * @param y
-     * @return boolean
+     * the first parameter to check in the first interval
+     * @return true is x is included in the first interval and if y is included in the second interval,
+     * false otherwise
      */
     public boolean contains(int x, int y){
         return iX.contains(x) && iY.contains(y);
@@ -51,7 +56,7 @@ public final class Interval2D {
 
     /**
      * Returns the size of the interval
-     * @return int
+     * @return the size of the bidimensional interval
      */
     public int size(){
         return iX().size() + iY().size();
@@ -61,7 +66,8 @@ public final class Interval2D {
     /**
      * Gets the size of the intersection of two bidimensional intervals.
      * @param that
-     * @return int
+     * the other bidimensional interval
+     * @return the size of the intersection
      */
     public int sizeOfIntersectionWith(Interval2D that){
         return this.iX().sizeOfIntersectionWith(that.iX()) + this.iY().sizeOfIntersectionWith(that.iY());
@@ -70,7 +76,8 @@ public final class Interval2D {
     /**
      * Get the bounding union of two bidimensional intervals.
      * @param that
-     * @return Interval2D
+     * the other didimensional interval
+     * @return the bounding union 
      */
     public Interval2D boundingUnion(Interval2D that){
         return new Interval2D(this.iX().boundingUnion(that.iX()), this.iY().boundingUnion(that.iY()));
@@ -79,7 +86,8 @@ public final class Interval2D {
     /**
      * Checks of two bidimensional intervals are unionable.
      * @param that
-     * @return boolean
+     * the other bidimensional interval
+     * @return true if the two intervals are unionable, false otherwise
      */
     public boolean isUnionableWith(Interval2D that){
         int sizeThis = this.size();
@@ -92,8 +100,9 @@ public final class Interval2D {
     /**
      * Returns the union of two sets, otherwise it throws an error.
      * @param that
-     * @return Interval2D
-     * @throws IllegalArgumentException
+     * the other interval
+     * @return the union of the two intervals
+     * @throws IllegalArgumentException if the two interval are not unionable
      */
     public Interval2D union(Interval2D that){
         if (this.isUnionableWith(that)){
@@ -103,6 +112,9 @@ public final class Interval2D {
         }
     }
 
+    /* (non-Javadoc)
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
     @Override
     public boolean equals(Object thatO) {
         if (thatO instanceof Interval2D) {
@@ -113,11 +125,17 @@ public final class Interval2D {
         }
     }
 
+    /* (non-Javadoc)
+     * @see java.lang.Object#hashCode()
+     */
     @Override
     public int hashCode() {
         return Objects.hash(iX(), iY());
     }
 
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
     @Override
     public String toString(){
         return this.iX().toString() + "x" + this.iY().toString();
