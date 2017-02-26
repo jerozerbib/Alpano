@@ -4,10 +4,9 @@
     <bookmark url="file://$PROJECT_DIR$/test/ch/epfl/alpano/Interval2DTest.java" line="18" mnemonic="9" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9db4d824-ea19-47cf-ae8b-91be862e663f" name="Default" comment="Fini les tests de Interval2D tout à l'air de marcher">
+    <list default="true" id="9db4d824-ea19-47cf-ae8b-91be862e663f" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Alpano/ch/epfl/alpano/Interval2DTest.class" afterPath="$PROJECT_DIR$/out/production/Alpano/ch/epfl/alpano/Interval2DTest.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/ch/epfl/alpano/Interval2D.java" afterPath="$PROJECT_DIR$/src/ch/epfl/alpano/Interval2D.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/ch/epfl/alpano/Interval2DTest.java" afterPath="$PROJECT_DIR$/test/ch/epfl/alpano/Interval2DTest.java" />
     </list>
     <ignored path="Alpano.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -31,8 +30,8 @@
       <file leaf-file-name="Interval2D.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/ch/epfl/alpano/Interval2D.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="731">
-              <caret line="123" column="28" selection-start-line="123" selection-start-column="28" selection-end-line="123" selection-end-column="28" />
+            <state relative-caret-position="785">
+              <caret line="126" column="0" selection-start-line="126" selection-start-column="0" selection-end-line="126" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -75,6 +74,11 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="master" />
+      </map>
+    </option>
   </component>
   <component name="GradleLocalSettings">
     <option name="externalProjectsViewState">
@@ -850,8 +854,16 @@
       <workItem from="1487754139379" duration="4011000" />
       <workItem from="1487767655817" duration="21106000" />
       <workItem from="1487835152276" duration="13423000" />
-      <workItem from="1488109553985" duration="1612000" />
+      <workItem from="1488109553985" duration="1716000" />
     </task>
+    <task id="LOCAL-00001" summary="Fini les tests de Interval2D tout à l'air de marcher">
+      <created>1488111177326</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1488111177326</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -887,11 +899,11 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="58072000" />
+    <option name="totallyTimeSpent" value="58176000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="27" width="1920" height="1053" extended-state="0" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -1196,8 +1208,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/ch/epfl/alpano/Interval2D.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="731">
-          <caret line="123" column="28" selection-start-line="123" selection-start-column="28" selection-end-line="123" selection-end-column="28" />
+        <state relative-caret-position="785">
+          <caret line="126" column="0" selection-start-line="126" selection-start-column="0" selection-end-line="126" selection-end-column="0" />
           <folding />
         </state>
       </provider>
