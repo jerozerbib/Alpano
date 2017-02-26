@@ -1,101 +1,116 @@
 package ch.epfl.alpano;
 
 /**
- * @author Etienne Caquot
- * @author Jeremy Zerbib (257715)
- *
+ * @author : Jeremy Zerbib (257715)
+ * @author : Etienne Caquot (249949)
  */
 
 public interface Azimuth {
 
     /**
-     * Retourne vrai si son argument est un azimut canonique et faux sinon
+     * Returns true if argument is a canonical azimuth, false otherwise
+     * 
      * @param azimuth
-     *      l'azimuth à vérifier
-     * @return vrai si l'azimuth est canonique et faux sinon
+     *            azimuth to check
+     * @return true is the azimuth is canonical and false otherwise
      */
-    static boolean isCanonical(double azimuth){
+    static boolean isCanonical(double azimuth) {
         return azimuth >= 0 && azimuth < Math2.PI2;
     }
 
     /**
-     * Retourne l'azimut canonique équivalent à celui passé en argument
+     * Returns the canonical azimuth equivalent to the one given
+     * 
      * @param azimuth
-     *      l'azimuth qui n'est pas canonique
-     * @return l'azimut canomique equivalent
+     *            the non-canonical azimuth
+     * @return the equivalent canonical azimuth
      */
-    static double canonicalize(double azimuth){
+    static double canonicalize(double azimuth) {
         return Math2.floorMod(azimuth, Math2.PI2);
     }
 
     /**
-     *  transforme un azimut en angle mathématique, ou lève l'exception IllegalArgumentException
-     *  si son argument n'est pas un azimut canonique,
+     * Transforms an azimuth in a mathematical angle, or throws the exception
+     * IllegalArgumentException if the argument is not a canonical azimut
+     * 
      * @param azimuth
-     *      l'azimuth que l'on veut convertir
-     * @throws IllegalArgumentException si l'argument n'est pas canonique
-     * @return l'angle mathématiqe correspondant
+     *            the azimuth to convert
+     * @throws IllegalArgumentException
+     *             the azimuth is not canonical
+     * @return the corresponding mathematical angle
      */
-    static double toMath(double azimuth){
-        if(isCanonical(azimuth)){
+    static double toMath(double azimuth) {
+        if (isCanonical(azimuth)) {
             return canonicalize(Math2.PI2 - azimuth);
-        }else{
+        } else {
             throw new IllegalArgumentException();
         }
     }
 
     /**
-     * transforme un angle mathématique en azimut, ou lève l'exception IllegalArgumentException
-     * si l'argument n'est pas canonique
+     * Transforms a mathematical angle in an azimuth, or throws the
+     * IllegalArgumentException if the mathematical angle is not canonical
+     * 
      * @param angle
-     *      l'angle que l'on veut convertir
-     * @throws IllegalArgumentException si l'argument n'est pas canonique
-     * @return azimut correspondant à l'angle mathématique
+     *            the angle to convert
+     * @throws IllegalArgumentException
+     *             if the angle is not canonical
+     * @return the correspinding azimuth
      */
-    static double fromMath(double angle){
-        if(isCanonical(angle)){
+    static double fromMath(double angle) {
+        if (isCanonical(angle)) {
             return canonicalize(Math2.PI2 - angle);
-        }else{
+        } else {
             throw new IllegalArgumentException();
         }
     }
 
     /**
-     * retourne une chaîne correspondant à l'octant dans lequel se trouve l'azimut donné,
-     * formée en combinant les chaînes n, e, s et w correspondant aux quatre points cardinaux
-     * lève l'exception IllegalArgumentException si l'azimut donnée n'est pas canonique.
+     * Returns a string cooresponding to the octant in which the azimuth is,
+     * throws the IllegalArgumentException if the azimuth is not canonical
+     * 
      * @param azimuth
-     *      l'azimuth auquel on veut faire correspondre l'octant
+     *            the azimuth for which we want to make corresponds an octant
      * @param n
-     *      le nord
+     *            the north
      * @param e
-     *      l'est
+     *            the east
      * @param s
-     *      le sud
+     *            the south
      * @param w
-     *      l'ouest
-     * @throws IllegalArgumentException si l'azimuth n'est pas canonique
-     * @return l'octant correspondant à l'azimuth
+     *            the west
+     * @throws IllegalArgumentException
+     *             if the azimuth is not canonical
+     * @return the corresponding octant
      */
-    static String toOctantString(double azimuth, String n, String e, String s, String w){
+    static String toOctantString(double azimuth, String n, String e, String s,
+            String w) {
         String message = "";
-        if(isCanonical(azimuth)){
-            if((azimuth > ((15.0 / 16.0) * Math2.PI2)) || (azimuth <= ((1.0 / 16.0) * Math2.PI2))){
+        if (isCanonical(azimuth)) {
+            if ((azimuth > ((15.0 / 16.0) * Math2.PI2))
+                    || (azimuth <= ((1.0 / 16.0) * Math2.PI2))) {
                 message = n;
-            } else if((azimuth > ((1.0 / 16.0) * Math2.PI2)) && (azimuth <= ((3.0 / 16.0) * Math2.PI2))){
-                message = n+e;
-            } else if((azimuth > ((3.0 / 16.0) * Math2.PI2)) && (azimuth <= ((5.0 / 16.0) * Math2.PI2))) {
+            } else if ((azimuth > ((1.0 / 16.0) * Math2.PI2))
+                    && (azimuth <= ((3.0 / 16.0) * Math2.PI2))) {
+                message = n + e;
+            } else if ((azimuth > ((3.0 / 16.0) * Math2.PI2))
+                    && (azimuth <= ((5.0 / 16.0) * Math2.PI2))) {
                 message = e;
-            } else if((azimuth > ((5.0 / 16.0) * Math2.PI2)) && (azimuth <= ((7.0 / 16.0) * Math2.PI2))){
-                message = s+e;
-            } else if((azimuth > ((7.0 / 16.0) * Math2.PI2)) && (azimuth <= ((9.0 / 16.0) * Math2.PI2))){
+            } else if ((azimuth > ((5.0 / 16.0) * Math2.PI2))
+                    && (azimuth <= ((7.0 / 16.0) * Math2.PI2))) {
+                message = s + e;
+            } else if ((azimuth > ((7.0 / 16.0) * Math2.PI2))
+                    && (azimuth <= ((9.0 / 16.0) * Math2.PI2))) {
                 message = s;
-            } else if((azimuth > ((9.0 / 16.0) * Math2.PI2)) && (azimuth <= ((11.0 / 16.0) * Math2.PI2))){
-                message = s+w;
-            } else if((azimuth > ((11.0 / 16.0) * Math2.PI2)) && (azimuth <= ((13.0 / 16.0) * Math2.PI2))){
+            } else if ((azimuth > ((9.0 / 16.0) * Math2.PI2))
+                    && (azimuth <= ((11.0 / 16.0) * Math2.PI2))) {
+                message = s + w;
+            } else if ((azimuth > ((11.0 / 16.0) * Math2.PI2))
+                    && (azimuth <= ((13.0 / 16.0) * Math2.PI2))) {
                 message = w;
-            } else if((azimuth > ((13.0 / 16.0) * Math2.PI2)) && (azimuth <= ((15.0 / 16.0) * Math2.PI2))){
-                message = n+w;
+            } else if ((azimuth > ((13.0 / 16.0) * Math2.PI2))
+                    && (azimuth <= ((15.0 / 16.0) * Math2.PI2))) {
+                message = n + w;
             }
         } else {
             throw new IllegalArgumentException();

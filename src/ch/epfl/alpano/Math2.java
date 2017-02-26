@@ -3,119 +3,157 @@ package ch.epfl.alpano;
 import java.util.function.DoubleUnaryOperator;
 
 /**
- * @author Etienne Caquot
  * @author : Jeremy Zerbib (257715)
+ * @author : Etienne Caquot (249949)
  */
+
 public interface Math2 {
     double PI2 = Math.PI * 2;
 
     /**
      * Elevates a number to the square.
+     * 
      * @param x
-     * @return double
+     *            the number
+     * @return the square of the number
      */
     static double sq(double x) {
         return x * x;
     }
 
     /**
-     * Gives the rest of the division.
+     * Gives the rest of the default division of two numbers
+     * 
      * @param x
+     *            the numerator
      * @param y
-     * @return double
+     *            the denominator
+     * @return the rest of the default division
      */
-    static double floorMod(double x, double y){
-        return x - y * Math.floor(x/y);
+    static double floorMod(double x, double y) {
+        return x - y * Math.floor(x / y);
     }
 
     /**
      * Calculates the haversin value.
+     * 
      * @param x
-     * @return double
+     *            the number
+     * @return the haversin of the value
      */
-    static double haversin(double x){
-        return sq(Math.sin(x/2));
+    static double haversin(double x) {
+        return sq(Math.sin(x / 2));
     }
 
     /**
-     * Calculates the angular distance between two points.
+     * Calculates the angular difference between two points.
+     * 
      * @param a1
+     *            first points
      * @param a2
-     * @return double
+     *            second point
+     * @return the angular difference of the to points
      */
-    static double angularDistance(double a1, double a2){
+    static double angularDistance(double a1, double a2) {
         double n = (a2 - a1 + Math.PI);
         return floorMod(n, PI2) - Math.PI;
     }
 
     /**
      * Calculates the linear interpolation of f(x) with f(0) = y0 and f(1) = y1.
+     * 
      * @param y0
+     *            f(0)
      * @param y1
+     *            f(1)
      * @param x
-     * @return double
+     *            in where we want to evaluate f
+     * @return the linear interpolation
      */
-    static double lerp(double y0, double y1, double x){
+    static double lerp(double y0, double y1, double x) {
         return y0 - x * (y0 - y1);
     }
 
     /**
-     * Calculates the bilinear interpolation of f(x,y) with f(0,0) = z00, f(1,0) = z10, f(0,1) = z01 and f(1,1) = z11
-     * @param z00
+     * Calculates the bilinear interpolation of f(x,y) with f(0,0) = z00, f(1,0)
+     * = z10, f(0,1) = z01 and f(1,1) = z11
+     * 
+     * @param z00)
+     *            f(0,0
      * @param z10
+     *            f(1,0)
      * @param z01
+     *            f(0,1)
      * @param z11
+     *            f(1,1)
      * @param x
+     *            in where we want to evaluate f
      * @param y
-     * @return double
+     *            in where we want to evaluate f
+     * @return the bilinear interpolation
      */
-    static double bilerp(double z00, double z10, double z01, double z11, double x, double y){
+    static double bilerp(double z00, double z10, double z01, double z11,
+            double x, double y) {
         double z1 = lerp(z00, z10, x);
         double z2 = lerp(z01, z11, x);
         return lerp(z1, z2, y);
     }
 
     /**
-     * Finds the lower bound of thw zero of a function within a size of dX
+     * Finds the lower bound of an interval of size dX in which there is a zero
+     * of a function
+     * 
      * @param f
+     *            the function
      * @param minX
+     *            the start of searching
      * @param maxX
+     *            the end of searching
      * @param dX
-     * @return double
+     *            the size of the interval
+     * @return the lower bound of the interval
      */
 
-    static double firstIntervalContainingRoot(DoubleUnaryOperator f, double minX, double maxX, double dX){
+    static double firstIntervalContainingRoot(DoubleUnaryOperator f,
+            double minX, double maxX, double dX) {
         double bound = 0;
-        for (double i = minX; i <= maxX; i += dX){
-                if (f.applyAsDouble(i) * f.applyAsDouble(i + dX) < 0){
-                    return i;
-                } else {
-                    bound = Double.POSITIVE_INFINITY;
-                }
+        for (double i = minX; i <= maxX; i += dX) {
+            if (f.applyAsDouble(i) * f.applyAsDouble(i + dX) < 0) {
+                return i;
+            } else {
+                bound = Double.POSITIVE_INFINITY;
+            }
         }
         return bound;
     }
 
     /**
-     * Finds the lower bound of thw zero of a function within a size of epsilon
+     * Finds the lower bound of an interval of size inferior or equal to epsilon
+     * in which there is a zero of a function
+     * 
      * @param f
+     *            the function
      * @param x1
+     *            the lower bound of searching
      * @param x2
+     *            the upper bound of searching
      * @param epsilon
-     * @return double
+     *            the size of the interval
+     * @return the lower bound of the interval
      */
-    static double improveRoot(DoubleUnaryOperator f, double x1, double x2, double epsilon){
-        if (f.applyAsDouble(x1) * f.applyAsDouble(x2) > 0){
+    static double improveRoot(DoubleUnaryOperator f, double x1, double x2,
+            double epsilon) {
+        if (f.applyAsDouble(x1) * f.applyAsDouble(x2) > 0) {
             throw new IllegalArgumentException();
         }
 
         do {
-            double xm = (x1 + x2) /2;
-            if (x2 - x1 == epsilon){
+            double xm = (x1 + x2) / 2;
+            if (x2 - x1 == epsilon) {
                 return x1;
-            } else if (f.applyAsDouble(xm) == 0){
+            } else if (f.applyAsDouble(xm) == 0) {
                 return xm;
-            } else if (f.applyAsDouble(x1) * f.applyAsDouble(xm) < 0){
+            } else if (f.applyAsDouble(x1) * f.applyAsDouble(xm) < 0) {
                 x2 = xm;
             } else {
                 x1 = xm;
@@ -123,6 +161,5 @@ public interface Math2 {
         } while (x2 - x1 >= epsilon);
         return x1;
     }
-
 
 }
