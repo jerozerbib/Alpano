@@ -121,6 +121,6 @@ public final class Interval2D {
     @Override
     public String toString(){
         return this.iX().toString() + "x" + this.iY().toString();
-    }
+    } //We used the letter x
 
 }
