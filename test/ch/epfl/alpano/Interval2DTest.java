@@ -70,6 +70,7 @@ public class Interval2DTest {
         Interval2D test2 = new Interval2D(new Interval1D(2, 6), new Interval1D(2, 4));
         assertEquals(test1, test.boundingUnion(test1));
         assertEquals(new Interval2D(new Interval1D(2, 6), new Interval1D(0, 4)), test.boundingUnion(test2));
+
     }
 
     @Test
