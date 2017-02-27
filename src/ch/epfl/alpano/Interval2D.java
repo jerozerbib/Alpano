@@ -76,7 +76,7 @@ public final class Interval2D {
     /**
      * Get the bounding union of two bidimensional intervals.
      * @param that
-     * the other didimensional interval
+     * the other bidimensional interval
      * @return the bounding union 
      */
     public Interval2D boundingUnion(Interval2D that){
