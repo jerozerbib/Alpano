@@ -58,14 +58,19 @@ public class Interval2DTest {
     public void sizeOfIntersectionWith(){
         Interval2D test = new Interval2D(new Interval1D(4, 5), new Interval1D(0, 3));
         Interval2D test1 = new Interval2D(new Interval1D(2, 5), new Interval1D(0, 3));
+        Interval2D test2 = new Interval2D(new Interval1D(0,6),new Interval1D(1,2));
         assertEquals(6, test.sizeOfIntersectionWith(test1));
+        assertEquals(4, test.sizeOfIntersectionWith(test2));
     }
 
     @Test
     public void boundingUnion(){
         Interval2D test = new Interval2D(new Interval1D(4, 5), new Interval1D(0, 3));
         Interval2D test1 = new Interval2D(new Interval1D(2, 5), new Interval1D(0, 3));
+        Interval2D test2 = new Interval2D(new Interval1D(2, 6), new Interval1D(2, 4));
         assertEquals(test1, test.boundingUnion(test1));
+        assertEquals(new Interval2D(new Interval1D(2, 6), new Interval1D(0, 4)), test.boundingUnion(test2));
+
     }
 
     @Test
