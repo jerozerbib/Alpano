@@ -60,7 +60,7 @@ public interface Math2 {
     }
 
     /**
-     * Calculates the linear interpolation of f(x) with f(0) = y0 and f(1) = y1.
+     * Calculates the linear interpolation of f(x).
      * 
      * @param y0
      *            f(0)
@@ -75,11 +75,10 @@ public interface Math2 {
     }
 
     /**
-     * Calculates the bilinear interpolation of f(x,y) with f(0,0) = z00, f(1,0)
-     * = z10, f(0,1) = z01 and f(1,1) = z11
+     * Calculates the bilinear interpolation of f(x,y).
      * 
-     * @param z00)
-     *            f(0,0
+     * @param z00
+     *            f(0,0)
      * @param z10
      *            f(1,0)
      * @param z01
