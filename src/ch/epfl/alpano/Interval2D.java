@@ -2,6 +2,8 @@ package ch.epfl.alpano;
 
 import java.util.Objects;
 
+import static java.util.Objects.requireNonNull;
+
 /**
  * @author : Jeremy Zerbib (257715)
  * @author : Etienne Caquot (249949)
@@ -18,11 +20,9 @@ public final class Interval2D {
      * the second interval
      */
     public Interval2D(Interval1D iX, Interval1D iY){
-        if (iX == null || iY == null){
-            throw new NullPointerException();
-        }
-        this.iX = iX;
-        this.iY = iY;
+       this.iX = requireNonNull(iX);
+       this.iY = requireNonNull(iY);
+
     }
 
     /**
@@ -105,11 +105,8 @@ public final class Interval2D {
      * @throws IllegalArgumentException if the two interval are not unionable
      */
     public Interval2D union(Interval2D that){
-        if (this.isUnionableWith(that)){
-            return new Interval2D(this.boundingUnion(that).iX(), this.boundingUnion(that).iY());
-        } else {
-            throw new IllegalArgumentException();
-        }
+        Preconditions.checkArgument(this.isUnionableWith(that));
+        return this.boundingUnion(that);
     }
 
     /* (non-Javadoc)

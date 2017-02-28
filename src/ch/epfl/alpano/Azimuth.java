@@ -40,17 +40,13 @@ public interface Azimuth {
      * @return the corresponding mathematical angle
      */
     static double toMath(double azimuth) {
-        if (isCanonical(azimuth)) {
-            return canonicalize(Math2.PI2 - azimuth);
-        } else {
-            throw new IllegalArgumentException();
-        }
+        Preconditions.checkArgument(isCanonical(azimuth), "The given azimuth is not canonical");
+        return canonicalize(Math2.PI2 - azimuth);
     }
-
     /**
      * Transforms a mathematical angle in an azimuth, or throws the
      * IllegalArgumentException if the mathematical angle is not canonical
-     * 
+     *
      * @param angle
      *            the angle to convert
      * @throws IllegalArgumentException
@@ -58,11 +54,8 @@ public interface Azimuth {
      * @return the correspinding azimuth
      */
     static double fromMath(double angle) {
-        if (isCanonical(angle)) {
-            return canonicalize(Math2.PI2 - angle);
-        } else {
-            throw new IllegalArgumentException();
-        }
+        Preconditions.checkArgument(isCanonical(angle), "The given angle is not canonical");
+        return canonicalize(Math2.PI2 - angle);
     }
 
     /**
@@ -86,34 +79,31 @@ public interface Azimuth {
     static String toOctantString(double azimuth, String n, String e, String s,
             String w) {
         String message = "";
-        if (isCanonical(azimuth)) {
-            if ((azimuth > ((15.0 / 16.0) * Math2.PI2))
-                    || (azimuth <= ((1.0 / 16.0) * Math2.PI2))) {
-                message = n;
-            } else if ((azimuth > ((1.0 / 16.0) * Math2.PI2))
-                    && (azimuth <= ((3.0 / 16.0) * Math2.PI2))) {
-                message = n + e;
-            } else if ((azimuth > ((3.0 / 16.0) * Math2.PI2))
-                    && (azimuth <= ((5.0 / 16.0) * Math2.PI2))) {
-                message = e;
-            } else if ((azimuth > ((5.0 / 16.0) * Math2.PI2))
-                    && (azimuth <= ((7.0 / 16.0) * Math2.PI2))) {
-                message = s + e;
-            } else if ((azimuth > ((7.0 / 16.0) * Math2.PI2))
-                    && (azimuth <= ((9.0 / 16.0) * Math2.PI2))) {
-                message = s;
-            } else if ((azimuth > ((9.0 / 16.0) * Math2.PI2))
-                    && (azimuth <= ((11.0 / 16.0) * Math2.PI2))) {
-                message = s + w;
-            } else if ((azimuth > ((11.0 / 16.0) * Math2.PI2))
-                    && (azimuth <= ((13.0 / 16.0) * Math2.PI2))) {
-                message = w;
-            } else if ((azimuth > ((13.0 / 16.0) * Math2.PI2))
-                    && (azimuth <= ((15.0 / 16.0) * Math2.PI2))) {
-                message = n + w;
-            }
-        } else {
-            throw new IllegalArgumentException();
+        Preconditions.checkArgument(isCanonical(azimuth), "The given azimuth is not canonical");
+        if ((azimuth > ((15.0 / 16.0) * Math2.PI2))
+                || (azimuth <= ((1.0 / 16.0) * Math2.PI2))) {
+            message = n;
+        } else if ((azimuth > ((1.0 / 16.0) * Math2.PI2))
+                && (azimuth <= ((3.0 / 16.0) * Math2.PI2))) {
+            message = n + e;
+        } else if ((azimuth > ((3.0 / 16.0) * Math2.PI2))
+                && (azimuth <= ((5.0 / 16.0) * Math2.PI2))) {
+            message = e;
+        } else if ((azimuth > ((5.0 / 16.0) * Math2.PI2))
+                && (azimuth <= ((7.0 / 16.0) * Math2.PI2))) {
+            message = s + e;
+        } else if ((azimuth > ((7.0 / 16.0) * Math2.PI2))
+                && (azimuth <= ((9.0 / 16.0) * Math2.PI2))) {
+            message = s;
+        } else if ((azimuth > ((9.0 / 16.0) * Math2.PI2))
+                && (azimuth <= ((11.0 / 16.0) * Math2.PI2))) {
+            message = s + w;
+        } else if ((azimuth > ((11.0 / 16.0) * Math2.PI2))
+                && (azimuth <= ((13.0 / 16.0) * Math2.PI2))) {
+            message = w;
+        } else if ((azimuth > ((13.0 / 16.0) * Math2.PI2))
+                && (azimuth <= ((15.0 / 16.0) * Math2.PI2))) {
+            message = n + w;
         }
         return message;
     }

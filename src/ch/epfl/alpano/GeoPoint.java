@@ -24,13 +24,10 @@ public final class GeoPoint {
      */
 
     public GeoPoint(double longitude, double latitude) {
-        if ((longitude < (-Math.PI) || longitude > Math.PI)
-                || (latitude < (-Math.PI) / 2.0 || latitude > Math.PI / 2.0)) {
-            throw new IllegalArgumentException();
-        } else {
-            this.longitude = longitude;
-            this.latitude = latitude;
-        }
+        Preconditions.checkArgument(longitude > -Math.PI && longitude < Math.PI);
+        this.longitude = longitude;
+        Preconditions.checkArgument(latitude > -Math.PI / 2 && latitude < Math.PI / 2);
+        this.latitude = latitude;
     }
 
     /**
@@ -64,8 +61,7 @@ public final class GeoPoint {
     public double distanceTo(GeoPoint that) {
         double haver1 = Math2.haversin(this.latitude() - that.latitude());
         double haver2 = Math2.haversin(this.longitude() - that.longitude());
-        double cos = Math.cos(this.latitude()) * Math.cos(that.latitude())
-                * haver2;
+        double cos = Math.cos(this.latitude()) * Math.cos(that.latitude()) * haver2;
         double sqr = Math.sqrt(haver1 + cos);
         double a = 2 * Math.asin(sqr);
         return Distance.toMeters(a);
@@ -80,12 +76,16 @@ public final class GeoPoint {
      */
 
     public double azimuthTo(GeoPoint that) {
-        return Azimuth.canonicalize(Math.atan2(
-                Math.sin(this.longitude - that.longitude)
-                        * Math.cos(that.latitude),
-                Math.cos(this.latitude) * Math.sin(that.latitude)
-                        - Math.sin(this.latitude) * Math.cos(that.latitude)
-                                * Math.cos(this.longitude - that.longitude)));
+        double sin1 = Math.sin(this.longitude - that.longitude);
+        double cos1 = Math.cos(that.latitude);
+        double num = sin1 * cos1;
+        double cos2 = Math.cos(this.latitude);
+        double sin2 = Math.sin(that.latitude);
+        double sin3 = Math.sin(this.latitude);
+        double cos3 = Math.cos(that.latitude);
+        double cos4 = Math.cos(this.longitude - that.longitude());
+        double den = cos2 * sin2 - sin3 * cos3 * cos4;
+        return Azimuth.canonicalize(Math.atan2(num, den));
     }
 
     /*
