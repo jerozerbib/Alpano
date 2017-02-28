@@ -24,10 +24,7 @@ public final class Interval1D {
      */
 
     public Interval1D(int includedFrom, int includedTo) {
-        if (includedFrom > includedTo) {
-            throw new IllegalArgumentException(
-                    "La borne inférieure est plus grande que la borne supérieure");
-        }
+        Preconditions.checkArgument(includedFrom <= includedTo, "La borne inférieure est plus grande que la borne supérieure");
         this.includedFrom = includedFrom;
         this.includedTo = includedTo;
     }
@@ -82,8 +79,7 @@ public final class Interval1D {
     public int sizeOfIntersectionWith(Interval1D that) {
         if (this.contains(that.includedFrom())
                 && !this.contains(that.includedTo())) {
-            return new Interval1D(that.includedFrom(), this.includedTo())
-                    .size();
+            return new Interval1D(that.includedFrom(), this.includedTo()).size();
         } else if (that.contains(this.includedFrom())
                 && that.contains(this.includedTo())) {
             return this.size();
@@ -91,8 +87,7 @@ public final class Interval1D {
             if (this.contains(that.includedFrom())) {
                 return that.size();
             } else {
-                return new Interval1D(this.includedFrom(), that.includedTo())
-                        .size();
+                return new Interval1D(this.includedFrom(), that.includedTo()).size();
             }
         } else {
             return 0;
@@ -133,14 +128,12 @@ public final class Interval1D {
      * @param that
      *            the other interval
      * @return the union of the tow intervals
+     * @throws IllegalArgumentException
      */
     public Interval1D union(Interval1D that) {
-        if (this.isUnionableWith(that)) {
-            return new Interval1D(this.boundingUnion(that).includedFrom(),
-                    this.boundingUnion(that).includedTo());
-        } else {
-            throw new IllegalArgumentException();
-        }
+        System.out.print(this.isUnionableWith(that));
+        Preconditions.checkArgument(this.isUnionableWith(that));
+        return this.boundingUnion(that);
     }
 
     /*
