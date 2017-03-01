@@ -70,7 +70,7 @@ public final class Interval2D {
      * @return the size of the intersection
      */
     public int sizeOfIntersectionWith(Interval2D that){
-        return this.iX().sizeOfIntersectionWith(that.iX()) * this.iY().sizeOfIntersectionWith(that.iY());
+        return (this.iX().sizeOfIntersectionWith(that.iX())) * (this.iY().sizeOfIntersectionWith(that.iY()));
     }
 
     /**
@@ -90,10 +90,7 @@ public final class Interval2D {
      * @return true if the two intervals are unionable, false otherwise
      */
     public boolean isUnionableWith(Interval2D that){
-        int sizeThis = this.size();
-        int sizeThat = that.size();
-        int intersection= this.sizeOfIntersectionWith(that);
-        int union = sizeThis + sizeThat - intersection;
+        int union = this.size() + that.size() - this.sizeOfIntersectionWith(that);
         return union == this.boundingUnion(that).size();
     }
 

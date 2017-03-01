@@ -1,7 +1,8 @@
 package ch.epfl.alpano.dem;
 
 import ch.epfl.alpano.Interval2D;
-import ch.epfl.alpano.Preconditions;
+
+import static ch.epfl.alpano.Preconditions.checkArgument;
 
 /**
  * @author : Jeremy Zerbib (257715)
@@ -9,7 +10,7 @@ import ch.epfl.alpano.Preconditions;
 public interface DiscreteElevationModel extends AutoCloseable {
 
     int SAMPLES_PER_DEGREE = 3600;
-    double SAMPLES_PER_RADIAN = Math.toRadians(1) / SAMPLES_PER_DEGREE;
+    double SAMPLES_PER_RADIAN = Math.toDegrees(1) * SAMPLES_PER_DEGREE;
 
     /**
      * Returns the index corrresponding to a given angle in radian
@@ -44,7 +45,7 @@ public interface DiscreteElevationModel extends AutoCloseable {
      * @throws IllegalArgumentException
      */
     default DiscreteElevationModel union(DiscreteElevationModel that){
-        Preconditions.checkArgument(this.extent().isUnionableWith(that.extent()));
+        checkArgument(this.extent().isUnionableWith(that.extent()));
         return new CompositeDiscreteElevationModel(this, that);
     }
 }

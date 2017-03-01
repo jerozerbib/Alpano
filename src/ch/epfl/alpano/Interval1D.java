@@ -80,13 +80,9 @@ public final class Interval1D {
      * @return size of the intersection of the two intervals
      */
     public int sizeOfIntersectionWith(Interval1D that) {
-        if (this.includedTo() < that.includedFrom()){
-            return 0;
-        } else {
-            int max = max(this.includedFrom(), that.includedFrom());
-            int min = min(this.includedTo(), that.includedTo());
-            return min - max + 1;
-        }
+        int max = max(this.includedFrom(), that.includedFrom());
+        int min = min(this.includedTo(), that.includedTo());
+        return max(min - max + 1, 0);
     }
 
     /**

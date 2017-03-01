@@ -2,7 +2,7 @@ package ch.epfl.alpano;
 
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author : Jeremy Zerbib (257715)
