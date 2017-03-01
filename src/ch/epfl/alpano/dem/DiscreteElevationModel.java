@@ -9,7 +9,7 @@ import ch.epfl.alpano.Preconditions;
 public interface DiscreteElevationModel extends AutoCloseable {
 
     int SAMPLES_PER_DEGREE = 3600;
-    double SAMPLES_PER_RADIAN = Math.toRadians(1) * SAMPLES_PER_DEGREE;
+    double SAMPLES_PER_RADIAN = Math.toRadians(1) / SAMPLES_PER_DEGREE;
 
     /**
      * Returns the index corrresponding to a given angle in radian

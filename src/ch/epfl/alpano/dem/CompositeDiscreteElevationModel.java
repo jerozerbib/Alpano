@@ -12,12 +12,12 @@ public final class CompositeDiscreteElevationModel implements DiscreteElevationM
 
     private DiscreteElevationModel dem1;
     private DiscreteElevationModel dem2;
-    private Interval2D extent;
+    private DiscreteElevationModel union;
 
     public CompositeDiscreteElevationModel(DiscreteElevationModel dem1, DiscreteElevationModel dem2){
         this.dem1 = requireNonNull(dem1);
         this.dem2 = requireNonNull(dem2);
-        extent = dem1.extent().union(dem2.extent());
+        union = dem1.union(dem2);
     }
 
     public DiscreteElevationModel dem1() {
@@ -30,12 +30,12 @@ public final class CompositeDiscreteElevationModel implements DiscreteElevationM
 
     @Override
     public Interval2D extent() {
-        return extent;
+        return union.extent();
     }
 
     @Override
     public double elevationSample(int x, int y) {
-        Preconditions.checkArgument(extent.contains(x, y));
+        Preconditions.checkArgument(union.extent().contains(x, y));
         if (dem1().extent().contains(x, y)){
             return dem1().elevationSample(x, y);
         } else {

@@ -91,8 +91,7 @@ public interface Math2 {
      *            in where we want to evaluate f
      * @return the bilinear interpolation
      */
-    static double bilerp(double z00, double z10, double z01, double z11,
-            double x, double y) {
+    static double bilerp(double z00, double z10, double z01, double z11, double x, double y) {
         double z1 = lerp(z00, z10, x);
         double z2 = lerp(z01, z11, x);
         return lerp(z1, z2, y);
