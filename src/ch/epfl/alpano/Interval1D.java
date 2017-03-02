@@ -2,13 +2,11 @@ package ch.epfl.alpano;
 
 import java.util.Objects;
 
+import static java.lang.Math.*;
+
 /**
  * @author : Jeremy Zerbib (257715)
  * @author : Etienne Caquot (249949)
- */
-/**
- * @author etienne
- *
  */
 public final class Interval1D {
 
@@ -77,21 +75,9 @@ public final class Interval1D {
      * @return size of the intersection of the two intervals
      */
     public int sizeOfIntersectionWith(Interval1D that) {
-        if (this.contains(that.includedFrom())
-                && !this.contains(that.includedTo())) {
-            return new Interval1D(that.includedFrom(), this.includedTo()).size();
-        } else if (that.contains(this.includedFrom())
-                && that.contains(this.includedTo())) {
-            return this.size();
-        } else if (this.contains(that.includedTo())) {
-            if (this.contains(that.includedFrom())) {
-                return that.size();
-            } else {
-                return new Interval1D(this.includedFrom(), that.includedTo()).size();
-            }
-        } else {
-            return 0;
-        }
+      int max = max(this.includedFrom(), that.includedFrom());
+      int min = min(this.includedTo(), that.includedTo());
+      return max(min - max + 1,0);
     }
 
     /**
@@ -103,8 +89,8 @@ public final class Interval1D {
      */
     public Interval1D boundingUnion(Interval1D that) {
         return new Interval1D(
-                Math.min(that.includedFrom(), this.includedFrom()),
-                Math.max(that.includedTo(), this.includedTo()));
+                min(that.includedFrom(), this.includedFrom()),
+                max(that.includedTo(), this.includedTo()));
     }
 
     /**

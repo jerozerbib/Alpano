@@ -2,7 +2,7 @@ package ch.epfl.alpano;
 
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author : Jeremy Zerbib (257715)
@@ -43,7 +43,7 @@ public class GeoPointTest {
     public void azimuthTo() throws Exception {
         GeoPoint c1 = new GeoPoint(Math.toRadians(8.01700), Math.toRadians(46.57306));
         GeoPoint c2 = new GeoPoint(Math.toRadians(8.017000), Math.toRadians(47.566044));
-        assertEquals(0, c1.azimuthTo(c2), 1e-2);
+        assertEquals(0, c1.azimuthTo(c2), 0);
     }
 
     @Test
