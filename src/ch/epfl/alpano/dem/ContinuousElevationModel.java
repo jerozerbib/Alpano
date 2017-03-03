@@ -9,7 +9,10 @@ import static ch.epfl.alpano.Math2.sq;
 import static ch.epfl.alpano.dem.DiscreteElevationModel.sampleIndex;
 import static java.lang.Math.acos;
 import static java.lang.Math.sqrt;
+
 import static java.util.Objects.requireNonNull;
+
+import ch.epfl.alpano.GeoPoint;
 
 /**
  * @author : Jeremy Zerbib (257715)
@@ -19,14 +22,14 @@ public final class ContinuousElevationModel {
     private DiscreteElevationModel dem;
     private static final double DNS = toMeters(1 / DiscreteElevationModel.SAMPLES_PER_RADIAN);
 
-    public ContinuousElevationModel(DiscreteElevationModel dem){
+    public ContinuousElevationModel(DiscreteElevationModel dem) {
         this.dem = requireNonNull(dem);
     }
 
-
-    public DiscreteElevationModel dem(){
+    public DiscreteElevationModel dem() {
         return dem;
     }
+
 
     private double elevationAtDEMExtent(int x, int y){
         if (dem().extent().contains(x, y)){
@@ -69,5 +72,6 @@ public final class ContinuousElevationModel {
         double z01 = slopeAtDEMExtent(lg, neighborLat);
         double z11 = slopeAtDEMExtent(neighborLg, neighborLat);
         return Math2.bilerp(z00, z10, z01, z11, longIndex - lg, latIndex - lat);
+
     }
 }
