@@ -2,6 +2,13 @@ package ch.epfl.alpano;
 
 import java.util.Locale;
 
+import static ch.epfl.alpano.Azimuth.canonicalize;
+import static ch.epfl.alpano.Distance.toMeters;
+import static ch.epfl.alpano.Math2.haversin;
+import static ch.epfl.alpano.Preconditions.checkArgument;
+import static java.lang.Math.*;
+import static java.lang.String.format;
+
 /**
  * @author : Jeremy Zerbib (257715)
  * @author : Etienne Caquot (249949)
@@ -24,9 +31,9 @@ public final class GeoPoint {
      */
 
     public GeoPoint(double longitude, double latitude) {
-        Preconditions.checkArgument(longitude > -Math.PI && longitude < Math.PI);
+        checkArgument(longitude > -Math.PI && longitude < Math.PI);
         this.longitude = longitude;
-        Preconditions.checkArgument(latitude > -Math.PI / 2 && latitude < Math.PI / 2);
+        checkArgument(latitude > -Math.PI / 2 && latitude < Math.PI / 2);
         this.latitude = latitude;
     }
 
@@ -59,12 +66,12 @@ public final class GeoPoint {
      */
 
     public double distanceTo(GeoPoint that) {
-        double haver1 = Math2.haversin(this.latitude() - that.latitude());
-        double haver2 = Math2.haversin(this.longitude() - that.longitude());
-        double cos = Math.cos(this.latitude()) * Math.cos(that.latitude()) * haver2;
-        double sqr = Math.sqrt(haver1 + cos);
-        double a = 2 * Math.asin(sqr);
-        return Distance.toMeters(a);
+        double haver1 = haversin(this.latitude() - that.latitude());
+        double haver2 = haversin(this.longitude() - that.longitude());
+        double cos = cos(this.latitude()) * cos(that.latitude()) * haver2;
+        double sqr = sqrt(haver1 + cos);
+        double a = 2 * asin(sqr);
+        return toMeters(a);
     }
 
     /**
@@ -76,16 +83,16 @@ public final class GeoPoint {
      */
 
     public double azimuthTo(GeoPoint that) {
-        double sin1 = Math.sin(this.longitude - that.longitude);
-        double cos1 = Math.cos(that.latitude);
+        double sin1 = sin(this.longitude - that.longitude);
+        double cos1 = cos(that.latitude);
         double num = sin1 * cos1;
-        double cos2 = Math.cos(this.latitude);
-        double sin2 = Math.sin(that.latitude);
-        double sin3 = Math.sin(this.latitude);
-        double cos3 = Math.cos(that.latitude);
-        double cos4 = Math.cos(this.longitude - that.longitude());
+        double cos2 = cos(this.latitude);
+        double sin2 = sin(that.latitude);
+        double sin3 = sin(this.latitude);
+        double cos3 = cos(that.latitude);
+        double cos4 = cos(this.longitude - that.longitude());
         double den = cos2 * sin2 - sin3 * cos3 * cos4;
-        return Azimuth.canonicalize(Math.atan2(num, den));
+        return canonicalize(Math.atan2(num, den));
     }
 
     /*
@@ -96,8 +103,8 @@ public final class GeoPoint {
     @Override
     public String toString() {
         Locale l = null;
-        double longitudeDegree = Math.toDegrees(this.longitude);
-        double latitudeDegree = Math.toDegrees(this.latitude);
-        return String.format(l, "(%.4f,%.4f)", longitudeDegree, latitudeDegree);
+        double longitudeDegree = toDegrees(this.longitude);
+        double latitudeDegree = toDegrees(this.latitude);
+        return format(l, "(%.4f,%.4f)", longitudeDegree, latitudeDegree);
     }
 }

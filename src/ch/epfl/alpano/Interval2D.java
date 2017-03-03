@@ -1,7 +1,7 @@
 package ch.epfl.alpano;
 
-import java.util.Objects;
-
+import static ch.epfl.alpano.Preconditions.checkArgument;
+import static java.util.Objects.hash;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -102,7 +102,7 @@ public final class Interval2D {
      * @throws IllegalArgumentException if the two interval are not unionable
      */
     public Interval2D union(Interval2D that){
-        Preconditions.checkArgument(this.isUnionableWith(that));
+        checkArgument(this.isUnionableWith(that));
         return this.boundingUnion(that);
     }
 
@@ -124,7 +124,7 @@ public final class Interval2D {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(iX(), iY());
+        return hash(iX(), iY());
     }
 
     /* (non-Javadoc)

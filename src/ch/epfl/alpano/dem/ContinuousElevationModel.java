@@ -9,10 +9,8 @@ import static ch.epfl.alpano.Math2.sq;
 import static ch.epfl.alpano.dem.DiscreteElevationModel.sampleIndex;
 import static java.lang.Math.acos;
 import static java.lang.Math.sqrt;
-
+import static java.lang.Math.floor;
 import static java.util.Objects.requireNonNull;
-
-import ch.epfl.alpano.GeoPoint;
 
 /**
  * @author : Jeremy Zerbib (257715)
@@ -22,18 +20,14 @@ public final class ContinuousElevationModel {
     private DiscreteElevationModel dem;
     private static final double DNS = toMeters(1 / DiscreteElevationModel.SAMPLES_PER_RADIAN);
 
-    public ContinuousElevationModel(DiscreteElevationModel dem) {
+    public ContinuousElevationModel(DiscreteElevationModel dem){
         this.dem = requireNonNull(dem);
-    }
-
-    public DiscreteElevationModel dem() {
-        return dem;
     }
 
 
     private double elevationAtDEMExtent(int x, int y){
-        if (dem().extent().contains(x, y)){
-            return dem().elevationSample(x, y);
+        if (dem.extent().contains(x, y)){
+            return dem.elevationSample(x, y);
         } else {
             return 0;
         }
@@ -42,10 +36,10 @@ public final class ContinuousElevationModel {
     public double elevationAt(GeoPoint p){
         double longIndex =  sampleIndex(p.longitude());
         double latIndex = sampleIndex(p.latitude());
-        int lg = (int) Math.floor(longIndex); //a
-        int lat = (int) Math.floor(latIndex); //b
-        int neighborLg = (int) Math.ceil(longIndex); //a+1
-        int neighborLat = (int) Math.ceil(latIndex); //b+1
+        int lg = (int) floor(longIndex);
+        int lat = (int) floor(latIndex);
+        int neighborLg = lg + 1;
+        int neighborLat = lat + 1;
         double z00 = elevationAtDEMExtent(lg, lat);
         double z10 = elevationAtDEMExtent(neighborLg, lat);
         double z01 = elevationAtDEMExtent(lg, neighborLat);
@@ -63,15 +57,14 @@ public final class ContinuousElevationModel {
     public double slopeAt(GeoPoint p){
         double longIndex =  sampleIndex(p.longitude());
         double latIndex = sampleIndex(p.latitude());
-        int lg = (int) Math.floor(longIndex); //a
-        int lat = (int) Math.floor(latIndex); //b
-        int neighborLg = (int) Math.ceil(longIndex); //a+1
-        int neighborLat = (int) Math.ceil(latIndex); //b+1
+        int lg = (int) floor(longIndex);
+        int lat = (int) floor(latIndex);
+        int neighborLg = lg + 1;
+        int neighborLat = lat + 1 ;
         double z00 = slopeAtDEMExtent(lg, lat);
         double z10 = slopeAtDEMExtent(neighborLg, lat);
         double z01 = slopeAtDEMExtent(lg, neighborLat);
         double z11 = slopeAtDEMExtent(neighborLg, neighborLat);
         return Math2.bilerp(z00, z10, z01, z11, longIndex - lg, latIndex - lat);
-
     }
 }
