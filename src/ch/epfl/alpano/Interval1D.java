@@ -1,9 +1,9 @@
 package ch.epfl.alpano;
 
-import java.util.Objects;
-
-import static java.lang.Math.*;
+import static ch.epfl.alpano.Preconditions.checkArgument;
 import static java.lang.Math.max;
+import static java.lang.Math.min;
+import static java.util.Objects.hash;
 
 /**
  * @author : Jeremy Zerbib (257715)
@@ -27,7 +27,7 @@ public final class Interval1D {
      */
 
     public Interval1D(int includedFrom, int includedTo) {
-        Preconditions.checkArgument(includedFrom <= includedTo, "La borne inférieure est plus grande que la borne supérieure");
+        checkArgument(includedFrom <= includedTo, "La borne inférieure est plus grande que la borne supérieure");
         this.includedFrom = includedFrom;
         this.includedTo = includedTo;
     }
@@ -122,7 +122,7 @@ public final class Interval1D {
      * @throws IllegalArgumentException
      */
     public Interval1D union(Interval1D that) {
-        Preconditions.checkArgument(this.isUnionableWith(that));
+        checkArgument(this.isUnionableWith(that));
         return this.boundingUnion(that);
     }
 
@@ -147,7 +147,7 @@ public final class Interval1D {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(includedFrom(), includedTo());
+        return hash(includedFrom(), includedTo());
     }
 
     /*

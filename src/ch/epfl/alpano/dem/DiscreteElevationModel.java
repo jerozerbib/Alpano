@@ -3,6 +3,7 @@ package ch.epfl.alpano.dem;
 import ch.epfl.alpano.Interval2D;
 
 import static ch.epfl.alpano.Preconditions.checkArgument;
+import static java.lang.Math.toDegrees;
 
 /**
  * @author : Jeremy Zerbib (257715)
@@ -10,7 +11,7 @@ import static ch.epfl.alpano.Preconditions.checkArgument;
 public interface DiscreteElevationModel extends AutoCloseable {
 
     int SAMPLES_PER_DEGREE = 3600;
-    double SAMPLES_PER_RADIAN = Math.toDegrees(1) * SAMPLES_PER_DEGREE;
+    double SAMPLES_PER_RADIAN = toDegrees(1) * SAMPLES_PER_DEGREE;
 
     /**
      * Returns the index corrresponding to a given angle in radian
