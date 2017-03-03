@@ -82,7 +82,6 @@ public final class Interval2D {
     public Interval2D boundingUnion(Interval2D that){
         return new Interval2D(this.iX().boundingUnion(that.iX()), this.iY().boundingUnion(that.iY()));
     }
-
     /**
      * Checks of two bidimensional intervals are unionable.
      * @param that
