@@ -59,6 +59,7 @@ public class Interval2DTest {
         Interval2D test = new Interval2D(new Interval1D(4, 5), new Interval1D(0, 3));
         Interval2D test1 = new Interval2D(new Interval1D(2, 5), new Interval1D(0, 3));
         assertEquals(8, test.sizeOfIntersectionWith(test1));
+
     }
 
     @Test
