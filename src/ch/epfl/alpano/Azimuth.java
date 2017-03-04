@@ -43,9 +43,11 @@ public interface Azimuth {
      * @return the corresponding mathematical angle
      */
     static double toMath(double azimuth) {
-        checkArgument(isCanonical(azimuth), "The given azimuth is not canonical");
+        checkArgument(isCanonical(azimuth),
+                "The given azimuth is not canonical");
         return canonicalize(PI2 - azimuth);
     }
+
     /**
      * Transforms a mathematical angle in an azimuth, or throws the
      * IllegalArgumentException if the mathematical angle is not canonical
@@ -82,7 +84,8 @@ public interface Azimuth {
     static String toOctantString(double azimuth, String n, String e, String s,
             String w) {
         String message = "";
-        checkArgument(isCanonical(azimuth), "The given azimuth is not canonical");
+        checkArgument(isCanonical(azimuth),
+                "The given azimuth is not canonical");
         if ((azimuth > ((15.0 / 16.0) * PI2))
                 || (azimuth <= ((1.0 / 16.0) * PI2))) {
             message = n;
