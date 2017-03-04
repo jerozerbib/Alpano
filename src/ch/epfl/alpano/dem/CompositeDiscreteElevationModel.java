@@ -1,8 +1,8 @@
 package ch.epfl.alpano.dem;
 
 import ch.epfl.alpano.Interval2D;
-import ch.epfl.alpano.Preconditions;
 
+import static ch.epfl.alpano.Preconditions.checkArgument;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -20,14 +20,6 @@ public final class CompositeDiscreteElevationModel implements DiscreteElevationM
         extent = dem1.extent().union(dem2.extent());
     }
 
-    public DiscreteElevationModel dem1() {
-        return dem1;
-    }
-
-    public DiscreteElevationModel dem2() {
-        return dem2;
-    }
-
     @Override
     public Interval2D extent() {
         return extent;
@@ -35,18 +27,18 @@ public final class CompositeDiscreteElevationModel implements DiscreteElevationM
 
     @Override
     public double elevationSample(int x, int y) {
-        Preconditions.checkArgument(extent.contains(x, y));
-        if (dem1().extent().contains(x, y)){
-            return dem1().elevationSample(x, y);
+        checkArgument(extent.contains(x, y));
+        if (dem1.extent().contains(x, y)){
+            return dem1.elevationSample(x, y);
         } else {
-            return dem2().elevationSample(x, y);
+            return dem2.elevationSample(x, y);
         }
 
     }
 
     @Override
     public void close() throws Exception {
-        dem1().close();
-        dem2().close();
+        dem1.close();
+        dem2.close();
     }
 }

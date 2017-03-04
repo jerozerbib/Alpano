@@ -2,13 +2,17 @@ package ch.epfl.alpano;
 
 import java.util.function.DoubleUnaryOperator;
 
+import static java.lang.Double.POSITIVE_INFINITY;
+import static java.lang.Math.PI;
+import static java.lang.Math.floor;
+
 /**
  * @author : Jeremy Zerbib (257715)
  * @author : Etienne Caquot (249949)
  */
 
 public interface Math2 {
-    double PI2 = Math.PI * 2;
+    double PI2 = PI * 2;
 
     /**
      * Elevates a number to the square.
@@ -31,7 +35,7 @@ public interface Math2 {
      * @return the rest of the default division
      */
     static double floorMod(double x, double y) {
-        return x - y * Math.floor(x / y);
+        return x - y * floor(x / y);
     }
 
     /**
@@ -55,8 +59,8 @@ public interface Math2 {
      * @return the angular difference of the to points
      */
     static double angularDistance(double a1, double a2) {
-        double n = (a2 - a1 + Math.PI);
-        return floorMod(n, PI2) - Math.PI;
+        double n = (a2 - a1 + PI);
+        return floorMod(n, PI2) - PI;
     }
 
     /**
@@ -91,8 +95,7 @@ public interface Math2 {
      *            in where we want to evaluate f
      * @return the bilinear interpolation
      */
-    static double bilerp(double z00, double z10, double z01, double z11,
-            double x, double y) {
+    static double bilerp(double z00, double z10, double z01, double z11, double x, double y) {
         double z1 = lerp(z00, z10, x);
         double z2 = lerp(z01, z11, x);
         return lerp(z1, z2, y);
@@ -120,7 +123,7 @@ public interface Math2 {
             if (f.applyAsDouble(i) * f.applyAsDouble(i + dX) < 0) {
                 return i;
             } else {
-                bound = Double.POSITIVE_INFINITY;
+                bound = POSITIVE_INFINITY;
             }
         }
         return bound;
@@ -140,8 +143,7 @@ public interface Math2 {
      *            the size of the interval
      * @return the lower bound of the interval
      */
-    static double improveRoot(DoubleUnaryOperator f, double x1, double x2,
-            double epsilon) {
+    static double improveRoot(DoubleUnaryOperator f, double x1, double x2, double epsilon) {
         if (f.applyAsDouble(x1) * f.applyAsDouble(x2) > 0) {
             throw new IllegalArgumentException();
         }

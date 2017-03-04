@@ -1,6 +1,9 @@
 package ch.epfl.alpano;
 
-import java.util.Objects;
+import static ch.epfl.alpano.Preconditions.checkArgument;
+import static java.lang.Math.max;
+import static java.lang.Math.min;
+import static java.util.Objects.hash;
 
 /**
  * @author : Jeremy Zerbib (257715)
@@ -24,7 +27,7 @@ public final class Interval1D {
      */
 
     public Interval1D(int includedFrom, int includedTo) {
-        Preconditions.checkArgument(includedFrom <= includedTo, "La borne inférieure est plus grande que la borne supérieure");
+        checkArgument(includedFrom <= includedTo, "La borne inférieure est plus grande que la borne supérieure");
         this.includedFrom = includedFrom;
         this.includedTo = includedTo;
     }
@@ -77,21 +80,9 @@ public final class Interval1D {
      * @return size of the intersection of the two intervals
      */
     public int sizeOfIntersectionWith(Interval1D that) {
-        if (this.contains(that.includedFrom())
-                && !this.contains(that.includedTo())) {
-            return new Interval1D(that.includedFrom(), this.includedTo()).size();
-        } else if (that.contains(this.includedFrom())
-                && that.contains(this.includedTo())) {
-            return this.size();
-        } else if (this.contains(that.includedTo())) {
-            if (this.contains(that.includedFrom())) {
-                return that.size();
-            } else {
-                return new Interval1D(this.includedFrom(), that.includedTo()).size();
-            }
-        } else {
-            return 0;
-        }
+        int max = max(this.includedFrom(), that.includedFrom());
+        int min = min(this.includedTo(), that.includedTo());
+        return max(min - max + 1, 0);
     }
 
     /**
@@ -103,8 +94,8 @@ public final class Interval1D {
      */
     public Interval1D boundingUnion(Interval1D that) {
         return new Interval1D(
-                Math.min(that.includedFrom(), this.includedFrom()),
-                Math.max(that.includedTo(), this.includedTo()));
+                min(that.includedFrom(), this.includedFrom()),
+                max(that.includedTo(), this.includedTo()));
     }
 
     /**
@@ -131,8 +122,7 @@ public final class Interval1D {
      * @throws IllegalArgumentException
      */
     public Interval1D union(Interval1D that) {
-        System.out.print(this.isUnionableWith(that));
-        Preconditions.checkArgument(this.isUnionableWith(that));
+        checkArgument(this.isUnionableWith(that));
         return this.boundingUnion(that);
     }
 
@@ -157,7 +147,7 @@ public final class Interval1D {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(includedFrom(), includedTo());
+        return hash(includedFrom(), includedTo());
     }
 
     /*
