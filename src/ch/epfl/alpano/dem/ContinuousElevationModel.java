@@ -1,6 +1,5 @@
 package ch.epfl.alpano.dem;
 
-
 import ch.epfl.alpano.GeoPoint;
 import ch.epfl.alpano.Math2;
 
@@ -14,27 +13,51 @@ import static java.util.Objects.requireNonNull;
 
 /**
  * @author : Jeremy Zerbib (257715)
+ * @author : Etienne Caquot (249949)
  */
+
 public final class ContinuousElevationModel {
 
     private DiscreteElevationModel dem;
-    private static final double DNS = toMeters(1 / DiscreteElevationModel.SAMPLES_PER_RADIAN);
+    private static final double DNS = toMeters(
+            1 / DiscreteElevationModel.SAMPLES_PER_RADIAN);
 
-    public ContinuousElevationModel(DiscreteElevationModel dem){
+    /**
+     * ContinuousElevationModel's constructor
+     * 
+     * @param dem
+     *            the dem to set
+     */
+    public ContinuousElevationModel(DiscreteElevationModel dem) {
         this.dem = requireNonNull(dem);
     }
 
-
-    private double elevationAtDEMExtent(int x, int y){
-        if (dem.extent().contains(x, y)){
+    /**
+     * Returns the elevation at the index x and y.
+     * 
+     * @param x
+     *            first index
+     * @param y
+     *            second index
+     * @return the elevation
+     */
+    private double elevationAtDEMExtent(int x, int y) {
+        if (dem.extent().contains(x, y)) {
             return dem.elevationSample(x, y);
         } else {
             return 0;
         }
     }
 
-    public double elevationAt(GeoPoint p){
-        double longIndex =  sampleIndex(p.longitude());
+    /**
+     * Returns the altitude at a given point, in meters.
+     * 
+     * @param p
+     *            the point
+     * @return the altitude
+     */
+    public double elevationAt(GeoPoint p) {
+        double longIndex = sampleIndex(p.longitude());
         double latIndex = sampleIndex(p.latitude());
         int lg = (int) floor(longIndex);
         int lat = (int) floor(latIndex);
@@ -47,20 +70,38 @@ public final class ContinuousElevationModel {
         return Math2.bilerp(z00, z10, z01, z11, longIndex - lg, latIndex - lat);
     }
 
-    private double slopeAtDEMExtent(int x, int y){
-        double dZa = elevationAtDEMExtent(x, y) - elevationAtDEMExtent(x + 1, y);
-        double dZb = elevationAtDEMExtent(x, y) - elevationAtDEMExtent(x, y + 1);
-        double den = sqrt(sq(dZa)+ sq(dZb) + sq(DNS));
+    /**
+     * Returns the slope at the index x and y.
+     * 
+     * @param x
+     *            first index
+     * @param y
+     *            second index
+     * @return the slope
+     */
+    private double slopeAtDEMExtent(int x, int y) {
+        double dZa = elevationAtDEMExtent(x, y)
+                - elevationAtDEMExtent(x + 1, y);
+        double dZb = elevationAtDEMExtent(x, y)
+                - elevationAtDEMExtent(x, y + 1);
+        double den = sqrt(sq(dZa) + sq(dZb) + sq(DNS));
         return acos(DNS / den);
     }
 
-    public double slopeAt(GeoPoint p){
-        double longIndex =  sampleIndex(p.longitude());
+    /**
+     * Returns the slope at a given point, in meters.
+     * 
+     * @param p
+     *            the point
+     * @return the slope
+     */
+    public double slopeAt(GeoPoint p) {
+        double longIndex = sampleIndex(p.longitude());
         double latIndex = sampleIndex(p.latitude());
         int lg = (int) floor(longIndex);
         int lat = (int) floor(latIndex);
         int neighborLg = lg + 1;
-        int neighborLat = lat + 1 ;
+        int neighborLat = lat + 1;
         double z00 = slopeAtDEMExtent(lg, lat);
         double z10 = slopeAtDEMExtent(neighborLg, lat);
         double z01 = slopeAtDEMExtent(lg, neighborLat);
