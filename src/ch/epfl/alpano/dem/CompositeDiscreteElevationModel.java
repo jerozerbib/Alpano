@@ -21,11 +21,11 @@ public final class CompositeDiscreteElevationModel
      * ContinuousElevationModel's constructor, union of two DEM's
      * 
      * @param dem1
-     *            the fist dem
+     *            the fist DEM
      * @param dem2
-     *            the second dem
+     *            the second DEM
      * @throws NullPointerException
-     *             if one of the two dems given in parameter is null
+     *             if one of the two DEMs given in parameter is null
      */
     public CompositeDiscreteElevationModel(DiscreteElevationModel dem1,
             DiscreteElevationModel dem2) {
@@ -38,7 +38,7 @@ public final class CompositeDiscreteElevationModel
      * Overrides the extend method implemented from DiscreteElevationModel
      * 
      * @return the scope of this composite model, which is the union of the
-     *         scope of it's two dem's
+     *         scope of it's two DEM's
      */
     @Override
     public Interval2D extent() {
@@ -55,7 +55,7 @@ public final class CompositeDiscreteElevationModel
      *            second index
      * @return the elevation at index x and y
      * @throws IllegalArgumentException
-     *             one of the two indexes are not part of the compostite DEM
+     *             one of the two indexes are not part of the composite DEM
      *             scope.
      */
     @Override
@@ -71,10 +71,10 @@ public final class CompositeDiscreteElevationModel
 
     /**
      * Frees the resources associated with the object to which it is applied,
-     * here two two dem's of this composite dem
+     * here the two DEM's of this composite DEM.
      * 
      * @throws Exception
-     *             if one the two dem's resource cannot be closed
+     *             if one the two DEM's resource cannot be closed
      * 
      */
     @Override
