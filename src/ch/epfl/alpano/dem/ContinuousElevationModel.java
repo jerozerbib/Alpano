@@ -27,6 +27,8 @@ public final class ContinuousElevationModel {
      * 
      * @param dem
      *            the dem to set
+     * @throws NullPointerException
+     *             if the dem given is null
      */
     public ContinuousElevationModel(DiscreteElevationModel dem) {
         this.dem = requireNonNull(dem);
