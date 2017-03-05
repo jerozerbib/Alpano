@@ -20,6 +20,8 @@ public final class Interval2D {
      *            the first interval
      * @param iY
      *            the second interval
+     * @throws NullPointerException
+     *             if one of the two given interval is null
      */
     public Interval2D(Interval1D iX, Interval1D iY) {
         this.iX = requireNonNull(iX);
@@ -119,7 +121,7 @@ public final class Interval2D {
         return this.boundingUnion(that);
     }
 
-    /*
+    /**
      * Overrides the inherited method from Object and and return true if that0
      * is an instance of Interval2D and the set of both are equal.
      * 
@@ -136,7 +138,7 @@ public final class Interval2D {
         }
     }
 
-    /*
+    /**
      * Overrides the inherited method from Object and and return the value of
      * Hash on the object it is applied on.
      * 
@@ -147,7 +149,7 @@ public final class Interval2D {
         return hash(iX(), iY());
     }
 
-    /*
+    /**
      * Overrides the toString method inherited from Object and gives back a
      * String composed of the bound of the two intervals.
      * 

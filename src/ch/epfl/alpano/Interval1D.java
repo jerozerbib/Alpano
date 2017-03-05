@@ -21,6 +21,8 @@ public final class Interval1D {
      *            lower bound of the interval
      * @param includedTo
      *            upper bound of the interval
+     * @throws NullPointerException
+     *             if the upper bound is smaller than the lower bound
      */
 
     public Interval1D(int includedFrom, int includedTo) {
@@ -123,7 +125,7 @@ public final class Interval1D {
         return this.boundingUnion(that);
     }
 
-    /*
+    /**
      * Overrides the inherited method from Object and and return true if that0
      * is an instance of Interval1D and the set of both are equal.
      * 
@@ -140,7 +142,7 @@ public final class Interval1D {
         }
     }
 
-    /*
+    /**
      * Overrides the inherited method from Object and and return the value of
      * Hash on the object it is applied on.
      * 
@@ -151,7 +153,7 @@ public final class Interval1D {
         return hash(includedFrom(), includedTo());
     }
 
-    /*
+    /**
      * Overrides the toString method inherited from Object and gives back a
      * String composed of the bound of the interval.
      * 
