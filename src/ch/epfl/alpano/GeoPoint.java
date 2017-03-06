@@ -3,6 +3,7 @@ package ch.epfl.alpano;
 import java.util.Locale;
 
 import static ch.epfl.alpano.Azimuth.canonicalize;
+import static ch.epfl.alpano.Azimuth.fromMath;
 import static ch.epfl.alpano.Distance.toMeters;
 import static ch.epfl.alpano.Math2.haversin;
 import static ch.epfl.alpano.Preconditions.checkArgument;
@@ -90,7 +91,7 @@ public final class GeoPoint {
         double cos3 = cos(that.latitude);
         double cos4 = cos(this.longitude - that.longitude());
         double den = cos2 * sin2 - sin3 * cos3 * cos4;
-        return canonicalize(Math.atan2(num, den));
+        return fromMath(canonicalize(Math.atan2(num, den)));
     }
 
     /**

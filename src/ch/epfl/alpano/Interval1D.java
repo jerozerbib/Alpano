@@ -136,7 +136,7 @@ public final class Interval1D {
     @Override
     public boolean equals(Object thatO) {
         if (thatO instanceof Interval1D) {
-            return this.union((Interval1D) thatO).size() == this.size();
+            return this.includedTo() == ((Interval1D) thatO).includedTo() && this.includedFrom() == ((Interval1D) thatO).includedFrom();
         } else {
             return false;
         }

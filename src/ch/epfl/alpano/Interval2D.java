@@ -132,7 +132,7 @@ public final class Interval2D {
     @Override
     public boolean equals(Object thatO) {
         if (thatO instanceof Interval2D) {
-            return this.union((Interval2D) thatO).size() == this.size();
+            return this.iX().equals(((Interval2D) thatO).iX()) && this.iY().equals(((Interval2D) thatO).iY());
         } else {
             return false;
         }
