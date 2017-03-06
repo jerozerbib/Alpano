@@ -9,10 +9,7 @@ import static java.util.Objects.hash;
  * @author : Jeremy Zerbib (257715)
  * @author : Etienne Caquot (249949)
  */
-/**
- * @author etienne
- *
- */
+
 public final class Interval1D {
 
     private final int includedFrom, includedTo;
@@ -24,10 +21,13 @@ public final class Interval1D {
      *            lower bound of the interval
      * @param includedTo
      *            upper bound of the interval
+     * @throws NullPointerException
+     *             if the upper bound is smaller than the lower bound
      */
 
     public Interval1D(int includedFrom, int includedTo) {
-        checkArgument(includedFrom <= includedTo, "La borne inférieure est plus grande que la borne supérieure");
+        checkArgument(includedFrom <= includedTo,
+                "La borne inférieure est plus grande que la borne supérieure");
         this.includedFrom = includedFrom;
         this.includedTo = includedTo;
     }
@@ -93,8 +93,7 @@ public final class Interval1D {
      * @return the bounding union of the two intervals
      */
     public Interval1D boundingUnion(Interval1D that) {
-        return new Interval1D(
-                min(that.includedFrom(), this.includedFrom()),
+        return new Interval1D(min(that.includedFrom(), this.includedFrom()),
                 max(that.includedTo(), this.includedTo()));
     }
 
@@ -114,7 +113,7 @@ public final class Interval1D {
     }
 
     /**
-     * Creates the inteval resulting of the union of two intervals.
+     * Creates the interval resulting of the union of two intervals.
      * 
      * @param that
      *            the other interval
@@ -126,10 +125,13 @@ public final class Interval1D {
         return this.boundingUnion(that);
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Overrides the inherited method from Object and and return true if that0
+     * is an instance of Interval1D and the set of both are equal.
      * 
-     * @see java.lang.Object#equals(java.lang.Object)
+     * @param that0 the other interval
+     * 
+     * @return true is that0 is the same than this
      */
     @Override
     public boolean equals(Object thatO) {
@@ -140,20 +142,22 @@ public final class Interval1D {
         }
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Overrides the inherited method from Object and and return the value of
+     * Hash on the object it is applied on.
      * 
-     * @see java.lang.Object#hashCode()
+     * @return hashCode of the Object
      */
     @Override
     public int hashCode() {
         return hash(includedFrom(), includedTo());
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Overrides the toString method inherited from Object and gives back a
+     * String composed of the bound of the interval.
      * 
-     * @see java.lang.Object#toString()
+     * @return the string composed of the bounds of the interval.
      */
     @Override
     public String toString() {

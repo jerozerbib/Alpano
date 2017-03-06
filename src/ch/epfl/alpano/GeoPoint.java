@@ -14,10 +14,6 @@ import static java.lang.String.format;
  * @author : Etienne Caquot (249949)
  */
 
-/**
- * @author etienne
- *
- */
 public final class GeoPoint {
     private final double longitude, latitude;
 
@@ -28,6 +24,8 @@ public final class GeoPoint {
      *            the longitude to set
      * @param latitude
      *            the latitude to set
+     * @throws IllegalArgumentException
+     *             if the latitude or the longitude given is not valid
      */
 
     public GeoPoint(double longitude, double latitude) {
@@ -95,10 +93,12 @@ public final class GeoPoint {
         return canonicalize(Math.atan2(num, den));
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * *overrides the toString method inherited from Object and gives back a
+     * String composed of the point's coordinates (in degrees) with a 0.0001
+     * precision.
      * 
-     * @see java.lang.Object#toString()
+     * @return the String corresponding to the GeoPoint
      */
     @Override
     public String toString() {
