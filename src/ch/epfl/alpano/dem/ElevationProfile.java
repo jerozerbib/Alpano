@@ -1,5 +1,6 @@
 package ch.epfl.alpano.dem;
 
+import static ch.epfl.alpano.Azimuth.toMath;
 import ch.epfl.alpano.GeoPoint;
 
 import static ch.epfl.alpano.Azimuth.isCanonical;
@@ -20,7 +21,8 @@ public class ElevationProfile {
     private final double azimuth;
     private final double length;
 
-    public ElevationProfile(ContinuousElevationModel elevationModel, GeoPoint origin, double azimuth, double length){
+    public ElevationProfile(ContinuousElevationModel elevationModel,
+            GeoPoint origin, double azimuth, double length) {
         checkArgument(isCanonical(azimuth), "l'azimuth n'est pas canonique");
         checkArgument(length >= 0, "La longueur est négative");
         this.elevationModel = requireNonNull(elevationModel);
@@ -28,7 +30,6 @@ public class ElevationProfile {
         this.azimuth = azimuth;
         this.length = length;
     }
-
 
     private double latitudeAt(double x){
         checkArgument(x <= length, "la valeur x n'est pas comprise dans la longueur du profil");
@@ -40,6 +41,7 @@ public class ElevationProfile {
         double cosAz = cos(toMath(azimuth));
         return asin(sinLat * cosDist + cosLat * sinDist * cosAz);
     }
+
 
     private double longitudeAt(double x){
         double longitude = origin.longitude();
@@ -60,5 +62,6 @@ public class ElevationProfile {
 
     public double slopeAt(double x){
         return elevationModel.slopeAt(positionAt(x));
+        
     }
 }
