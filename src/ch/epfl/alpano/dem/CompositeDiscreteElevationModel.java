@@ -27,8 +27,7 @@ public final class CompositeDiscreteElevationModel
      * @throws NullPointerException
      *             if one of the two DEMs given in parameter is null
      */
-    public CompositeDiscreteElevationModel(DiscreteElevationModel dem1,
-            DiscreteElevationModel dem2) {
+    public CompositeDiscreteElevationModel(DiscreteElevationModel dem1, DiscreteElevationModel dem2) {
         this.dem1 = requireNonNull(dem1);
         this.dem2 = requireNonNull(dem2);
         extent = dem1.extent().union(dem2.extent());
