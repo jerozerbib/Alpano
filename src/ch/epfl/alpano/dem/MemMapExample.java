@@ -21,7 +21,7 @@ public class MemMapExample {
                     .asShortBuffer();
 
             for (int i = 0; i <= 10; ++i) {
-                System.out.println(b.get(i));
+                System.out.println(b.get(i) + " | " + i);
             }
         }
     }
