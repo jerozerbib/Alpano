@@ -3,7 +3,9 @@ package ch.epfl.alpano.dem;
 import ch.epfl.alpano.GeoPoint;
 
 import static ch.epfl.alpano.Azimuth.isCanonical;
+import static ch.epfl.alpano.Azimuth.toMath;
 import static ch.epfl.alpano.Distance.toMeters;
+import static ch.epfl.alpano.Math2.PI2;
 import static ch.epfl.alpano.Preconditions.checkArgument;
 import static java.lang.Math.*;
 import static java.util.Objects.requireNonNull;
@@ -29,31 +31,34 @@ public class ElevationProfile {
 
 
     private double latitudeAt(double x){
+        checkArgument(x <= length, "la valeur x n'est pas comprise dans la longueur du profil");
         double lat = origin.latitude();
         double sinLat = sin(lat);
         double cosDist = cos(toMeters(x));
         double cosLat = cos(lat);
         double sinDist = sin(toMeters(x));
-        double cosAz = cos(azimuth);
+        double cosAz = cos(toMath(azimuth));
         return asin(sinLat * cosDist + cosLat * sinDist * cosAz);
     }
 
     private double longitudeAt(double x){
-        checkArgument(x <= length, "la valeur x n'est pas comprise dans la longueur du profil");
-        double originLongitude = origin.longitude();
-        double arcsin = asin((sin(azimuth) * sin(x)) / cos(latitudeAt(x)));
-        return 0;
+        double longitude = origin.longitude();
+        double sinAz = sin(toMath(azimuth));
+        double sinDist = sin(toMeters(x));
+        double cosLatAt = cos(latitudeAt(x));
+        double arcsin = asin((sinAz * sinDist) / cosLatAt);
+        return (((longitude - arcsin) + PI) % PI2) - PI;
     }
 
     public double elevationAt(double x){
-        return 0;
+        return elevationModel.elevationAt(positionAt(x));
     }
 
     public GeoPoint positionAt(double x){
-        return null;
+        return new GeoPoint(longitudeAt(x), latitudeAt(x));
     }
 
     public double slopeAt(double x){
-        return 0;
+        return elevationModel.slopeAt(positionAt(x));
     }
 }
