@@ -10,6 +10,7 @@ import java.nio.ShortBuffer;
 import java.nio.channels.FileChannel;
 
 import static ch.epfl.alpano.Preconditions.checkArgument;
+import static ch.epfl.alpano.dem.DiscreteElevationModel.sampleIndex;
 
 /**
  * @author : Jeremy Zerbib (257715)
@@ -29,10 +30,10 @@ public final class HgtDiscreteElevationModel implements DiscreteElevationModel{
             String name = file.getName();
             checkArgument(name.length() == 11, "la longueur du nom du fichier n'est pas la bonne");
             int latitude = Integer.parseInt(name.substring(1, 3));
-            int longitude = Integer.parseInt(name.substring(4, 8));
+            int longitude = Integer.parseInt(name.substring(4, 7));
             checkArgument(name.charAt(0) == 'N' || name.charAt(0) == 'S', "La première lettre du fichier n'est pas la bonne");
             checkArgument(name.charAt(3) == 'E' || name.charAt(3) == 'W', "La deuxième lettre n'est pas la bonne");
-            checkArgument(name.substring(8, 10).equals(".hgt"), "l'extension n'est pas la bonne");
+            checkArgument(name.substring(7, 11).equals(".hgt"), "l'extension n'est pas la bonne");
             if (name.charAt(0) == 'S'){
                 latitude = (-1) * latitude;
             }
@@ -46,7 +47,8 @@ public final class HgtDiscreteElevationModel implements DiscreteElevationModel{
             this.extent = new Interval2D(iX, iY);
             b = s.getChannel().map(FileChannel.MapMode.READ_ONLY, 0, file.length()).asShortBuffer();
         } catch (IOException | NumberFormatException | IndexOutOfBoundsException e) {
-            throw new IllegalArgumentException();
+            System.out.print(e.getMessage());
+           throw new IllegalArgumentException();
         }
     }
 
@@ -58,11 +60,15 @@ public final class HgtDiscreteElevationModel implements DiscreteElevationModel{
     @Override
     public double elevationSample(int x, int y) {
         checkArgument(extent().contains(x, y));
-        return 0;
+        String name = file.getName();
+        double line = Math.abs(sampleIndex((Integer.parseInt(name.substring(4, 8)))) - x);
+        double column = Math.abs(sampleIndex((Integer.parseInt(name.substring(1, 3)))) - y);
+        int index = (int) ((3601 * line) + column);
+        return b.get(index);
     }
 
     @Override
     public void close() throws Exception {
-
+        
     }
 }

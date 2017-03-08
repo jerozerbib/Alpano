@@ -1,37 +1,26 @@
 package ch.epfl.alpano.dem;
 
-/**
- * @author : Jeremy Zerbib (257715)
- */
+import static java.awt.image.BufferedImage.TYPE_INT_RGB;
+import static java.lang.Math.*;
 
-import ch.epfl.alpano.GeoPoint;
-import ch.epfl.alpano.Interval1D;
-import ch.epfl.alpano.Interval2D;
-
-import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-import static java.awt.image.BufferedImage.TYPE_INT_RGB;
-import static java.lang.Math.*;
+import javax.imageio.ImageIO;
+
+import ch.epfl.alpano.GeoPoint;
+import ch.epfl.alpano.Interval1D;
+import ch.epfl.alpano.Interval2D;
 
 public final class DrawDEM {
     @SuppressWarnings("resource")
     public static void main(String[] args) throws IOException {
 
         DiscreteElevationModel dDEM1 = new WavyDEM(
-                new Interval2D(
-                        new Interval1D(0, 50),
-                        new Interval1D(0, 100)
-                )
-        );
-        DiscreteElevationModel dDEM2 = new WavyDEM(
-                new Interval2D(
-                        new Interval1D(50, 100),
-                        new Interval1D(0, 100)
-                )
-        );
+                new Interval2D(new Interval1D(0, 50), new Interval1D(0, 100)));
+        DiscreteElevationModel dDEM2 = new WavyDEM(new Interval2D(
+                new Interval1D(50, 100), new Interval1D(0, 100)));
         DiscreteElevationModel dDEM = dDEM1.union(dDEM2);
         ContinuousElevationModel cDEM = new ContinuousElevationModel(dDEM);
 
@@ -39,7 +28,6 @@ public final class DrawDEM {
         double scale = (100d / 3600d) / (size - 1);
         BufferedImage elI = new BufferedImage(size, size, TYPE_INT_RGB);
         BufferedImage slI = new BufferedImage(size, size, TYPE_INT_RGB);
-
         for (int x = 0; x < size; ++x) {
             for (int y = 0; y < size; ++y) {
                 GeoPoint p = new GeoPoint(toRadians(x * scale),
@@ -56,7 +44,7 @@ public final class DrawDEM {
         ImageIO.write(slI, "png", new File("slope.png"));
     }
 
-    private static int gray(double v) {
+    protected static int gray(double v) {
         double clampedV = max(0, min(v, 1));
         int gray = (int) (255.9999 * clampedV);
         return (gray << 16) | (gray << 8) | gray;
