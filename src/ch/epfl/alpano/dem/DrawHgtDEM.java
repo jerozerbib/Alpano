@@ -1,14 +1,15 @@
 package ch.epfl.alpano.dem;
 
-import ch.epfl.alpano.GeoPoint;
-
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.File;
-
 import static ch.epfl.alpano.Distance.toRadians;
 import static ch.epfl.alpano.dem.DrawDEM.gray;
 import static java.awt.image.BufferedImage.TYPE_INT_RGB;
+
+import java.awt.image.BufferedImage;
+import java.io.File;
+
+import javax.imageio.ImageIO;
+
+import ch.epfl.alpano.GeoPoint;
 
 /**
  * @author : Jeremy Zerbib (257715)
