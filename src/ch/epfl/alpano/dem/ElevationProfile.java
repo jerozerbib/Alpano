@@ -4,7 +4,7 @@ import ch.epfl.alpano.GeoPoint;
 
 import static ch.epfl.alpano.Azimuth.isCanonical;
 import static ch.epfl.alpano.Azimuth.toMath;
-import static ch.epfl.alpano.Distance.toMeters;
+import static ch.epfl.alpano.Distance.toRadians;
 import static ch.epfl.alpano.Math2.PI2;
 import static ch.epfl.alpano.Preconditions.checkArgument;
 import static java.lang.Math.*;
@@ -19,14 +19,23 @@ public class ElevationProfile {
     private final GeoPoint origin;
     private final double azimuth;
     private final double length;
+    private final double STEP = 4096;
+    private final double[][] tab;
 
     public ElevationProfile(ContinuousElevationModel elevationModel, GeoPoint origin, double azimuth, double length){
+        final int size = (int) Math.ceil(length / STEP);
         checkArgument(isCanonical(azimuth), "l'azimuth n'est pas canonique");
         checkArgument(length >= 0, "La longueur est négative");
         this.elevationModel = requireNonNull(elevationModel);
         this.origin = requireNonNull(origin);
         this.azimuth = azimuth;
         this.length = length;
+        tab = new double[size][3];
+        for (int i = 0; i < size; i += STEP){
+            tab[i][0] = i;
+            tab[i][1] = longitudeAt(i) + origin.longitude();
+            tab[i][2] = latitudeAt(i) + origin.latitude();
+        }
     }
 
 
@@ -34,9 +43,9 @@ public class ElevationProfile {
         checkArgument(x <= length, "la valeur x n'est pas comprise dans la longueur du profil");
         double lat = origin.latitude();
         double sinLat = sin(lat);
-        double cosDist = cos(toMeters(x));
+        double cosDist = cos(toRadians(x));
         double cosLat = cos(lat);
-        double sinDist = sin(toMeters(x));
+        double sinDist = sin(toRadians(x));
         double cosAz = cos(toMath(azimuth));
         return asin(sinLat * cosDist + cosLat * sinDist * cosAz);
     }
@@ -44,7 +53,7 @@ public class ElevationProfile {
     private double longitudeAt(double x){
         double longitude = origin.longitude();
         double sinAz = sin(toMath(azimuth));
-        double sinDist = sin(toMeters(x));
+        double sinDist = sin(toRadians(x));
         double cosLatAt = cos(latitudeAt(x));
         double arcsin = asin((sinAz * sinDist) / cosLatAt);
         return (((longitude - arcsin) + PI) % PI2) - PI;

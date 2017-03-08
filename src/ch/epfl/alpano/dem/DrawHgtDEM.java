@@ -23,8 +23,7 @@ public final class DrawHgtDEM {
     final static double MAX_ELEVATION = 1_500;
 
     public static void main(String[] as) throws Exception {
-        DiscreteElevationModel dDEM =
-                new HgtDiscreteElevationModel(HGT_FILE);
+        DiscreteElevationModel dDEM = new HgtDiscreteElevationModel(HGT_FILE);
         ContinuousElevationModel cDEM =
                 new ContinuousElevationModel(dDEM);
 
