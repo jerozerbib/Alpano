@@ -35,3 +35,11 @@ gen### Java template
 hs_err_pid*
 
 Supprimerait .idea/
+Supprimerait .metadata/.mylyn/contexts/
+Supprimerait .metadata/.plugins/org.eclipse.core.resources/.history/
+Supprimerait .metadata/.plugins/org.eclipse.debug.core/
+Supprimerait .metadata/.plugins/org.eclipse.emf.common.ui/
+Supprimerait .metadata/.plugins/org.eclipse.mylyn.bugzilla.core/
+Supprimerait .metadata/.plugins/org.eclipse.mylyn.context.core/
+Supprimerait .metadata/.plugins/org.eclipse.mylyn.tasks.ui/
+Supprimerait .metadata/.plugins/org.eclipse.oomph.setup.ui/

@@ -19,12 +19,11 @@ import static java.util.Objects.requireNonNull;
 public final class ContinuousElevationModel {
 
     private DiscreteElevationModel dem;
-    private static final double DNS = toMeters(
-            1 / DiscreteElevationModel.SAMPLES_PER_RADIAN);
+    private static final double DNS = toMeters(1 / DiscreteElevationModel.SAMPLES_PER_RADIAN);
 
     /**
      * ContinuousElevationModel's constructor
-     * 
+     *
      * @param dem
      *            the DEM to set
      * @throws NullPointerException
@@ -36,7 +35,7 @@ public final class ContinuousElevationModel {
 
     /**
      * Returns the elevation at the index x and y.
-     * 
+     *
      * @param x
      *            first index
      * @param y
@@ -53,7 +52,7 @@ public final class ContinuousElevationModel {
 
     /**
      * Returns the altitude at a given point, in meters.
-     * 
+     *
      * @param p
      *            the point
      * @return the altitude
@@ -74,7 +73,7 @@ public final class ContinuousElevationModel {
 
     /**
      * Returns the slope at the index x and y.
-     * 
+     *
      * @param x
      *            first index
      * @param y
@@ -90,7 +89,7 @@ public final class ContinuousElevationModel {
 
     /**
      * Returns the slope at a given point, in meters.
-     * 
+     *
      * @param p
      *            the point
      * @return the slope
