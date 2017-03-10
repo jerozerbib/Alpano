@@ -10,7 +10,7 @@ import java.nio.ShortBuffer;
 import java.nio.channels.FileChannel;
 
 import static ch.epfl.alpano.Preconditions.checkArgument;
-import static ch.epfl.alpano.dem.DiscreteElevationModel.sampleIndex;
+import static java.lang.Math.abs;
 
 /**
  * @author : Jeremy Zerbib (257715)
@@ -21,12 +21,15 @@ public final class HgtDiscreteElevationModel implements DiscreteElevationModel{
     private final File file;
     private final Interval2D extent;
     private ShortBuffer b;
+    private FileInputStream s;
 
     /**
+     * Constructor
      * @param file
      */
     public HgtDiscreteElevationModel(File file){
         try (FileInputStream s = new FileInputStream(file)) {
+            this.s = s;
             String name = file.getName();
             checkArgument(name.length() == 11, "la longueur du nom du fichier n'est pas la bonne");
             int latitude = Integer.parseInt(name.substring(1, 3));
@@ -47,7 +50,6 @@ public final class HgtDiscreteElevationModel implements DiscreteElevationModel{
             this.extent = new Interval2D(iX, iY);
             b = s.getChannel().map(FileChannel.MapMode.READ_ONLY, 0, file.length()).asShortBuffer();
         } catch (IOException | NumberFormatException | IndexOutOfBoundsException e) {
-            System.out.print(e.getMessage());
            throw new IllegalArgumentException();
         }
     }
@@ -60,15 +62,15 @@ public final class HgtDiscreteElevationModel implements DiscreteElevationModel{
     @Override
     public double elevationSample(int x, int y) {
         checkArgument(extent().contains(x, y));
-        String name = file.getName();
-        double line = Math.abs(sampleIndex((Integer.parseInt(name.substring(4, 8)))) - x);
-        double column = Math.abs(sampleIndex((Integer.parseInt(name.substring(1, 3)))) - y);
-        int index = (int) ((3601 * line) + column);
+        double line = x - extent().iX().includedFrom();
+        double column = abs(y - extent().iY().includedTo());
+        int index = (int) ((3601 * column) + line);
         return b.get(index);
     }
 
     @Override
     public void close() throws Exception {
-        
+        s.close();
+        b = null;
     }
 }

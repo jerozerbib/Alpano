@@ -41,8 +41,7 @@ public class ElevationProfile {
     }
 
     private double latitudeAt(double x) {
-        checkArgument(x <= length,
-                "la valeur x n'est pas comprise dans la longueur du profil");
+        checkArgument(x <= length, "la valeur x n'est pas comprise dans la longueur du profil");
         double lat = origin.latitude();
         double sinLat = sin(lat);
         double cosDist = cos(toRadians(x));
@@ -62,14 +61,14 @@ public class ElevationProfile {
     }
 
     public double elevationAt(double x) {
+        System.out.print(positionAt(x).longitude());
+        System.out.print(positionAt(x).latitude());
         return elevationModel.elevationAt(positionAt(x));
     }
 
     public GeoPoint positionAt(double x) {
         int flag = 0;
-        checkArgument(x <= length && x >= 0,
-                "la valeur x n'est pas comprise dans la longueur du profil");
-        for (int i = 0; i < tab.length; ++i) {
+        for (int i = 0; i < tab.length - 1; ++i) {
             if (tab[i][0] <= x && tab[i + 1][0] >= x) {
                 flag = i;
             }
