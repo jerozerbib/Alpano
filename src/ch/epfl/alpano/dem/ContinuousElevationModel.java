@@ -19,7 +19,8 @@ import static java.util.Objects.requireNonNull;
 public final class ContinuousElevationModel {
 
     private DiscreteElevationModel dem;
-    private static final double DNS = toMeters(1 / DiscreteElevationModel.SAMPLES_PER_RADIAN);
+    private static final double DNS = toMeters(
+            1 / DiscreteElevationModel.SAMPLES_PER_RADIAN);
 
     /**
      * ContinuousElevationModel's constructor
@@ -81,8 +82,10 @@ public final class ContinuousElevationModel {
      * @return the slope
      */
     private double slopeAtDEMExtent(int x, int y) {
-        double dZa = elevationAtDEMExtent(x, y) - elevationAtDEMExtent(x + 1, y);
-        double dZb = elevationAtDEMExtent(x, y) - elevationAtDEMExtent(x, y + 1);
+        double dZa = elevationAtDEMExtent(x, y)
+                - elevationAtDEMExtent(x + 1, y);
+        double dZb = elevationAtDEMExtent(x, y)
+                - elevationAtDEMExtent(x, y + 1);
         double den = sqrt(sq(dZa) + sq(dZb) + sq(DNS));
         return acos(DNS / den);
     }

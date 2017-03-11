@@ -8,9 +8,11 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.ShortBuffer;
 import java.nio.channels.FileChannel;
+import java.lang.Math;
 
 import static ch.epfl.alpano.Preconditions.checkArgument;
-import static java.lang.Math.abs;
+
+import static ch.epfl.alpano.dem.DiscreteElevationModel.sampleIndex;
 
 /**
  * @author : Jeremy Zerbib (257715)
@@ -50,6 +52,7 @@ public final class HgtDiscreteElevationModel implements DiscreteElevationModel{
             this.extent = new Interval2D(iX, iY);
             b = s.getChannel().map(FileChannel.MapMode.READ_ONLY, 0, file.length()).asShortBuffer();
         } catch (IOException | NumberFormatException | IndexOutOfBoundsException e) {
+            System.out.println(e.getMessage());
            throw new IllegalArgumentException();
         }
     }
@@ -62,9 +65,10 @@ public final class HgtDiscreteElevationModel implements DiscreteElevationModel{
     @Override
     public double elevationSample(int x, int y) {
         checkArgument(extent().contains(x, y));
-        double line = x - extent().iX().includedFrom();
-        double column = abs(y - extent().iY().includedTo());
-        int index = (int) ((3601 * column) + line);
+        String name = file.getName();
+        double line = Math.abs(sampleIndex((Integer.parseInt(name.substring(4, 8)))) - x);
+        double column = Math.abs(sampleIndex((Integer.parseInt(name.substring(1, 3)))) - y);
+        int index = (int) ((3601 * line) + column);
         return b.get(index);
     }
 

@@ -5,6 +5,7 @@ import ch.epfl.alpano.Math2;
 
 import static ch.epfl.alpano.Azimuth.isCanonical;
 import static ch.epfl.alpano.Azimuth.toMath;
+import static ch.epfl.alpano.Azimuth.fromMath;
 import static ch.epfl.alpano.Distance.toRadians;
 import static ch.epfl.alpano.Math2.PI2;
 import static ch.epfl.alpano.Preconditions.checkArgument;
@@ -31,7 +32,7 @@ public class ElevationProfile {
         this.elevationModel = requireNonNull(elevationModel);
         this.origin = requireNonNull(origin);
         this.azimuth = azimuth;
-        this.length = length;
+        this.length = toRadians(length);
         tab = new double[size][3];
         for (int i = 0; i < size; i += STEP) {
             tab[i][0] = i;
@@ -41,7 +42,8 @@ public class ElevationProfile {
     }
 
     private double latitudeAt(double x) {
-        checkArgument(x <= length, "la valeur x n'est pas comprise dans la longueur du profil");
+        checkArgument(toRadians(x) <= length,
+                "la valeur x n'est pas comprise dans la longueur du profil");
         double lat = origin.latitude();
         double sinLat = sin(lat);
         double cosDist = cos(toRadians(x));
@@ -55,19 +57,19 @@ public class ElevationProfile {
         double longitude = origin.longitude();
         double sinAz = sin(toMath(azimuth));
         double sinDist = sin(toRadians(x));
-        double cosLatAt = cos(latitudeAt(x));
+        double cosLatAt = cos(latitudeAt(toRadians(x)));
         double arcsin = asin((sinAz * sinDist) / cosLatAt);
         return (((longitude - arcsin) + PI) % PI2) - PI;
     }
 
     public double elevationAt(double x) {
-        System.out.print(positionAt(x).longitude());
-        System.out.print(positionAt(x).latitude());
         return elevationModel.elevationAt(positionAt(x));
     }
 
     public GeoPoint positionAt(double x) {
         int flag = 0;
+        checkArgument(x <= length && x >= 0,
+                "la valeur x n'est pas comprise dans la longueur du profil");
         for (int i = 0; i < tab.length - 1; ++i) {
             if (tab[i][0] <= x && tab[i + 1][0] >= x) {
                 flag = i;
