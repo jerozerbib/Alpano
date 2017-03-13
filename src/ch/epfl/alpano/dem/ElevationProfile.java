@@ -1,12 +1,11 @@
 package ch.epfl.alpano.dem;
 
+import ch.epfl.alpano.Distance;
 import ch.epfl.alpano.GeoPoint;
 import ch.epfl.alpano.Math2;
 
 import static ch.epfl.alpano.Azimuth.isCanonical;
 import static ch.epfl.alpano.Azimuth.toMath;
-import static ch.epfl.alpano.Azimuth.fromMath;
-import static ch.epfl.alpano.Distance.toRadians;
 import static ch.epfl.alpano.Math2.PI2;
 import static ch.epfl.alpano.Preconditions.checkArgument;
 import static java.lang.Math.*;
@@ -21,43 +20,43 @@ public class ElevationProfile {
     private final GeoPoint origin;
     private final double azimuth;
     private final double length;
-    private final double STEP = 4096;
+    private final double STEP = Distance.toRadians(4096);
     private final double[][] tab;
 
-    public ElevationProfile(ContinuousElevationModel elevationModel,
-            GeoPoint origin, double azimuth, double length) {
-        final int size = (int) Math.ceil(length / STEP);
-        checkArgument(isCanonical(azimuth), "l'azimuth n'est pas canonique");
+    public ElevationProfile(ContinuousElevationModel elevationModel, GeoPoint origin, double azimuth, double length) {
         checkArgument(length >= 0, "La longueur est négative");
+        this.length = length;
+        final int size = (int) Math.ceil(Distance.toRadians(length)/ STEP);
+        checkArgument(isCanonical(azimuth), "l'azimuth n'est pas canonique");
         this.elevationModel = requireNonNull(elevationModel);
         this.origin = requireNonNull(origin);
         this.azimuth = azimuth;
-        this.length = toRadians(length);
-        tab = new double[size][3];
-        for (int i = 0; i < size; i += STEP) {
-            tab[i][0] = i;
-            tab[i][1] = longitudeAt(i) + origin.longitude();
-            tab[i][2] = latitudeAt(i) + origin.latitude();
+        tab = new double[size + 1][2];
+        for (int i = 0; i < size; i += 1) {
+            tab[i][0] = longitudeAt(i * STEP);
+            tab[i][1] = latitudeAt(i * STEP);
         }
+        tab[size][0] = origin.longitude() + toRadians(1);
+        tab[size][1] = origin.latitude() + toRadians(1);
     }
 
     private double latitudeAt(double x) {
-        checkArgument(toRadians(x) <= length,
-                "la valeur x n'est pas comprise dans la longueur du profil");
+        checkArgument(x <= Distance.toRadians(length), "la valeur x n'est pas comprise dans la longueur du profil");
         double lat = origin.latitude();
         double sinLat = sin(lat);
-        double cosDist = cos(toRadians(x));
+        double cosDist = cos(x);
         double cosLat = cos(lat);
-        double sinDist = sin(toRadians(x));
+        double sinDist = sin(x);
         double cosAz = cos(toMath(azimuth));
         return asin(sinLat * cosDist + cosLat * sinDist * cosAz);
     }
 
     private double longitudeAt(double x) {
+        //We do not check that the distance is in range because we call latitudeATt(x) that checks it.
         double longitude = origin.longitude();
         double sinAz = sin(toMath(azimuth));
-        double sinDist = sin(toRadians(x));
-        double cosLatAt = cos(latitudeAt(toRadians(x)));
+        double sinDist = sin(x);
+        double cosLatAt = cos(latitudeAt(x));
         double arcsin = asin((sinAz * sinDist) / cosLatAt);
         return (((longitude - arcsin) + PI) % PI2) - PI;
     }
@@ -67,16 +66,11 @@ public class ElevationProfile {
     }
 
     public GeoPoint positionAt(double x) {
-        int flag = 0;
-        checkArgument(x <= length && x >= 0,
-                "la valeur x n'est pas comprise dans la longueur du profil");
-        for (int i = 0; i < tab.length - 1; ++i) {
-            if (tab[i][0] <= x && tab[i + 1][0] >= x) {
-                flag = i;
-            }
-        }
-        return new GeoPoint((Math2.lerp(tab[flag][1], tab[flag + 1][1], x)),
-                (Math2.lerp(tab[flag][2], tab[flag + 1][2], x)));
+        checkArgument(x <= length && x >= 0, "la valeur x n'est pas comprise dans la longueur du profil");
+        int lowerBound = (int) floor(x / Distance.toMeters(STEP));
+        double longitude = (Math2.lerp(tab[lowerBound][0], tab[lowerBound + 1][0], (x - tab[lowerBound][0])/Distance.toMeters(STEP)));
+        double latitude = (Math2.lerp(tab[lowerBound][1], tab[lowerBound+ 1][1], (x - tab[lowerBound][1])/Distance.toMeters(STEP)));
+        return new GeoPoint(longitude, latitude);
     }
 
     public double slopeAt(double x) {

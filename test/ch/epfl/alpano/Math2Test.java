@@ -1,16 +1,29 @@
 package ch.epfl.alpano;
 
-import org.junit.Test;
+import static ch.epfl.alpano.Math2.angularDistance;
+import static ch.epfl.alpano.Math2.bilerp;
+import static ch.epfl.alpano.Math2.firstIntervalContainingRoot;
+import static ch.epfl.alpano.Math2.floorMod;
+import static ch.epfl.alpano.Math2.haversin;
+import static ch.epfl.alpano.Math2.improveRoot;
+import static ch.epfl.alpano.Math2.lerp;
+import static ch.epfl.alpano.Math2.sq;
+import static ch.epfl.test.TestRandomizer.RANDOM_ITERATIONS;
+import static ch.epfl.test.TestRandomizer.newRandom;
+import static java.lang.Math.PI;
+import static java.lang.Math.cos;
+import static java.lang.Math.floor;
+import static java.lang.Math.max;
+import static java.lang.Math.min;
+import static java.lang.Math.sin;
+import static java.lang.Math.toRadians;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Random;
 import java.util.function.DoubleUnaryOperator;
 
-import static ch.epfl.alpano.Math2.*;
-import static ch.epfl.test.TestRandomizer.RANDOM_ITERATIONS;
-import static ch.epfl.test.TestRandomizer.newRandom;
-import static java.lang.Math.*;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import org.junit.Test;
 
 public class Math2Test {
     @Test

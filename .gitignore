@@ -10,6 +10,7 @@ gen### Java template
 # Compiled class file
 *.class
 *.hgt
+*.txt
 *.png
 .project
 .classpath
@@ -43,3 +44,5 @@ Supprimerait .metadata/.plugins/org.eclipse.mylyn.bugzilla.core/
 Supprimerait .metadata/.plugins/org.eclipse.mylyn.context.core/
 Supprimerait .metadata/.plugins/org.eclipse.mylyn.tasks.ui/
 Supprimerait .metadata/.plugins/org.eclipse.oomph.setup.ui/
+Supprimerait test/ch/epfl/alpano/dem/
+Supprimerait test/ch/epfl/alpano/testProf/dem/
