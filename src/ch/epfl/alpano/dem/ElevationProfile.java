@@ -7,6 +7,7 @@ import ch.epfl.alpano.Math2;
 import static ch.epfl.alpano.Azimuth.isCanonical;
 import static ch.epfl.alpano.Azimuth.toMath;
 import static ch.epfl.alpano.Math2.PI2;
+import static ch.epfl.alpano.Math2.floorMod;
 import static ch.epfl.alpano.Preconditions.checkArgument;
 import static java.lang.Math.*;
 import static java.util.Objects.requireNonNull;
@@ -58,7 +59,7 @@ public class ElevationProfile {
         double sinDist = sin(x);
         double cosLatAt = cos(latitudeAt(x));
         double arcsin = asin((sinAz * sinDist) / cosLatAt);
-        return (((longitude - arcsin) + PI) % PI2) - PI;
+        return floorMod(((longitude - arcsin) + PI), PI2) - PI;
     }
 
     public double elevationAt(double x) {
@@ -67,9 +68,12 @@ public class ElevationProfile {
 
     public GeoPoint positionAt(double x) {
         checkArgument(x <= length && x >= 0, "la valeur x n'est pas comprise dans la longueur du profil");
-        int lowerBound = (int) floor(x / Distance.toMeters(STEP));
-        double longitude = (Math2.lerp(tab[lowerBound][0], tab[lowerBound + 1][0], (x - tab[lowerBound][0])/Distance.toMeters(STEP)));
-        double latitude = (Math2.lerp(tab[lowerBound][1], tab[lowerBound+ 1][1], (x - tab[lowerBound][1])/Distance.toMeters(STEP)));
+        double indexOfX = scalb(x, -12);
+        int lowerBound = (int) floor(indexOfX);
+        double restOfX = indexOfX - lowerBound;
+
+        double longitude = Math2.lerp(tab[lowerBound][0], tab[lowerBound + 1][0], restOfX);
+        double latitude = Math2.lerp(tab[lowerBound][1], tab[lowerBound+ 1][1], restOfX);
         return new GeoPoint(longitude, latitude);
     }
 

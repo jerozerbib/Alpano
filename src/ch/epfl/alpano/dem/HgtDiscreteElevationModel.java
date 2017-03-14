@@ -42,7 +42,7 @@ public final class HgtDiscreteElevationModel implements DiscreteElevationModel{
         int latitude = parseInt(name.substring(1, 3));
         int longitude = parseInt(name.substring(4, 7));
 
-        checkArgument(checkName(file), "Le nom du fichier n'est pas le bon");
+        checkArgument(checkName(name), "Le nom du fichier n'est pas le bon");
         checkArgument(file.length() == FILE_LENGTH, "La taille du fichier hgt n'est pas la bonne");
         sign(name, 0, latitude, 'S');
         sign(name, 3, longitude, 'W');
@@ -57,11 +57,10 @@ public final class HgtDiscreteElevationModel implements DiscreteElevationModel{
 
     /**
      * Checks that the file's name is acceptable.
-     * @param file
+     * @param name
      * @return boolean
      */
-    private boolean checkName(File file){
-        String name = file.getName();
+    private boolean checkName(String name){
         if (name.length() != 11){
             return false;
         }
@@ -99,6 +98,8 @@ public final class HgtDiscreteElevationModel implements DiscreteElevationModel{
 
     /**
      * Returns the longitude or latitude given a character.
+     * @param name
+     *          The name we want to check
      * @param index
      *          0 or 3
      * @param i

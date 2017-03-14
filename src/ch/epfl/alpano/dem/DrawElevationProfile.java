@@ -19,14 +19,19 @@ public final class DrawElevationProfile {
   final static int WIDTH = 800, HEIGHT = 100;
 
   public static void main(String[] as) throws Exception {
-    DiscreteElevationModel dDEM = new HgtDiscreteElevationModel(HGT_FILE);
-    ContinuousElevationModel cDEM = new ContinuousElevationModel(dDEM);
-    GeoPoint o = new GeoPoint(LONGITUDE, LATITUDE);
-    ElevationProfile p = new ElevationProfile(cDEM, o, AZIMUTH, LENGTH);
+    DiscreteElevationModel dDEM =
+            new HgtDiscreteElevationModel(HGT_FILE);
+    ContinuousElevationModel cDEM =
+            new ContinuousElevationModel(dDEM);
+    GeoPoint o =
+            new GeoPoint(LONGITUDE, LATITUDE);
+    ElevationProfile p =
+            new ElevationProfile(cDEM, o, AZIMUTH, LENGTH);
 
     int BLACK = 0x00_00_00, WHITE = 0xFF_FF_FF;
 
-    BufferedImage i = new BufferedImage(WIDTH, HEIGHT, TYPE_INT_RGB);
+    BufferedImage i =
+            new BufferedImage(WIDTH, HEIGHT, TYPE_INT_RGB);
     for (int x = 0; x < WIDTH; ++x) {
       double pX = x * (double) LENGTH / (WIDTH - 1);
       double pY = p.elevationAt(pX);
