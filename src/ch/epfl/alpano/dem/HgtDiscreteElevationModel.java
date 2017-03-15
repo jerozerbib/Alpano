@@ -55,6 +55,32 @@ public final class HgtDiscreteElevationModel implements DiscreteElevationModel{
         this.extent = new Interval2D(iX, iY);
     }
 
+
+
+
+    @Override
+    public Interval2D extent(){
+        return extent;
+    }
+
+    @Override
+    public double elevationSample(int x, int y) {
+        checkArgument(this.extent().contains(x, y));
+        int relY = abs(y - startingY) + 1;
+        int lines = 3601 - relY;
+
+        int relX = abs(x - startingX) + 1;
+
+        int index = 3601 * lines + relX;
+        return b.get(index);
+    }
+
+    @Override
+    public void close() throws Exception {
+        s.close();
+        b = null;
+    }
+
     /**
      * Checks that the file's name is acceptable.
      * @param name
@@ -114,29 +140,5 @@ public final class HgtDiscreteElevationModel implements DiscreteElevationModel{
         } else {
             return i;
         }
-    }
-
-
-    @Override
-    public Interval2D extent(){
-        return extent;
-    }
-
-    @Override
-    public double elevationSample(int x, int y) {
-        checkArgument(this.extent().contains(x, y));
-        int relY = abs(y - startingY) + 1;
-        int lines = 3601 - relY;
-
-        int relX = abs(x - startingX) + 1;
-
-        int index = 3601 * lines + relX;
-        return b.get(index);
-    }
-
-    @Override
-    public void close() throws Exception {
-        s.close();
-        b = null;
     }
 }

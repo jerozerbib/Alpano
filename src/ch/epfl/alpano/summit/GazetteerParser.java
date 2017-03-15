@@ -4,6 +4,7 @@ import ch.epfl.alpano.GeoPoint;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static java.lang.Integer.parseInt;
@@ -28,7 +29,7 @@ public class GazetteerParser {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return summits;
+        return Collections.unmodifiableList(summits);
     }
 
     /**

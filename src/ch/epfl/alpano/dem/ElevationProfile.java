@@ -41,6 +41,45 @@ public class ElevationProfile {
         tab[size][1] = origin.latitude() + toRadians(1);
     }
 
+    /**
+     * Calculates the elevation at a given distance.
+     * @param x
+     * @return double
+     */
+    public double elevationAt(double x) {
+        checkArgument(x <= length && x >= 0, "la valeur x n'est pas comprise dans la longueur du profil");
+        return elevationModel.elevationAt(positionAt(x));
+    }
+
+    /**
+     * Calculates the position of point at a given distance.
+     * @param x
+     * @return double
+     */
+    public GeoPoint positionAt(double x) {
+        checkArgument(x <= length && x >= 0, "la valeur x n'est pas comprise dans la longueur du profil");
+        double indexOfX = scalb(x, -12);
+        int lowerBound = (int) floor(indexOfX);
+        double longitude = Math2.lerp(tab[lowerBound][0], tab[lowerBound + 1][0], indexOfX - lowerBound);
+        double latitude = Math2.lerp(tab[lowerBound][1], tab[lowerBound+ 1][1], indexOfX - lowerBound);
+        return new GeoPoint(longitude, latitude);
+    }
+
+    /**
+     * Calculates the slope at a given distance.
+     * @param x
+     * @return double
+     */
+    public double slopeAt(double x) {
+        checkArgument(x <= length && x >= 0, "la valeur x n'est pas comprise dans la longueur du profil");
+        return elevationModel.slopeAt(positionAt(x));
+    }
+
+    /**
+     * Calculates the value of the latitude with the given formulae.
+     * @param x
+     * @return double
+     */
     private double latitudeAt(double x) {
         checkArgument(x <= Distance.toRadians(length), "la valeur x n'est pas comprise dans la longueur du profil");
         double lat = origin.latitude();
@@ -52,6 +91,11 @@ public class ElevationProfile {
         return asin(sinLat * cosDist + cosLat * sinDist * cosAz);
     }
 
+    /**
+     * Calculates the value of the longitude with the given formulae.
+     * @param x
+     * @return double
+     */
     private double longitudeAt(double x) {
         //We do not check that the distance is in range because we call latitudeATt(x) that checks it.
         double longitude = origin.longitude();
@@ -60,24 +104,5 @@ public class ElevationProfile {
         double cosLatAt = cos(latitudeAt(x));
         double arcsin = asin((sinAz * sinDist) / cosLatAt);
         return floorMod(((longitude - arcsin) + PI), PI2) - PI;
-    }
-
-    public double elevationAt(double x) {
-        return elevationModel.elevationAt(positionAt(x));
-    }
-
-    public GeoPoint positionAt(double x) {
-        checkArgument(x <= length && x >= 0, "la valeur x n'est pas comprise dans la longueur du profil");
-        double indexOfX = scalb(x, -12);
-        int lowerBound = (int) floor(indexOfX);
-        double restOfX = indexOfX - lowerBound;
-
-        double longitude = Math2.lerp(tab[lowerBound][0], tab[lowerBound + 1][0], restOfX);
-        double latitude = Math2.lerp(tab[lowerBound][1], tab[lowerBound+ 1][1], restOfX);
-        return new GeoPoint(longitude, latitude);
-    }
-
-    public double slopeAt(double x) {
-        return elevationModel.slopeAt(positionAt(x));
     }
 }
