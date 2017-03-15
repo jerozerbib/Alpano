@@ -1,13 +1,14 @@
 package ch.epfl.alpano.dem;
 
-import ch.epfl.alpano.GeoPoint;
-
-import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
-
-import static java.awt.image.BufferedImage.TYPE_INT_RGB;
 import static java.lang.Math.*;
+
+import javax.imageio.ImageIO;
+import static java.awt.image.BufferedImage.TYPE_INT_RGB;
+import static ch.epfl.alpano.dem.DrawDEM.gray;
+
+import ch.epfl.alpano.GeoPoint;
 
 final class DrawHgtDEM {
     final static File HGT_FILE = new File("N46E006.hgt");
@@ -30,7 +31,6 @@ final class DrawHgtDEM {
             for (int y = 0; y < IMAGE_SIZE; ++y) {
                 double lat = ORIGIN_LAT + y * step;
                 GeoPoint p = new GeoPoint(lon, lat);
-                System.out.println(cDEM.elevationAt(p));
                 double el = (cDEM.elevationAt(p) - MIN_ELEVATION)
                         / (MAX_ELEVATION - MIN_ELEVATION);
                 i.setRGB(x, IMAGE_SIZE - 1 - y, gray(el));
@@ -39,11 +39,5 @@ final class DrawHgtDEM {
         dDEM.close();
 
         ImageIO.write(i, "png", new File("dem.png"));
-    }
-
-    private static int gray(double v) {
-        double clampedV = max(0, min(v, 1));
-        int gray = (int) (255.9999 * clampedV);
-        return (gray << 16) | (gray << 8) | gray;
     }
 }
