@@ -99,6 +99,7 @@ public final class PanoramaParameters {
     }
 
     protected int linearSampleIndex(int x, int y){
+        checkArgument(isValidSampleIndex(x, y));
         return (x+1) * (y+1) - 1;
     }
 }
