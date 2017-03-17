@@ -1,4 +1,4 @@
-package ch.epfl.alpano;
+    package ch.epfl.alpano;
 
 import static ch.epfl.alpano.Azimuth.canonicalize;
 import static ch.epfl.alpano.Azimuth.isCanonical;
@@ -99,7 +99,6 @@ public final class PanoramaParameters {
     }
 
     protected int linearSampleIndex(int x, int y){
-        checkArgument(isValidSampleIndex(x, y));
         return (x+1) * (y+1) - 1;
     }
 }
