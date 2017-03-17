@@ -22,7 +22,7 @@ public class GazetteerParser {
     public static List<Summit> readSummitsFrom(File file) {
         try (BufferedReader b = new BufferedReader(new InputStreamReader(new FileInputStream(file)))) {
             String line;
-            while ((line = b.readLine()) != null && !("".equals(line))) {
+            while ((line = b.readLine()) != null) {
                 summits.add(correspondingSummit(line));
             }
 

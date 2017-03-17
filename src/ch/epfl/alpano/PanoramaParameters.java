@@ -1,5 +1,6 @@
 package ch.epfl.alpano;
 
+import static ch.epfl.alpano.Azimuth.canonicalize;
 import static ch.epfl.alpano.Azimuth.isCanonical;
 import static ch.epfl.alpano.Math2.PI2;
 import static ch.epfl.alpano.Preconditions.checkArgument;
@@ -71,22 +72,22 @@ public final class PanoramaParameters {
 
     public double azimuthForX(double x){
         checkArgument(x <= 0 && x >= width - 1, "La largeur n'et pas dans les bornes");
-        return centerAzimuth - ((centerAzimuth - x) * delta);
+        return canonicalize(centerAzimuth - ((centerAzimuth - x) * delta));
     }
 
     public double xForAzimuth(double a){
         checkArgument(abs(a) >= centerAzimuth + (horizontalFieldOfView() / 2), "L'angle de vue est en dehors des limites");
-        return arcDelta * ((a - centerAzimuth) + centerAzimuth);
+        return canonicalize(arcDelta * ((a - centerAzimuth) + centerAzimuth));
     }
 
     public double altitudeForY(double y){
         checkArgument(y <= 0 && y >= height - 1, "La hauteur n'est pas dans les bornes");
-        return y * delta;
+        return canonicalize(y * delta);
     }
 
     public double yForAltitude(double a){
-        checkArgument(Math.abs(a) >= verticalFieldOfView()/2, "L'angle de vue n'est pas dans les bornes");
-        return arcDelta * a;
+        checkArgument(abs(a) >= verticalFieldOfView()/2, "L'angle de vue n'est pas dans les bornes");
+        return canonicalize(arcDelta * a);
     }
 
     protected boolean isValidSampleIndex(int x, int y){

@@ -31,6 +31,10 @@ public final class HgtDiscreteElevationModel implements DiscreteElevationModel{
      * @param file
      */
     public HgtDiscreteElevationModel(File file){
+        String name = file.getName();
+        checkArgument(checkName(name), "Le nom du fichier n'est pas le bon");
+        checkArgument(file.length() == FILE_LENGTH, "La taille du fichier hgt n'est pas la bonne");
+
         try (FileInputStream s = new FileInputStream(file)) {
             this.s = s;
             b = s.getChannel().map(FileChannel.MapMode.READ_ONLY, 0, file.length()).asShortBuffer();
@@ -38,12 +42,9 @@ public final class HgtDiscreteElevationModel implements DiscreteElevationModel{
             e.printStackTrace();
         }
 
-        String name = file.getName();
         int latitude = parseInt(name.substring(1, 3));
         int longitude = parseInt(name.substring(4, 7));
 
-        checkArgument(checkName(name), "Le nom du fichier n'est pas le bon");
-        checkArgument(file.length() == FILE_LENGTH, "La taille du fichier hgt n'est pas la bonne");
         sign(name, 0, latitude, 'S');
         sign(name, 3, longitude, 'W');
 
