@@ -24,6 +24,13 @@ public class ElevationProfile {
     private final double STEP = Distance.toRadians(4096);
     private final double[][] tab;
 
+    /**
+     * ElevationProfile's constructor
+     * @param elevationModel
+     * @param origin
+     * @param azimuth
+     * @param length
+     */
     public ElevationProfile(ContinuousElevationModel elevationModel, GeoPoint origin, double azimuth, double length) {
         checkArgument(length >= 0, "La longueur est négative");
         this.length = length;

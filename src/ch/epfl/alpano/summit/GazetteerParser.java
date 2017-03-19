@@ -19,6 +19,11 @@ public class GazetteerParser {
 
     private GazetteerParser(){}
 
+    /**
+     * Creates a List of summits from a file.
+     * @param file
+     * @return List<Summit>
+     */
     public static List<Summit> readSummitsFrom(File file) {
         try (BufferedReader b = new BufferedReader(new InputStreamReader(new FileInputStream(file)))) {
             String line;
@@ -48,7 +53,11 @@ public class GazetteerParser {
         return new Summit(name, p, parseInt(elevation));
     }
 
-
+    /**
+     * Converts a given String into radians
+     * @param s
+     * @return double
+     */
     private static double StringToRadians(String s){
         String[] sDegrees = s.split(":");
         double sDouble = parseInt(sDegrees[0]) + parseInt(sDegrees[1]) / 60 + parseInt(sDegrees[2]) / 3600;
