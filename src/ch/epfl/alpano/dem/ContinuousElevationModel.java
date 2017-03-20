@@ -24,7 +24,7 @@ public final class ContinuousElevationModel {
 
     /**
      * ContinuousElevationModel's constructor
-     * 
+     *
      * @param dem
      *            the DEM to set
      * @throws NullPointerException
@@ -35,25 +35,8 @@ public final class ContinuousElevationModel {
     }
 
     /**
-     * Returns the elevation at the index x and y.
-     * 
-     * @param x
-     *            first index
-     * @param y
-     *            second index
-     * @return the elevation
-     */
-    private double elevationAtDEMExtent(int x, int y) {
-        if (dem.extent().contains(x, y)) {
-            return dem.elevationSample(x, y);
-        } else {
-            return 0;
-        }
-    }
-
-    /**
      * Returns the altitude at a given point, in meters.
-     * 
+     *
      * @param p
      *            the point
      * @return the altitude
@@ -73,24 +56,8 @@ public final class ContinuousElevationModel {
     }
 
     /**
-     * Returns the slope at the index x and y.
-     * 
-     * @param x
-     *            first index
-     * @param y
-     *            second index
-     * @return the slope
-     */
-    private double slopeAtDEMExtent(int x, int y) {
-        double dZa = elevationAtDEMExtent(x, y) - elevationAtDEMExtent(x + 1, y);
-        double dZb = elevationAtDEMExtent(x, y) - elevationAtDEMExtent(x, y + 1);
-        double den = sqrt(sq(dZa) + sq(dZb) + sq(DNS));
-        return acos(DNS / den);
-    }
-
-    /**
      * Returns the slope at a given point, in meters.
-     * 
+     *
      * @param p
      *            the point
      * @return the slope
@@ -108,4 +75,41 @@ public final class ContinuousElevationModel {
         double z11 = slopeAtDEMExtent(neighborLg, neighborLat);
         return Math2.bilerp(z00, z10, z01, z11, longIndex - lg, latIndex - lat);
     }
+
+    /**
+     * Returns the elevation at the index x and y.
+     *
+     * @param x
+     *            first index
+     * @param y
+     *            second index
+     * @return the elevation
+     */
+    private double elevationAtDEMExtent(int x, int y) {
+        if (dem.extent().contains(x, y)) {
+            return dem.elevationSample(x, y);
+        } else {
+            return 0;
+        }
+    }
+
+
+    /**
+     * Returns the slope at the index x and y.
+     *
+     * @param x
+     *            first index
+     * @param y
+     *            second index
+     * @return the slope
+     */
+    private double slopeAtDEMExtent(int x, int y) {
+        double dZa = elevationAtDEMExtent(x, y)
+                - elevationAtDEMExtent(x + 1, y);
+        double dZb = elevationAtDEMExtent(x, y)
+                - elevationAtDEMExtent(x, y + 1);
+        double den = sqrt(sq(dZa) + sq(dZb) + sq(DNS));
+        return acos(DNS / den);
+    }
+
 }
