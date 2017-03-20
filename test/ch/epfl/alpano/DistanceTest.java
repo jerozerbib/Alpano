@@ -1,14 +1,14 @@
 package ch.epfl.alpano;
 
-import org.junit.Test;
-
-import java.util.Random;
-
 import static ch.epfl.test.TestRandomizer.RANDOM_ITERATIONS;
 import static ch.epfl.test.TestRandomizer.newRandom;
 import static java.lang.Math.PI;
 import static java.lang.Math.scalb;
 import static org.junit.Assert.assertEquals;
+
+import java.util.Random;
+
+import org.junit.Test;
 
 public class DistanceTest {
     private static double EARTH_CIRCUMFERENCE = 40_030_174; // rounded to nearest integer

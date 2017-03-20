@@ -1,16 +1,28 @@
 package ch.epfl.alpano;
 
-import org.junit.Test;
+import static ch.epfl.alpano.Azimuth.canonicalize;
+import static ch.epfl.alpano.Azimuth.fromMath;
+import static ch.epfl.alpano.Azimuth.isCanonical;
+import static ch.epfl.alpano.Azimuth.toMath;
+import static ch.epfl.alpano.Azimuth.toOctantString;
+import static ch.epfl.test.TestRandomizer.RANDOM_ITERATIONS;
+import static ch.epfl.test.TestRandomizer.newRandom;
+import static java.lang.Math.PI;
+import static java.lang.Math.floorMod;
+import static java.lang.Math.nextDown;
+import static java.lang.Math.round;
+import static java.lang.Math.scalb;
+import static java.lang.Math.toDegrees;
+import static java.lang.Math.toRadians;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
 
-import static ch.epfl.alpano.Azimuth.*;
-import static ch.epfl.test.TestRandomizer.RANDOM_ITERATIONS;
-import static ch.epfl.test.TestRandomizer.newRandom;
-import static java.lang.Math.*;
-import static org.junit.Assert.*;
+import org.junit.Test;
 
 public class AzimuthTest {
     @Test
