@@ -101,7 +101,7 @@ public final class Panorama {
         public Builder setDistanceAt(int x, int y, float distance){
            if (ticker){
                this.distance[parameters.linearSampleIndex(x, y)] = distance;
-               return new Builder(parameters);
+               return this;
            } else {
                throw new IllegalStateException("Une construction a déjà été faite");
            }
@@ -110,7 +110,7 @@ public final class Panorama {
         public Builder setLongitudeAt(int x, int y, float longitude){
             if (ticker){
                 this.longitude[parameters.linearSampleIndex(x, y)] = longitude;
-                return new Builder(parameters);
+                return this;
             } else {
                 throw new IllegalStateException("Une construction a déjà été faite");
             }
@@ -119,7 +119,7 @@ public final class Panorama {
         public Builder setLatitudeAt(int x, int y, float latitude){
             if (ticker){
                 this.latitude[parameters.linearSampleIndex(x, y)] = latitude;
-                return new Builder(parameters);
+                return this;
             } else {
                 throw new IllegalStateException("Une construction a déjà été faite");
             }
@@ -128,7 +128,7 @@ public final class Panorama {
         public Builder setElevationAt(int x, int y, float elevation){
             if (ticker){
                 this.altitude[parameters.linearSampleIndex(x, y)] = elevation;
-                return new Builder(parameters);
+                return this;
             } else {
                 throw new IllegalStateException("Une construction a déjà été faite");
             }
@@ -137,7 +137,7 @@ public final class Panorama {
         public Builder setSlopeAt(int x, int y, float slope){
             if (ticker){
                 this.slope[parameters.linearSampleIndex(x, y)] = slope;
-                return new Builder(parameters);
+                return this;
             } else {
                 throw new IllegalStateException("Une construction a déjà été faite");
             }
