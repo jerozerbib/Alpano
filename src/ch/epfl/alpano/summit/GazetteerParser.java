@@ -34,7 +34,7 @@ public class GazetteerParser {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return Collections.unmodifiableList(summits);
+        return Collections.unmodifiableList(new ArrayList<>(summits));
     }
 
     /**

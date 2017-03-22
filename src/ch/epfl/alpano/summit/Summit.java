@@ -2,6 +2,8 @@ package ch.epfl.alpano.summit;
 
 import ch.epfl.alpano.GeoPoint;
 
+import static java.util.Objects.requireNonNull;
+
 /**
  * @author : Jeremy Zerbib (257715)
  */
@@ -11,8 +13,8 @@ public final class Summit {
     private final int elevation;
 
     public Summit(String name, GeoPoint position, int elevation){
-        this.name = name;
-        this.position = position;
+        this.name = requireNonNull(name);
+        this.position = requireNonNull(position);
         this.elevation = elevation;
     }
 

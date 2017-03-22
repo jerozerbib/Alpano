@@ -129,7 +129,7 @@ public final class PanoramaParameters {
      */
     public double xForAzimuth(double a){
         checkArgument(abs(a) >= centerAzimuth + (horizontalFieldOfView() / 2), "L'angle de vue est en dehors des limites");
-        return canonicalize(arcDelta * ((a - centerAzimuth) + centerAzimuth));
+        return arcDelta * ((a - centerAzimuth) + centerAzimuth);
     }
 
     /**
@@ -139,7 +139,7 @@ public final class PanoramaParameters {
      */
     public double altitudeForY(double y){
         checkArgument(y <= 0 && y >= height - 1, "La hauteur n'est pas dans les bornes");
-        return canonicalize(y * delta);
+        return y * delta;
     }
 
     /**
@@ -149,7 +149,7 @@ public final class PanoramaParameters {
      */
     public double yForAltitude(double a){
         checkArgument(abs(a) >= verticalFieldOfView()/2, "L'angle de vue n'est pas dans les bornes");
-        return canonicalize(arcDelta * a);
+        return arcDelta * a;
     }
 
     /**
