@@ -40,7 +40,7 @@ public final class PanoramaParameters {
         this.maxDistance = maxDistance;
         this.width = width;
         this.height = height;
-        delta = this.horizontalFieldOfView/ (this.width - 1);
+        delta = this.horizontalFieldOfView / (this.width - 1);
         arcDelta = 1 / delta;
 
 
@@ -129,7 +129,7 @@ public final class PanoramaParameters {
      */
     public double xForAzimuth(double a){
         checkArgument(abs(a) >= centerAzimuth + (horizontalFieldOfView() / 2), "L'angle de vue est en dehors des limites");
-        return arcDelta * ((a - centerAzimuth) + centerAzimuth);
+        return arcDelta * (a - centerAzimuth) + centerAzimuth;
     }
 
     /**
@@ -141,10 +141,8 @@ public final class PanoramaParameters {
         checkArgument(y >= 0 && y <= height - 1, "La hauteur n'est pas dans les bornes");
         if (y == height() / 2){
             return 0;
-        } else if (y < height() / 2){
-            return  y * delta;
         } else {
-            return -y * delta;
+            return -(y-height() / 2) * delta;
         }
     }
 
@@ -156,11 +154,9 @@ public final class PanoramaParameters {
     public double yForAltitude(double a){
         checkArgument(abs(a) >= verticalFieldOfView()/2, "L'angle de vue n'est pas dans les bornes");
         if (a == 0){
-            return height() / 2;
-        } else if (a > 0){
-            return arcDelta * a;
+            return height() / 2.0;
         } else {
-            return - arcDelta * a;
+            return - arcDelta * a + height() / 2.0;
         }
     }
 

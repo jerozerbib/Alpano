@@ -36,6 +36,7 @@ public final class PanoramaComputer {
                 ray0 = parameters.observerElevation();
                 DoubleUnaryOperator f = rayToGroundDistance(e, ray0, tan(raySlope));
                 double lowerBoundFirst = firstIntervalContainingRoot(f, rayX, maxD, dX);
+//                System.out.println(lowerBoundFirst + " | " + " | " + i + " | " + j + " | " + maxD);
                 if (lowerBoundFirst != Double.POSITIVE_INFINITY){
                     double upperBound = lowerBoundFirst + dX;
                     rayX = improveRoot(f, lowerBoundFirst, upperBound, epsilon);
@@ -44,6 +45,7 @@ public final class PanoramaComputer {
                     p.setSlopeAt(i, j, (float) e.slopeAt(j));
                     p.setLongitudeAt(i, j, (float) e.positionAt(i).longitude());
                     p.setLatitudeAt(i, j, (float) e.positionAt(i).latitude());
+                    System.out.println(lowerBoundFirst);
                 }
             }
         }
