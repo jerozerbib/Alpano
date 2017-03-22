@@ -34,7 +34,7 @@ public final class PanoramaParameters {
         this.observerPosition = requireNonNull(observerPosition);
         checkArgument(isCanonical(centerAzimuth), "L'azimuth n'est pas central");
         this.centerAzimuth = centerAzimuth;
-        checkArgument(horizontalFieldOfView < 0 && horizontalFieldOfView >= PI2, "Le champ de vision horizontal n'est pas dans les bornes");
+        checkArgument(horizontalFieldOfView > 0 && horizontalFieldOfView <= PI2, "Le champ de vision horizontal n'est pas dans les bornes");
         this.horizontalFieldOfView = horizontalFieldOfView;
         checkArgument(maxDistance > 0 && width > 0 && height > 0, "La valeur n'est pas strictement positive");
         this.maxDistance = maxDistance;
@@ -117,7 +117,7 @@ public final class PanoramaParameters {
      * @return double
      */
     public double azimuthForX(double x){
-        checkArgument(x <= 0 && x >= width - 1, "La largeur n'et pas dans les bornes");
+        checkArgument(x >= 0 && x <= width - 1, "La largeur n'et pas dans les bornes");
         return canonicalize(centerAzimuth - ((centerAzimuth - x) * delta));
     }
 
@@ -138,8 +138,14 @@ public final class PanoramaParameters {
      * @return double
      */
     public double altitudeForY(double y){
-        checkArgument(y <= 0 && y >= height - 1, "La hauteur n'est pas dans les bornes");
-        return y * delta;
+        checkArgument(y >= 0 && y <= height - 1, "La hauteur n'est pas dans les bornes");
+        if (y == height() / 2){
+            return 0;
+        } else if (y < height() / 2){
+            return  y * delta;
+        } else {
+            return -y * delta;
+        }
     }
 
     /**
@@ -149,7 +155,13 @@ public final class PanoramaParameters {
      */
     public double yForAltitude(double a){
         checkArgument(abs(a) >= verticalFieldOfView()/2, "L'angle de vue n'est pas dans les bornes");
-        return arcDelta * a;
+        if (a == 0){
+            return height() / 2;
+        } else if (a > 0){
+            return arcDelta * a;
+        } else {
+            return - arcDelta * a;
+        }
     }
 
     /**

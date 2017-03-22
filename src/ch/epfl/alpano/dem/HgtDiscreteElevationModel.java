@@ -51,8 +51,8 @@ public final class HgtDiscreteElevationModel implements DiscreteElevationModel{
         this.file = file;
         this.startingX = longitude * SAMPLES_PER_DEGREE;
         this.startingY = latitude * SAMPLES_PER_DEGREE;
-        Interval1D iX = new Interval1D(startingX, startingX + SAMPLES_PER_DEGREE + 1);
-        Interval1D iY = new Interval1D(startingY, startingY + SAMPLES_PER_DEGREE + 1);
+        Interval1D iX = new Interval1D(startingX, startingX + SAMPLES_PER_DEGREE);
+        Interval1D iY = new Interval1D(startingY, startingY + SAMPLES_PER_DEGREE);
         this.extent = new Interval2D(iX, iY);
     }
 
@@ -70,7 +70,7 @@ public final class HgtDiscreteElevationModel implements DiscreteElevationModel{
         int relY = abs(y - startingY) + 1;
         int lines = 3601 - relY;
 
-        int relX = abs(x - startingX) + 1;
+        int relX = abs(x - startingX);
 
         int index = 3601 * lines + relX;
         return b.get(index);

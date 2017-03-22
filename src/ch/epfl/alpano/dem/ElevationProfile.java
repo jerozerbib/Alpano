@@ -32,7 +32,7 @@ public class ElevationProfile {
      * @param length
      */
     public ElevationProfile(ContinuousElevationModel elevationModel, GeoPoint origin, double azimuth, double length) {
-        checkArgument(length >= 0, "La longueur est négative");
+        checkArgument(length > 0, "La longueur est négative");
         this.length = length;
         final int size = (int) Math.ceil(Distance.toRadians(length)/ STEP);
         checkArgument(isCanonical(azimuth), "l'azimuth n'est pas canonique");
@@ -54,7 +54,8 @@ public class ElevationProfile {
      * @return double
      */
     public double elevationAt(double x) {
-        checkArgument(x <= length && x >= 0, "la valeur x n'est pas comprise dans la longueur du profil");
+        checkArgument(x >= 0, "la valeur x n'est pas comprise dans la longueur du profil");
+        checkArgument(x <= length, "test");
         return elevationModel.elevationAt(positionAt(x));
     }
 
