@@ -43,7 +43,8 @@ public interface Azimuth {
      * @return the corresponding mathematical angle
      */
     static double toMath(double azimuth) {
-        checkArgument(isCanonical(azimuth), "The given azimuth is not canonical");
+        checkArgument(isCanonical(azimuth),
+                "The given azimuth is not canonical");
         return canonicalize(PI2 - azimuth);
     }
 

@@ -125,14 +125,16 @@ public final class Interval2D {
      * Overrides the inherited method from Object and and return true if that0
      * is an instance of Interval2D and the set of both are equal.
      * 
-     * @param that0 the other interval
+     * @param that0
+     *            the other interval
      * 
      * @return true is that0 is the same than this
      */
     @Override
     public boolean equals(Object thatO) {
         if (thatO instanceof Interval2D) {
-            return this.iX().equals(((Interval2D) thatO).iX()) && this.iY().equals(((Interval2D) thatO).iY());
+            return this.iX().equals(((Interval2D) thatO).iX())
+                    && this.iY().equals(((Interval2D) thatO).iY());
         } else {
             return false;
         }
@@ -154,7 +156,7 @@ public final class Interval2D {
      * String composed of the bound of the two intervals.
      * 
      * @return the string composed of the bounds of the two intervals with the
-     * letter x for the cross.
+     *         letter x for the cross.
      */
     @Override
     public String toString() {

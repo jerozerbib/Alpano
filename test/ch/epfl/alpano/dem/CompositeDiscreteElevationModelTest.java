@@ -15,21 +15,19 @@ import ch.epfl.alpano.Interval2D;
 
 public class CompositeDiscreteElevationModelTest {
     private final static Interval2D ext1 = new Interval2D(
-            new Interval1D(-100_000, 100_000),
-            new Interval1D(0, 100_000));
+            new Interval1D(-100_000, 100_000), new Interval1D(0, 100_000));
     private final static Interval2D ext2 = new Interval2D(
             new Interval1D(-100_000, 100_000),
             new Interval1D(100_001, 200_000));
     private final static Interval2D ext12 = new Interval2D(
-            new Interval1D(-100_000, 100_000),
-            new Interval1D(0, 200_000));
+            new Interval1D(-100_000, 100_000), new Interval1D(0, 200_000));
     private final static Interval2D ext3 = new Interval2D(
-            new Interval1D(0, 99_999),
-            new Interval1D(0, 100_001));
+            new Interval1D(0, 99_999), new Interval1D(0, 100_001));
 
     @Test
     public void samplesPerRadiansHasCorrectValue() {
-        assertEquals(206264.80624709636, DiscreteElevationModel.SAMPLES_PER_RADIAN, 1e-8);
+        assertEquals(206264.80624709636,
+                DiscreteElevationModel.SAMPLES_PER_RADIAN, 1e-8);
     }
 
     @Test
@@ -38,7 +36,8 @@ public class CompositeDiscreteElevationModelTest {
         for (int i = 0; i < RANDOM_ITERATIONS; ++i) {
             int arcSeconds = rng.nextInt(2_000_000) - 1_000_000;
             double angle = toRadians(arcSeconds / 3_600d);
-            assertEquals(arcSeconds, DiscreteElevationModel.sampleIndex(angle), 1e-5);
+            assertEquals(arcSeconds, DiscreteElevationModel.sampleIndex(angle),
+                    1e-5);
         }
     }
 
@@ -107,11 +106,17 @@ class ConstantElevationDEM implements DiscreteElevationModel {
     }
 
     @Override
-    public void close() throws Exception { isClosed = true; }
+    public void close() throws Exception {
+        isClosed = true;
+    }
 
     @Override
-    public Interval2D extent() { return extent; }
+    public Interval2D extent() {
+        return extent;
+    }
 
     @Override
-    public double elevationSample(int x, int y) { return elevation; }
+    public double elevationSample(int x, int y) {
+        return elevation;
+    }
 }

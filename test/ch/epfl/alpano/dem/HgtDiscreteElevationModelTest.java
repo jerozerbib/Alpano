@@ -34,7 +34,8 @@ public class HgtDiscreteElevationModelTest {
         Path fakeHgtDir = Files.createTempDirectory("hgt");
 
         Path fakeHgtFile = fakeHgtDir.resolve("empty.hgt");
-        try (FileChannel c = FileChannel.open(fakeHgtFile, CREATE_NEW, READ, WRITE)) {
+        try (FileChannel c = FileChannel.open(fakeHgtFile, CREATE_NEW, READ,
+                WRITE)) {
             // make sure the empty hgt file has the right size
             c.map(MapMode.READ_WRITE, 0, HGT_FILE_SIZE).asShortBuffer();
         }
@@ -47,13 +48,15 @@ public class HgtDiscreteElevationModelTest {
     public static void deleteFakeHgtFiles() throws IOException {
         Files.walkFileTree(FAKE_HGT_DIR, new SimpleFileVisitor<Path>() {
             @Override
-            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+            public FileVisitResult visitFile(Path file,
+                    BasicFileAttributes attrs) throws IOException {
                 Files.delete(file);
                 return FileVisitResult.CONTINUE;
             }
 
             @Override
-            public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+            public FileVisitResult postVisitDirectory(Path dir, IOException exc)
+                    throws IOException {
                 if (exc != null)
                     throw exc;
                 Files.delete(dir);
@@ -80,7 +83,9 @@ public class HgtDiscreteElevationModelTest {
     @Test(expected = IllegalArgumentException.class)
     public void constructorFailsWithInexistantFile() throws Exception {
         Path p = FAKE_HGT_DIR.resolve("N40E010.hgt");
-        try (DiscreteElevationModel d = new HgtDiscreteElevationModel(p.toFile())) {}
+        try (DiscreteElevationModel d = new HgtDiscreteElevationModel(
+                p.toFile())) {
+        }
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -89,7 +94,8 @@ public class HgtDiscreteElevationModelTest {
         try (FileOutputStream s = new FileOutputStream(f)) {
             s.write(0);
         }
-        try (DiscreteElevationModel d = new HgtDiscreteElevationModel(f)) {}
+        try (DiscreteElevationModel d = new HgtDiscreteElevationModel(f)) {
+        }
     }
 
     @Test
@@ -101,14 +107,15 @@ public class HgtDiscreteElevationModelTest {
     public void extentMatchesFileName() throws Exception {
         int[] lons = new int[] { 1, 7 };
         int[] lats = new int[] { 1, 47 };
-        for (int lon: lons) {
-            for (int lat: lats) {
+        for (int lon : lons) {
+            for (int lat : lats) {
                 Interval2D expectedExtent = new Interval2D(
                         new Interval1D(lon * 3600, (lon + 1) * 3600),
                         new Interval1D(lat * 3600, (lat + 1) * 3600));
                 String hgtFileName = String.format("N%02dE%03d.hgt", lat, lon);
                 Path p = copyEmptyHgtFileAs(hgtFileName);
-                try (HgtDiscreteElevationModel dem = new HgtDiscreteElevationModel(p.toFile())) {
+                try (HgtDiscreteElevationModel dem = new HgtDiscreteElevationModel(
+                        p.toFile())) {
                     assertEquals(expectedExtent, dem.extent());
                 }
             }
@@ -119,7 +126,8 @@ public class HgtDiscreteElevationModelTest {
     public void elevationSampleFailsForIndexNotInExtent() throws Exception {
         String hgtFileName = "N02E002.hgt";
         Path p = copyEmptyHgtFileAs(hgtFileName);
-        try (HgtDiscreteElevationModel dem = new HgtDiscreteElevationModel(p.toFile())) {
+        try (HgtDiscreteElevationModel dem = new HgtDiscreteElevationModel(
+                p.toFile())) {
             dem.elevationSample(10, 10);
         }
     }
@@ -128,13 +136,15 @@ public class HgtDiscreteElevationModelTest {
     public void elevationSampleIsCorrectInFourCorners() throws Exception {
         Path p = FAKE_HGT_DIR.resolve("N01E001.hgt");
         try (FileChannel c = FileChannel.open(p, CREATE_NEW, READ, WRITE)) {
-            ShortBuffer b = c.map(MapMode.READ_WRITE, 0, HGT_FILE_SIZE).asShortBuffer();
-            b.put(0, (short)1);
+            ShortBuffer b = c.map(MapMode.READ_WRITE, 0, HGT_FILE_SIZE)
+                    .asShortBuffer();
+            b.put(0, (short) 1);
             b.put(3600, (short) 2);
             b.put(3601 * 3600, (short) 3);
             b.put(3601 * 3601 - 1, (short) 4);
         }
-        try (HgtDiscreteElevationModel dem = new HgtDiscreteElevationModel(p.toFile())) {
+        try (HgtDiscreteElevationModel dem = new HgtDiscreteElevationModel(
+                p.toFile())) {
             assertEquals(0, dem.elevationSample(4000, 4000), 1e-10);
             assertEquals(1, dem.elevationSample(3600, 7200), 1e-10);
             assertEquals(2, dem.elevationSample(7200, 7200), 1e-10);
@@ -143,12 +153,17 @@ public class HgtDiscreteElevationModelTest {
         }
     }
 
-    private static void createHgtDemWithFileNamed(String hgtFileName) throws Exception {
+    private static void createHgtDemWithFileNamed(String hgtFileName)
+            throws Exception {
         Path p = copyEmptyHgtFileAs(hgtFileName);
-        try (DiscreteElevationModel d = new HgtDiscreteElevationModel(p.toFile())) {}
+        try (DiscreteElevationModel d = new HgtDiscreteElevationModel(
+                p.toFile())) {
+        }
     }
 
-    private static Path copyEmptyHgtFileAs(String hgtFileName) throws IOException {
-        return Files.copy(FAKE_HGT_FILE, FAKE_HGT_DIR.resolve(hgtFileName), REPLACE_EXISTING);
+    private static Path copyEmptyHgtFileAs(String hgtFileName)
+            throws IOException {
+        return Files.copy(FAKE_HGT_FILE, FAKE_HGT_DIR.resolve(hgtFileName),
+                REPLACE_EXISTING);
     }
 }

@@ -12,7 +12,8 @@ public final class Panorama {
     private final int size = p.width() * p.height();
     private final float[] distance, longitude, latitude, altitude, slope;
 
-    private Panorama(PanoramaParameters p, float[] distance, float[] longitude, float[] latitude, float[] altitude, float[] slope){
+    private Panorama(PanoramaParameters p, float[] distance, float[] longitude,
+            float[] latitude, float[] altitude, float[] slope) {
         this.p = p;
         this.distance = distance;
         this.longitude = longitude;
@@ -21,61 +22,64 @@ public final class Panorama {
         this.slope = slope;
     }
 
-    public PanoramaParameters parameters(){
+    public PanoramaParameters parameters() {
         return this.p;
     }
 
-    public float distanceAt(int x, int y){
-        if (!p.isValidSampleIndex(x, y)){
-            throw new IndexOutOfBoundsException("L'index est plus grand que la taille du tableau");
+    public float distanceAt(int x, int y) {
+        if (!p.isValidSampleIndex(x, y)) {
+            throw new IndexOutOfBoundsException(
+                    "L'index est plus grand que la taille du tableau");
         } else {
             return distance[p.linearSampleIndex(x, y)];
         }
     }
 
-    public float distanceAt(int x, int y, float d){
-        if (!p.isValidSampleIndex(x, y)){
+    public float distanceAt(int x, int y, float d) {
+        if (!p.isValidSampleIndex(x, y)) {
             return d;
         } else {
             return distance[p.linearSampleIndex(x, y)];
         }
     }
 
-    public float longitudeAt(int x, int y){
-        if (!p.isValidSampleIndex(x, y)){
-            throw new IndexOutOfBoundsException("L'index est plus grand que la taille du tableau");
+    public float longitudeAt(int x, int y) {
+        if (!p.isValidSampleIndex(x, y)) {
+            throw new IndexOutOfBoundsException(
+                    "L'index est plus grand que la taille du tableau");
         } else {
             return longitude[p.linearSampleIndex(x, y)];
         }
     }
 
-    public float latitudeAt(int x, int y){
-        if (!p.isValidSampleIndex(x, y)){
-            throw new IndexOutOfBoundsException("L'index est plus grand que la taille du tableau");
+    public float latitudeAt(int x, int y) {
+        if (!p.isValidSampleIndex(x, y)) {
+            throw new IndexOutOfBoundsException(
+                    "L'index est plus grand que la taille du tableau");
         } else {
             return latitude[p.linearSampleIndex(x, y)];
         }
     }
 
-
-    public float elevationAt(int x, int y){
-        if (!p.isValidSampleIndex(x, y)){
-            throw new IndexOutOfBoundsException("L'index est plus grand que la taille du tableau");
+    public float elevationAt(int x, int y) {
+        if (!p.isValidSampleIndex(x, y)) {
+            throw new IndexOutOfBoundsException(
+                    "L'index est plus grand que la taille du tableau");
         } else {
             return altitude[p.linearSampleIndex(x, y)];
         }
     }
 
-    public float slopeAt(int x, int y){
-        if (!p.isValidSampleIndex(x, y)){
-            throw new IndexOutOfBoundsException("L'index est plus grand que la taille du tableau");
+    public float slopeAt(int x, int y) {
+        if (!p.isValidSampleIndex(x, y)) {
+            throw new IndexOutOfBoundsException(
+                    "L'index est plus grand que la taille du tableau");
         } else {
             return slope[p.linearSampleIndex(x, y)];
         }
     }
 
-
-    public static final class Builder{
+    public static final class Builder {
         PanoramaParameters parameters;
         int size;
         float[] tabDistance;
@@ -85,10 +89,7 @@ public final class Panorama {
         float[] tabSlope;
         boolean ticker = false;
 
-
-
-
-        public Builder(PanoramaParameters parameters){
+        public Builder(PanoramaParameters parameters) {
             this.parameters = requireNonNull(parameters);
             size = parameters.height() * parameters.width();
             tabDistance = new float[size];
@@ -103,55 +104,62 @@ public final class Panorama {
             Arrays.fill(this.tabSlope, 0);
         }
 
-
-        public Builder setDistanceAt(int x, int y, float distance){
-           if (!ticker){
-               tabDistance[parameters.linearSampleIndex(x, y)] = distance;
-               return this;
-           } else {
-               throw new IllegalStateException("Une construction a déjà été faite");
-           }
-        }
-
-        public Builder setLongitudeAt(int x, int y, float longitude){
-            if (!ticker){
-                this.tabLongitude[parameters.linearSampleIndex(x, y)] = longitude;
+        public Builder setDistanceAt(int x, int y, float distance) {
+            if (!ticker) {
+                tabDistance[parameters.linearSampleIndex(x, y)] = distance;
                 return this;
             } else {
-                throw new IllegalStateException("Une construction a déjà été faite");
+                throw new IllegalStateException(
+                        "Une construction a déjà été faite");
             }
         }
 
-        public Builder setLatitudeAt(int x, int y, float latitude){
-            if (!ticker){
+        public Builder setLongitudeAt(int x, int y, float longitude) {
+            if (!ticker) {
+                this.tabLongitude[parameters.linearSampleIndex(x,
+                        y)] = longitude;
+                return this;
+            } else {
+                throw new IllegalStateException(
+                        "Une construction a déjà été faite");
+            }
+        }
+
+        public Builder setLatitudeAt(int x, int y, float latitude) {
+            if (!ticker) {
                 this.tabLatitude[parameters.linearSampleIndex(x, y)] = latitude;
                 return this;
             } else {
-                throw new IllegalStateException("Une construction a déjà été faite");
+                throw new IllegalStateException(
+                        "Une construction a déjà été faite");
             }
         }
 
-        public Builder setElevationAt(int x, int y, float elevation){
-            if (!ticker){
-                this.tabAltitude[parameters.linearSampleIndex(x, y)] = elevation;
+        public Builder setElevationAt(int x, int y, float elevation) {
+            if (!ticker) {
+                this.tabAltitude[parameters.linearSampleIndex(x,
+                        y)] = elevation;
                 return this;
             } else {
-                throw new IllegalStateException("Une construction a déjà été faite");
+                throw new IllegalStateException(
+                        "Une construction a déjà été faite");
             }
         }
 
-        public Builder setSlopeAt(int x, int y, float slope){
-            if (!ticker){
+        public Builder setSlopeAt(int x, int y, float slope) {
+            if (!ticker) {
                 this.tabSlope[parameters.linearSampleIndex(x, y)] = slope;
                 return this;
             } else {
-                throw new IllegalStateException("Une construction a déjà été faite");
+                throw new IllegalStateException(
+                        "Une construction a déjà été faite");
             }
         }
 
-        public Panorama build(){
+        public Panorama build() {
             ticker = true;
-            return new Panorama(parameters, tabDistance, tabLongitude, tabLatitude, tabAltitude, tabSlope);
+            return new Panorama(parameters, tabDistance, tabLongitude,
+                    tabLatitude, tabAltitude, tabSlope);
         }
 
     }

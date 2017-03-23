@@ -60,7 +60,7 @@ public class AzimuthTest {
             double aRad = toRadians(aDeg);
             double canonicalARad = canonicalize(aRad);
             assertTrue(0 <= canonicalARad && canonicalARad < scalb(PI, 1));
-            int canonicalADeg = (int)round(toDegrees(canonicalARad));
+            int canonicalADeg = (int) round(toDegrees(canonicalARad));
             if (canonicalADeg == 360)
                 canonicalADeg = 0;
             assertEquals(floorMod(aDeg, 360), canonicalADeg);
@@ -79,29 +79,19 @@ public class AzimuthTest {
 
     @Test
     public void toMathWorksForKnownValues() {
-        int[] vs = new int[] {
-                0, 0,
-                90, 270,
-                180, 180,
-                270, 90
-        };
+        int[] vs = new int[] { 0, 0, 90, 270, 180, 180, 270, 90 };
         for (int i = 0; i < vs.length; i += 2) {
             double a = toMath(toRadians(vs[i]));
-            assertEquals(toRadians(vs[i+1]), a, 1e-10);
+            assertEquals(toRadians(vs[i + 1]), a, 1e-10);
         }
     }
 
     @Test
     public void fromMathWorksForKnownValues() {
-        int[] vs = new int[] {
-                0, 0,
-                90, 270,
-                180, 180,
-                270, 90
-        };
+        int[] vs = new int[] { 0, 0, 90, 270, 180, 180, 270, 90 };
         for (int i = 0; i < vs.length; i += 2) {
             double a = fromMath(toRadians(vs[i]));
-            assertEquals(toRadians(vs[i+1]), a, 1e-10);
+            assertEquals(toRadians(vs[i + 1]), a, 1e-10);
         }
     }
 
@@ -138,13 +128,13 @@ public class AzimuthTest {
         String n = "north", e = "east", s = "south", w = "west";
         ArrayList<String> expected = new ArrayList<>();
         expected.addAll(Collections.nCopies(45, n));
-        expected.addAll(Collections.nCopies(45, n+e));
+        expected.addAll(Collections.nCopies(45, n + e));
         expected.addAll(Collections.nCopies(45, e));
-        expected.addAll(Collections.nCopies(45, s+e));
+        expected.addAll(Collections.nCopies(45, s + e));
         expected.addAll(Collections.nCopies(45, s));
-        expected.addAll(Collections.nCopies(45, s+w));
+        expected.addAll(Collections.nCopies(45, s + w));
         expected.addAll(Collections.nCopies(45, w));
-        expected.addAll(Collections.nCopies(45, n+w));
+        expected.addAll(Collections.nCopies(45, n + w));
 
         for (int aDeg = 0; aDeg < 360; ++aDeg) {
             double aRad = toRadians(floorMod(aDeg - 22, 360));

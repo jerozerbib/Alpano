@@ -75,10 +75,12 @@ public class Interval2DTest {
     @Test
     public void sizeOfIntersectionWorksOnIntersectingIntervals() {
         assertEquals(1, i_2_2_2_2().sizeOfIntersectionWith(i_2_2_2_2()));
-        assertEquals(21 * 11, i_0_20_0_10().sizeOfIntersectionWith(i_0_20_0_10()));
+        assertEquals(21 * 11,
+                i_0_20_0_10().sizeOfIntersectionWith(i_0_20_0_10()));
         assertEquals(1, i_2_2_2_2().sizeOfIntersectionWith(i_0_20_0_10()));
         assertEquals(1, i_0_20_0_10().sizeOfIntersectionWith(i_2_2_2_2()));
-        assertEquals(10 * 11, i_0_10_0_10().sizeOfIntersectionWith(i_0_9_0_11()));
+        assertEquals(10 * 11,
+                i_0_10_0_10().sizeOfIntersectionWith(i_0_9_0_11()));
     }
 
     @Test
@@ -132,7 +134,7 @@ public class Interval2DTest {
         for (int i = 0; i < RANDOM_ITERATIONS; ++i) {
             Interval2D i1 = nextInterval(rng, 5, 10);
             Interval2D i2 = nextInterval(rng, 5, 10);
-            assertTrue(! i1.isUnionableWith(i2) || i2.isUnionableWith(i1));
+            assertTrue(!i1.isUnionableWith(i2) || i2.isUnionableWith(i1));
         }
     }
 
@@ -143,7 +145,8 @@ public class Interval2DTest {
 
     @Test
     public void unionWorksOnASingleInterval() {
-        assertEquals(i_0_10_0_10(), i_0_10_0_10().union(i_0_10_0_10().union(i_0_10_0_10())));
+        assertEquals(i_0_10_0_10(),
+                i_0_10_0_10().union(i_0_10_0_10().union(i_0_10_0_10())));
     }
 
     @Test
@@ -204,6 +207,7 @@ public class Interval2DTest {
     private Interval2D nextInterval(Random rng, int maxOffset, int maxSize) {
         int offsetX = rng.nextInt(maxOffset), offsetY = rng.nextInt(maxOffset);
         int sizeX = rng.nextInt(maxSize), sizeY = rng.nextInt(maxSize);
-        return newInterval2D(-offsetX, sizeX - offsetX, -offsetY, sizeY - offsetY);
+        return newInterval2D(-offsetX, sizeX - offsetX, -offsetY,
+                sizeY - offsetY);
     }
 }

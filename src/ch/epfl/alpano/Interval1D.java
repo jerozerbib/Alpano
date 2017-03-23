@@ -129,14 +129,17 @@ public final class Interval1D {
      * Overrides the inherited method from Object and and return true if that0
      * is an instance of Interval1D and the set of both are equal.
      * 
-     * @param that0 the other interval
+     * @param that0
+     *            the other interval
      * 
      * @return true is that0 is the same than this
      */
     @Override
     public boolean equals(Object thatO) {
         if (thatO instanceof Interval1D) {
-            return this.includedTo() == ((Interval1D) thatO).includedTo() && this.includedFrom() == ((Interval1D) thatO).includedFrom();
+            return this.includedTo() == ((Interval1D) thatO).includedTo()
+                    && this.includedFrom() == ((Interval1D) thatO)
+                            .includedFrom();
         } else {
             return false;
         }

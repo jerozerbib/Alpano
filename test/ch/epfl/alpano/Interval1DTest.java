@@ -16,11 +16,25 @@ import java.util.Random;
 import org.junit.Test;
 
 public class Interval1DTest {
-    private static Interval1D i_0_9() { return new Interval1D(0, 9); }
-    private static Interval1D i_0_2() { return new Interval1D(0, 2); }
-    private static Interval1D i_3_5() { return new Interval1D(3, 5); }
-    private static Interval1D i_4_6() { return new Interval1D(4, 6); }
-    private static Interval1D i_6_9() { return new Interval1D(6, 9); }
+    private static Interval1D i_0_9() {
+        return new Interval1D(0, 9);
+    }
+
+    private static Interval1D i_0_2() {
+        return new Interval1D(0, 2);
+    }
+
+    private static Interval1D i_3_5() {
+        return new Interval1D(3, 5);
+    }
+
+    private static Interval1D i_4_6() {
+        return new Interval1D(4, 6);
+    }
+
+    private static Interval1D i_6_9() {
+        return new Interval1D(6, 9);
+    }
 
     @Test(expected = IllegalArgumentException.class)
     public void constructorFailsForInvalidBounds() {
@@ -34,7 +48,7 @@ public class Interval1DTest {
 
     @Test
     public void containsIsTrueOnlyForTheIntervalsElements() {
-        int sqrtIt = (int)ceil(sqrt(RANDOM_ITERATIONS));
+        int sqrtIt = (int) ceil(sqrt(RANDOM_ITERATIONS));
         Random rng = newRandom();
         for (int i = 0; i < sqrtIt; ++i) {
             int a = rng.nextInt(200) - 100;
@@ -61,6 +75,7 @@ public class Interval1DTest {
             assertFalse(interval.contains(b + 1));
         }
     }
+
     @Test
     public void sizeWorksOnKnownIntervals() {
         assertEquals(10, i_0_9().size());

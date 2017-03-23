@@ -43,7 +43,7 @@ public class Math2Test {
             double d = 0;
             while (d == 0)
                 d = rng.nextDouble() * 1_000d - 500d;
-            double q = (int)floor(n / d);
+            double q = (int) floor(n / d);
             double r = floorMod(n, d);
             assertEquals(n, q * d + r, 1e-10);
         }
@@ -61,14 +61,8 @@ public class Math2Test {
 
     @Test
     public void angularDistanceWorksOnKnownAngles() {
-        double data[] = {
-                0, 45, 45,
-                45, 0, -45,
-                0, 179, 179,
-                0, 181, -179,
-                181, 359, 178,
-                181, 2, -179
-        };
+        double data[] = { 0, 45, 45, 45, 0, -45, 0, 179, 179, 0, 181, -179, 181,
+                359, 178, 181, 2, -179 };
         for (int i = 0; i < data.length; i += 3) {
             double a1 = toRadians(data[i]);
             double a2 = toRadians(data[i + 1]);
@@ -94,7 +88,8 @@ public class Math2Test {
         for (int i = 0; i < RANDOM_ITERATIONS; ++i) {
             double a1 = nextAngle(rng);
             double a2 = nextAngle(rng);
-            assertEquals(0, angularDistance(a1, a2) + angularDistance(a2, a1), 1e-10);
+            assertEquals(0, angularDistance(a1, a2) + angularDistance(a2, a1),
+                    1e-10);
         }
     }
 
@@ -174,16 +169,17 @@ public class Math2Test {
         for (int i = 0; i < RANDOM_ITERATIONS; ++i) {
             double v0 = rng.nextDouble(), v1 = rng.nextDouble();
             double v2 = rng.nextDouble(), v3 = rng.nextDouble();
-            assertEquals((v0 + v1)/2d, bilerp(v0, v1, v2, v3, 0.5, 0), 1e-10);
-            assertEquals((v0 + v2)/2d, bilerp(v0, v1, v2, v3, 0, 0.5), 1e-10);
-            assertEquals((v2 + v3)/2d, bilerp(v0, v1, v2, v3, 0.5, 1), 1e-10);
-            assertEquals((v1 + v3)/2d, bilerp(v0, v1, v2, v3, 1, 0.5), 1e-10);
+            assertEquals((v0 + v1) / 2d, bilerp(v0, v1, v2, v3, 0.5, 0), 1e-10);
+            assertEquals((v0 + v2) / 2d, bilerp(v0, v1, v2, v3, 0, 0.5), 1e-10);
+            assertEquals((v2 + v3) / 2d, bilerp(v0, v1, v2, v3, 0.5, 1), 1e-10);
+            assertEquals((v1 + v3) / 2d, bilerp(v0, v1, v2, v3, 1, 0.5), 1e-10);
         }
     }
 
     @Test
     public void firstIntervalContainingRootWorksOnSin() {
-        double i1 = firstIntervalContainingRoot(new Sin(), -1d, 1d, 0.1 + 1e-11);
+        double i1 = firstIntervalContainingRoot(new Sin(), -1d, 1d,
+                0.1 + 1e-11);
         assertEquals(-0.1, i1, 1e-10);
 
         double i2 = firstIntervalContainingRoot(new Sin(), 1, 4, 1);
