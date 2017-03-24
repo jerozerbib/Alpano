@@ -5,6 +5,7 @@ import static ch.epfl.alpano.Azimuth.isCanonical;
 import static ch.epfl.alpano.Math2.PI2;
 import static ch.epfl.alpano.Preconditions.checkArgument;
 import static java.lang.Math.abs;
+import static java.lang.Math.toDegrees;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -35,7 +36,7 @@ public final class PanoramaParameters {
         this.observerElevationn = observerElevation;
         this.observerPosition = requireNonNull(observerPosition);
         checkArgument(isCanonical(centerAzimuth),
-                "L'azimuth n'est pas central");
+                "L'azimuth n'est pas Canonique");
         this.centerAzimuth = centerAzimuth;
         checkArgument(horizontalFieldOfView > 0 && horizontalFieldOfView <= PI2,
                 "Le champ de vision horizontal n'est pas dans les bornes");
@@ -45,8 +46,8 @@ public final class PanoramaParameters {
         this.maxDistance = maxDistance;
         this.width = width;
         this.height = height;
-        delta = this.horizontalFieldOfView / (this.width - 1);
-        arcDelta = 1 / delta;
+        this.delta = this.horizontalFieldOfView / (this.width - 1);
+        this.arcDelta = 1.0 / delta;
 
     }
 
@@ -119,7 +120,7 @@ public final class PanoramaParameters {
      * @return double
      */
     public double verticalFieldOfView() {
-        return delta * (width() - 1);
+        return delta * (height - 1);
     }
 
     /**
@@ -132,7 +133,11 @@ public final class PanoramaParameters {
     public double azimuthForX(double x) {
         checkArgument(x >= 0 && x <= width - 1,
                 "La largeur n'et pas dans les bornes");
-        return canonicalize(centerAzimuth - ((centerAzimuth - x) * delta));
+        double indexForCenterAzimuth = (width() - 1) / 2.0;
+        return canonicalize(
+                centerAzimuth - (indexForCenterAzimuth - x) * delta);
+        // return canonicalize(centerAzimuth - ((centerAzimuth - x) * delta));
+
     }
 
     /**
@@ -143,9 +148,17 @@ public final class PanoramaParameters {
      * @return double
      */
     public double xForAzimuth(double a) {
-        checkArgument(abs(a) >= centerAzimuth + (horizontalFieldOfView() / 2),
+        // if (toDegrees(a) == (toDegrees(centerAzimuth) +
+        // toDegrees(horizontalFieldOfView()) / 2.0)){
+        // return width-1;
+        // }else{
+        checkArgument(((a <= centerAzimuth + (horizontalFieldOfView() / 2.0))
+                && (a >= centerAzimuth - (horizontalFieldOfView() / 2.0))),
                 "L'angle de vue est en dehors des limites");
-        return arcDelta * (a - centerAzimuth) + centerAzimuth;
+        double indexForCenterAzimuth = (width() - 1) / 2.0;
+        return indexForCenterAzimuth - (centerAzimuth - a) * arcDelta;
+        // return arcDelta * (a - centerAzimuth) + centerAzimuth;
+        // }
     }
 
     /**
@@ -157,11 +170,14 @@ public final class PanoramaParameters {
     public double altitudeForY(double y) {
         checkArgument(y >= 0 && y <= height - 1,
                 "La hauteur n'est pas dans les bornes");
-        if (y == height() / 2) {
-            return 0;
-        } else {
-            return -(y - height() / 2) * delta;
-        }
+        double indexForAltZero = (height() - 1) / 2.0;
+        return (indexForAltZero - y) * delta;
+
+        // if (y == height() / 2) {
+        // return 0;
+        // } else {
+        // return -(y - height() / 2) * delta;
+        // }
     }
 
     /**
@@ -171,13 +187,16 @@ public final class PanoramaParameters {
      * @return double
      */
     public double yForAltitude(double a) {
-        checkArgument(abs(a) >= verticalFieldOfView() / 2,
+        checkArgument(abs(a) <= verticalFieldOfView() / 2,
                 "L'angle de vue n'est pas dans les bornes");
-        if (a == 0) {
-            return height() / 2.0;
-        } else {
-            return -arcDelta * a + height() / 2.0;
-        }
+        double indexForAltZero = (width() - 1) / 2.0;
+        return indexForAltZero - a * arcDelta;
+
+        // if (a == 0) {
+        // return height() / 2.0;
+        // } else {
+        // return -arcDelta * a + height() / 2.0;
+        // }
     }
 
     /**

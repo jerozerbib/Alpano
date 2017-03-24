@@ -56,7 +56,7 @@ public interface Math2 {
      *            first points
      * @param a2
      *            second point
-     * @return the angular difference of the to points
+     * @return the angular difference of the two points
      */
     static double angularDistance(double a1, double a2) {
         double n = (a2 - a1 + PI);

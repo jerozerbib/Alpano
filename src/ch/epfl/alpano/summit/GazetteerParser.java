@@ -53,8 +53,8 @@ public class GazetteerParser {
         String elevation = line.substring(18, 24).trim();
         double longitudeDouble = StringToRadians(longitude);
         double latitudeDouble = StringToRadians(latitude);
-        GeoPoint p = new GeoPoint(toRadians(longitudeDouble),
-                toRadians(latitudeDouble));
+        GeoPoint p = new GeoPoint(longitudeDouble,
+               latitudeDouble);
         return new Summit(name, p, parseInt(elevation));
     }
 
@@ -66,8 +66,8 @@ public class GazetteerParser {
      */
     private static double StringToRadians(String s) {
         String[] sDegrees = s.split(":");
-        double sDouble = parseInt(sDegrees[0]) + parseInt(sDegrees[1]) / 60
-                + parseInt(sDegrees[2]) / 3600;
+        double sDouble = parseInt(sDegrees[0]) + parseInt(sDegrees[1]) / 60.0
+                + parseInt(sDegrees[2]) / 3600.0;
         return toRadians(sDouble);
     }
 }
