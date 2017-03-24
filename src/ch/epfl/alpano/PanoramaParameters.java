@@ -136,8 +136,6 @@ public final class PanoramaParameters {
         double indexForCenterAzimuth = (width() - 1) / 2.0;
         return canonicalize(
                 centerAzimuth - (indexForCenterAzimuth - x) * delta);
-        // return canonicalize(centerAzimuth - ((centerAzimuth - x) * delta));
-
     }
 
     /**
@@ -148,17 +146,13 @@ public final class PanoramaParameters {
      * @return double
      */
     public double xForAzimuth(double a) {
-        // if (toDegrees(a) == (toDegrees(centerAzimuth) +
-        // toDegrees(horizontalFieldOfView()) / 2.0)){
-        // return width-1;
-        // }else{
-        checkArgument(((a <= centerAzimuth + (horizontalFieldOfView() / 2.0))
-                && (a >= centerAzimuth - (horizontalFieldOfView() / 2.0))),
+        checkArgument(
+                (a <= centerAzimuth + horizontalFieldOfView() / 2.0)
+                        && (a >= centerAzimuth - horizontalFieldOfView() / 2.0),
                 "L'angle de vue est en dehors des limites");
         double indexForCenterAzimuth = (width() - 1) / 2.0;
-        return indexForCenterAzimuth - (centerAzimuth - a) * arcDelta;
-        // return arcDelta * (a - centerAzimuth) + centerAzimuth;
-        // }
+        return indexForCenterAzimuth
+                - Math2.angularDistance(a, centerAzimuth) * arcDelta;
     }
 
     /**
@@ -172,12 +166,6 @@ public final class PanoramaParameters {
                 "La hauteur n'est pas dans les bornes");
         double indexForAltZero = (height() - 1) / 2.0;
         return (indexForAltZero - y) * delta;
-
-        // if (y == height() / 2) {
-        // return 0;
-        // } else {
-        // return -(y - height() / 2) * delta;
-        // }
     }
 
     /**
@@ -187,16 +175,10 @@ public final class PanoramaParameters {
      * @return double
      */
     public double yForAltitude(double a) {
-        checkArgument(abs(a) <= verticalFieldOfView() / 2,
+        checkArgument(abs(a) <= verticalFieldOfView() / 2.0,
                 "L'angle de vue n'est pas dans les bornes");
-        double indexForAltZero = (width() - 1) / 2.0;
-        return indexForAltZero - a * arcDelta;
-
-        // if (a == 0) {
-        // return height() / 2.0;
-        // } else {
-        // return -arcDelta * a + height() / 2.0;
-        // }
+        double indexForAltZero = (height() - 1) / 2.0;
+        return indexForAltZero - Math2.angularDistance(0, a) * arcDelta;
     }
 
     /**
