@@ -9,7 +9,7 @@ import static java.util.Objects.requireNonNull;
  */
 public final class Panorama {
     private PanoramaParameters p;
-    private final int size = p.width() * p.height();
+    private final int size;
     private final float[] distance, longitude, latitude, altitude, slope;
 
     private Panorama(PanoramaParameters p, float[] distance, float[] longitude,
@@ -20,6 +20,7 @@ public final class Panorama {
         this.latitude = latitude;
         this.altitude = altitude;
         this.slope = slope;
+        size = p.width() * p.height();
     }
 
     public PanoramaParameters parameters() {

@@ -57,8 +57,7 @@ public class ElevationProfile {
      * @return double
      */
     public double elevationAt(double x) {
-        checkArgument(x >= 0, "la valeur x n'est pas comprise dans la longueur du profil");
-        checkArgument(x <= length, "test");
+        checkArgument(x >= 0 && x <= length, "la valeur x n'est pas comprise dans la longueur du profil");
         return elevationModel.elevationAt(positionAt(x));
     }
 
@@ -69,8 +68,7 @@ public class ElevationProfile {
      * @return double
      */
     public GeoPoint positionAt(double x) {
-        checkArgument(x <= length && x >= 0,
-                "la valeur x n'est pas comprise dans la longueur du profil");
+        checkArgument(x <= length && x >= 0, "la valeur x n'est pas comprise dans la longueur du profil");
         double indexOfX = scalb(x, -12);
         int lowerBound = (int) floor(indexOfX);
         double longitude = Math2.lerp(tab[lowerBound][0],

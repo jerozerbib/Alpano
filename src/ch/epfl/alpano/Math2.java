@@ -120,7 +120,7 @@ public interface Math2 {
     static double firstIntervalContainingRoot(DoubleUnaryOperator f,
             double minX, double maxX, double dX) {
         double bound = 0;
-        for (double i = minX; i <= maxX; i += dX) {
+        for (double i = minX; i <= (maxX - dX); i += dX) {
             if (f.applyAsDouble(i) * f.applyAsDouble(i + dX) < 0) {
                 return i;
             } else {
@@ -144,8 +144,7 @@ public interface Math2 {
      *            the size of the interval
      * @return the lower bound of the interval
      */
-    static double improveRoot(DoubleUnaryOperator f, double x1, double x2,
-            double epsilon) {
+    static double improveRoot(DoubleUnaryOperator f, double x1, double x2, double epsilon) {
         if (f.applyAsDouble(x1) * f.applyAsDouble(x2) > 0) {
             throw new IllegalArgumentException();
         }
