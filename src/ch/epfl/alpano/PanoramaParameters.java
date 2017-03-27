@@ -5,7 +5,6 @@ import static ch.epfl.alpano.Azimuth.isCanonical;
 import static ch.epfl.alpano.Math2.PI2;
 import static ch.epfl.alpano.Preconditions.checkArgument;
 import static java.lang.Math.abs;
-import static java.lang.Math.toDegrees;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -14,7 +13,7 @@ import static java.util.Objects.requireNonNull;
 public final class PanoramaParameters {
 
     private final GeoPoint observerPosition;
-    private final int observerElevationn, maxDistance, width, height;
+    private final int observerElevation, maxDistance, width, height;
     private final double centerAzimuth, horizontalFieldOfView;
     private double delta;
     private double arcDelta;
@@ -33,7 +32,7 @@ public final class PanoramaParameters {
     public PanoramaParameters(GeoPoint observerPosition, int observerElevation,
             double centerAzimuth, double horizontalFieldOfView, int maxDistance,
             int width, int height) {
-        this.observerElevationn = observerElevation;
+        this.observerElevation = observerElevation;
         this.observerPosition = requireNonNull(observerPosition);
         checkArgument(isCanonical(centerAzimuth),
                 "L'azimuth n'est pas Canonique");
@@ -66,7 +65,7 @@ public final class PanoramaParameters {
      * @return int
      */
     public int observerElevation() {
-        return this.observerElevationn;
+        return this.observerElevation;
     }
 
     /**
@@ -151,8 +150,7 @@ public final class PanoramaParameters {
                         && (a >= centerAzimuth - horizontalFieldOfView() / 2.0),
                 "L'angle de vue est en dehors des limites");
         double indexForCenterAzimuth = (width() - 1) / 2.0;
-        return indexForCenterAzimuth
-                - Math2.angularDistance(a, centerAzimuth) * arcDelta;
+        return indexForCenterAzimuth - Math2.angularDistance(a, centerAzimuth) * arcDelta;
     }
 
     /**

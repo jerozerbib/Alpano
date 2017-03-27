@@ -30,26 +30,21 @@ public final class PanoramaComputer {
         Panorama.Builder p = new Panorama.Builder(parameters);
         for (int i = 0; i < parameters.width(); i++) {
             double rayX = 0;
-            ElevationProfile e = new ElevationProfile(dem, obsPos,
-                    parameters.azimuthForX(i), maxD);
+            ElevationProfile e = new ElevationProfile(dem, obsPos, parameters.azimuthForX(i), maxD);
             for (int j = parameters.height() - 1; j >= 0; j--) {
                 double raySlope = parameters.altitudeForY(j);
                 ray0 = parameters.observerElevation();
-                DoubleUnaryOperator f = rayToGroundDistance(e, ray0,
-                        tan(raySlope));
-                double lowerBoundFirst = firstIntervalContainingRoot(f, rayX,
-                        maxD, dX);
-                // System.out.println(lowerBoundFirst + " | " + " | " + i + " |
-                // " + j + " | " + maxD);
+                DoubleUnaryOperator f = rayToGroundDistance(e, ray0, tan(raySlope));
+                double lowerBoundFirst = firstIntervalContainingRoot(f, rayX, maxD, dX);
+                System.out.println(lowerBoundFirst + " | " + " | " + i + " |" + j + " | " + maxD);
+                double upperBound = lowerBoundFirst + dX;
+                rayX = improveRoot(f, lowerBoundFirst, upperBound, epsilon);
                 if (lowerBoundFirst != Double.POSITIVE_INFINITY) {
-                    double upperBound = lowerBoundFirst + dX;
-                    rayX = improveRoot(f, lowerBoundFirst, upperBound, epsilon);
                     p.setDistanceAt(i, j, (float) (rayX / cos(raySlope)));
                     p.setElevationAt(i, j, (float) e.elevationAt(j));
                     p.setSlopeAt(i, j, (float) e.slopeAt(j));
                     p.setLongitudeAt(i, j, (float) e.positionAt(i).longitude());
                     p.setLatitudeAt(i, j, (float) e.positionAt(i).latitude());
-                    System.out.println(lowerBoundFirst);
                 }
             }
         }
@@ -59,9 +54,7 @@ public final class PanoramaComputer {
     public static DoubleUnaryOperator rayToGroundDistance(
             ElevationProfile profile, double ray0, double raySlope) {
         final double k = 0.13;
-        return x -> ray0 + x * raySlope - (profile.elevationAt(x)
-                - ((1 - k) / (2 * EARTH_RADIUS)) * sq(x));
-        // We call the static field EARTH_RADIUS from the class Distance and the
-        // method sq() from Math2.
+        return x -> ray0 + x * raySlope - (profile.elevationAt(x) - ((1 - k) / (2 * EARTH_RADIUS)) * sq(x));
+        // We call the static field EARTH_RADIUS from the class Distance and the method sq() from Math2.
     }
 }

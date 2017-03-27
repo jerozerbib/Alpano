@@ -57,8 +57,7 @@ public class ElevationProfile {
      * @return double
      */
     public double elevationAt(double x) {
-        checkArgument(x >= 0,
-                "la valeur x n'est pas comprise dans la longueur du profil");
+        checkArgument(x >= 0, "la valeur x n'est pas comprise dans la longueur du profil");
         checkArgument(x <= length, "test");
         return elevationModel.elevationAt(positionAt(x));
     }

@@ -14,9 +14,6 @@ import static java.lang.Math.toRadians;
  * @author : Jeremy Zerbib (257715)
  */
 public class GazetteerParser {
-
-    private static ArrayList<Summit> summits = new ArrayList<>();
-
     private GazetteerParser() {
     }
 
@@ -26,16 +23,15 @@ public class GazetteerParser {
      * @param file
      * @return List<Summit>
      */
-    public static List<Summit> readSummitsFrom(File file) {
-        try (BufferedReader b = new BufferedReader(
-                new InputStreamReader(new FileInputStream(file)))) {
+    public static List<Summit> readSummitsFrom(File file) throws IOException {
+        List<Summit> summits = new ArrayList<>();
+        try (BufferedReader b = new BufferedReader(new InputStreamReader(new FileInputStream(file)))) {
             String line;
             while ((line = b.readLine()) != null) {
                 summits.add(correspondingSummit(line));
             }
-
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException | NumberFormatException | StringIndexOutOfBoundsException e) {
+            throw new IOException(e);
         }
         return Collections.unmodifiableList(new ArrayList<>(summits));
     }
@@ -49,12 +45,11 @@ public class GazetteerParser {
     private static Summit correspondingSummit(String line) {
         String longitude = line.substring(0, 9).trim();
         String latitude = line.substring(10, 18).trim();
-        String name = line.substring(35).trim();
         String elevation = line.substring(18, 24).trim();
+        String name = line.substring(35).trim();
         double longitudeDouble = StringToRadians(longitude);
         double latitudeDouble = StringToRadians(latitude);
-        GeoPoint p = new GeoPoint(longitudeDouble,
-               latitudeDouble);
+        GeoPoint p = new GeoPoint(longitudeDouble, latitudeDouble);
         return new Summit(name, p, parseInt(elevation));
     }
 
@@ -66,8 +61,7 @@ public class GazetteerParser {
      */
     private static double StringToRadians(String s) {
         String[] sDegrees = s.split(":");
-        double sDouble = parseInt(sDegrees[0]) + parseInt(sDegrees[1]) / 60.0
-                + parseInt(sDegrees[2]) / 3600.0;
+        double sDouble = parseInt(sDegrees[0]) + parseInt(sDegrees[1]) / 60.0 + parseInt(sDegrees[2]) / 3600.0;
         return toRadians(sDouble);
     }
 }
