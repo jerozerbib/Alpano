@@ -17,6 +17,8 @@ import static java.util.Objects.requireNonNull;
  */
 public final class PanoramaComputer {
     private final ContinuousElevationModel dem;
+    private final int dX = 64;
+    private final int epsilon = 4;
 
     public PanoramaComputer(ContinuousElevationModel dem) {
         this.dem = requireNonNull(dem);
@@ -25,8 +27,6 @@ public final class PanoramaComputer {
     public Panorama computePanorama(PanoramaParameters parameters) {
         final double maxD = parameters.maxDistance();
         final GeoPoint obsPos = parameters.observerPosition();
-        final int dX = 64;
-        final int epsilon = 4;
         double ray0 = parameters.observerElevation();
         Panorama.Builder p = new Panorama.Builder(parameters);
         for (int i = 0; i < parameters.width(); i++) {
@@ -40,10 +40,10 @@ public final class PanoramaComputer {
                 if (lowerBoundFirst != POSITIVE_INFINITY) {
                     rayX = improveRoot(f, lowerBoundFirst, upperBound, epsilon);
                     p.setDistanceAt(i, j, (float) (rayX / cos(raySlope)));
-                    p.setElevationAt(i, j, (float) e.elevationAt(j));
-                    p.setSlopeAt(i, j, (float) e.slopeAt(j));
-                    p.setLongitudeAt(i, j, (float) e.positionAt(j).longitude());
-                    p.setLatitudeAt(i, j, (float) e.positionAt(j).latitude());
+                    p.setElevationAt(i, j, (float) e.elevationAt(rayX));
+                    p.setSlopeAt(i, j, (float) e.slopeAt(rayX));
+                    p.setLongitudeAt(i, j, (float) e.positionAt(rayX).longitude());
+                    p.setLatitudeAt(i, j, (float) e.positionAt(rayX).latitude());
                 }
             }
         }

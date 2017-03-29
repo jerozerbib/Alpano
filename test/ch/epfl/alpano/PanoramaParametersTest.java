@@ -1,16 +1,13 @@
 package ch.epfl.alpano;
 
-import static ch.epfl.test.TestRandomizer.RANDOM_ITERATIONS;
-import static ch.epfl.test.TestRandomizer.newRandom;
-import static java.lang.Math.PI;
-import static java.lang.Math.floorMod;
-import static java.lang.Math.nextUp;
-import static java.lang.Math.toRadians;
-import static org.junit.Assert.assertEquals;
+import org.junit.Test;
 
 import java.util.Random;
 
-import org.junit.Test;
+import static ch.epfl.test.TestRandomizer.RANDOM_ITERATIONS;
+import static ch.epfl.test.TestRandomizer.newRandom;
+import static java.lang.Math.*;
+import static org.junit.Assert.assertEquals;
 
 public class PanoramaParametersTest {
     // Default (and valid) arguments for constructor

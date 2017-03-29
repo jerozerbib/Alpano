@@ -34,13 +34,11 @@ public final class DrawPanorama {
             HORIZONTAL_FOV, MAX_DISTANCE, IMAGE_WIDTH, IMAGE_HEIGHT);
 
     public static void main(String[] as) throws Exception {
-        try (DiscreteElevationModel dDEM = new HgtDiscreteElevationModel(
-                HGT_FILE)) {
+        try (DiscreteElevationModel dDEM = new HgtDiscreteElevationModel(HGT_FILE)) {
             ContinuousElevationModel cDEM = new ContinuousElevationModel(dDEM);
             Panorama p = new PanoramaComputer(cDEM).computePanorama(PARAMS);
 
-            BufferedImage i = new BufferedImage(IMAGE_WIDTH, IMAGE_HEIGHT,
-                    TYPE_INT_RGB);
+            BufferedImage i = new BufferedImage(IMAGE_WIDTH, IMAGE_HEIGHT, TYPE_INT_RGB);
 
             for (int x = 0; x < IMAGE_WIDTH; ++x) {
                 for (int y = 0; y < IMAGE_HEIGHT; ++y) {

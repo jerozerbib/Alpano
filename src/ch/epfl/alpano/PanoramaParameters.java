@@ -3,6 +3,7 @@ package ch.epfl.alpano;
 import static ch.epfl.alpano.Azimuth.canonicalize;
 import static ch.epfl.alpano.Azimuth.isCanonical;
 import static ch.epfl.alpano.Math2.PI2;
+import static ch.epfl.alpano.Math2.angularDistance;
 import static ch.epfl.alpano.Preconditions.checkArgument;
 import static java.lang.Math.abs;
 import static java.util.Objects.requireNonNull;
@@ -133,8 +134,7 @@ public final class PanoramaParameters {
         checkArgument(x >= 0 && x <= width - 1,
                 "La largeur n'et pas dans les bornes");
         double indexForCenterAzimuth = (width() - 1) / 2.0;
-        return canonicalize(
-                centerAzimuth - (indexForCenterAzimuth - x) * delta);
+        return canonicalize(centerAzimuth - (indexForCenterAzimuth - x) * delta);
     }
 
     /**
@@ -150,7 +150,7 @@ public final class PanoramaParameters {
                         && (a >= centerAzimuth - horizontalFieldOfView() / 2.0),
                 "L'angle de vue est en dehors des limites");
         double indexForCenterAzimuth = (width() - 1) / 2.0;
-        return indexForCenterAzimuth - Math2.angularDistance(a, centerAzimuth) * arcDelta;
+        return indexForCenterAzimuth - angularDistance(a, centerAzimuth) * arcDelta;
     }
 
     /**
@@ -176,7 +176,7 @@ public final class PanoramaParameters {
         checkArgument(abs(a) <= verticalFieldOfView() / 2.0,
                 "L'angle de vue n'est pas dans les bornes");
         double indexForAltZero = (height() - 1) / 2.0;
-        return indexForAltZero - Math2.angularDistance(0, a) * arcDelta;
+        return indexForAltZero - angularDistance(0, a) * arcDelta;
     }
 
     /**
@@ -202,6 +202,6 @@ public final class PanoramaParameters {
      * @return int
      */
     protected int linearSampleIndex(int x, int y) {
-        return (x + 1) * (y + 1) - 1;
+        return width() * y + x;
     }
 }
