@@ -45,8 +45,7 @@ public final class DrawPanorama {
             for (int x = 0; x < IMAGE_WIDTH; ++x) {
                 for (int y = 0; y < IMAGE_HEIGHT; ++y) {
                     float d = p.distanceAt(x, y);
-                    int c = (d == Float.POSITIVE_INFINITY) ? 0x87_CE_EB
-                            : gray((d - 2_000) / 15_000);
+                    int c = (d == Float.POSITIVE_INFINITY) ? 0x87_CE_EB : gray((d - 2_000) / 15_000);
                     i.setRGB(x, y, c);
                 }
             }

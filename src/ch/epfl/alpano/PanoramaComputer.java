@@ -7,6 +7,7 @@ import java.util.function.DoubleUnaryOperator;
 
 import static ch.epfl.alpano.Distance.EARTH_RADIUS;
 import static ch.epfl.alpano.Math2.*;
+import static java.lang.Double.POSITIVE_INFINITY;
 import static java.lang.Math.cos;
 import static java.lang.Math.tan;
 import static java.util.Objects.requireNonNull;
@@ -36,13 +37,13 @@ public final class PanoramaComputer {
                 DoubleUnaryOperator f = rayToGroundDistance(e, ray0, tan(raySlope));
                 double lowerBoundFirst = firstIntervalContainingRoot(f, rayX, maxD, dX);
                 double upperBound = lowerBoundFirst + dX;
-                if (lowerBoundFirst != Double.POSITIVE_INFINITY) {
+                if (lowerBoundFirst != POSITIVE_INFINITY) {
                     rayX = improveRoot(f, lowerBoundFirst, upperBound, epsilon);
                     p.setDistanceAt(i, j, (float) (rayX / cos(raySlope)));
                     p.setElevationAt(i, j, (float) e.elevationAt(j));
                     p.setSlopeAt(i, j, (float) e.slopeAt(j));
-                    p.setLongitudeAt(i, j, (float) e.positionAt(i).longitude());
-                    p.setLatitudeAt(i, j, (float) e.positionAt(i).latitude());
+                    p.setLongitudeAt(i, j, (float) e.positionAt(j).longitude());
+                    p.setLatitudeAt(i, j, (float) e.positionAt(j).latitude());
                 }
             }
         }

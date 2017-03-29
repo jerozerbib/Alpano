@@ -117,17 +117,13 @@ public interface Math2 {
      * @return the lower bound of the interval
      */
 
-    static double firstIntervalContainingRoot(DoubleUnaryOperator f,
-            double minX, double maxX, double dX) {
-        double bound = 0;
+    static double firstIntervalContainingRoot(DoubleUnaryOperator f, double minX, double maxX, double dX) {
         for (double i = minX; i <= (maxX - dX); i += dX) {
             if (f.applyAsDouble(i) * f.applyAsDouble(i + dX) < 0) {
                 return i;
-            } else {
-                bound = POSITIVE_INFINITY;
             }
         }
-        return bound;
+        return POSITIVE_INFINITY;
     }
 
     /**
@@ -146,20 +142,18 @@ public interface Math2 {
      */
     static double improveRoot(DoubleUnaryOperator f, double x1, double x2, double epsilon) {
         if (f.applyAsDouble(x1) * f.applyAsDouble(x2) > 0) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("f(x1) et f(x2) sont du même signe.");
         }
-        do {
+        while (x2 - x1 >= epsilon) {
             double xm = (x1 + x2) / 2;
-            if (x2 - x1 == epsilon) {
-                return x1;
-            } else if (f.applyAsDouble(xm) == 0) {
+            if (f.applyAsDouble(xm) == 0) {
                 return xm;
             } else if (f.applyAsDouble(x1) * f.applyAsDouble(xm) < 0) {
                 x2 = xm;
             } else {
                 x1 = xm;
             }
-        } while (x2 - x1 >= epsilon);
+        }
 
         return x1;
     }
