@@ -19,6 +19,7 @@ public final class PanoramaComputer {
     private final ContinuousElevationModel dem;
     private final int dX = 64;
     private final int epsilon = 4;
+    private static final double k = 0.13;
 
     public PanoramaComputer(ContinuousElevationModel dem) {
         this.dem = requireNonNull(dem);
@@ -50,9 +51,7 @@ public final class PanoramaComputer {
         return p.build();
     }
 
-    public static DoubleUnaryOperator rayToGroundDistance(
-            ElevationProfile profile, double ray0, double raySlope) {
-        final double k = 0.13;
+    public static DoubleUnaryOperator rayToGroundDistance(ElevationProfile profile, double ray0, double raySlope) {
         return x -> ray0 + x * raySlope - (profile.elevationAt(x) - ((1 - k) / (2 * EARTH_RADIUS)) * sq(x));
         // We call the static field EARTH_RADIUS from the class Distance and the method sq() from Math2.
     }

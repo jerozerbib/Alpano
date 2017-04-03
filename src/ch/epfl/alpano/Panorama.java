@@ -80,7 +80,7 @@ public final class Panorama {
         float[] tabLatitude;
         float[] tabAltitude;
         float[] tabSlope;
-        boolean ticker;
+        boolean ticker = false;
 
         public Builder(PanoramaParameters parameters) {
             this.parameters = requireNonNull(parameters);
@@ -95,7 +95,6 @@ public final class Panorama {
             Arrays.fill(this.tabLatitude, 0);
             Arrays.fill(this.tabAltitude, 0);
             Arrays.fill(this.tabSlope, 0);
-            ticker = false;
         }
 
         public Builder setDistanceAt(int x, int y, float distance) {
@@ -164,8 +163,12 @@ public final class Panorama {
         }
 
         public Panorama build() {
-            ticker = true;
-            return new Panorama(parameters, tabDistance, tabLongitude, tabLatitude, tabAltitude, tabSlope);
+            if (ticker){
+                throw new IllegalStateException("Une construction a déjà été faite");
+            } else {
+                ticker = true;
+                return new Panorama(parameters, tabDistance, tabLongitude, tabLatitude, tabAltitude, tabSlope);
+            }
         }
 
     }
