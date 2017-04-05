@@ -20,7 +20,7 @@ public interface DiscreteElevationModel extends AutoCloseable {
      * 
      * @param angle
      *            the angle
-     * @return the index
+     * @return the corresponding index 
      */
     static double sampleIndex(double angle) {
         return angle * SAMPLES_PER_RADIAN;
@@ -48,8 +48,7 @@ public interface DiscreteElevationModel extends AutoCloseable {
     double elevationSample(int x, int y);
 
     /**
-     * Returns the union of two DEM sample. If the two DEM sample are not
-     * unionable, it throws an error.
+     * Returns the union of two DEM sample.
      * 
      * @param that
      *            the other DEM

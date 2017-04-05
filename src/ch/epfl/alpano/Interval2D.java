@@ -78,8 +78,9 @@ public final class Interval2D {
      * @return the size of the intersection
      */
     public int sizeOfIntersectionWith(Interval2D that) {
-        return (this.iX().sizeOfIntersectionWith(that.iX()))
-                * (this.iY().sizeOfIntersectionWith(that.iY()));
+        int sizeIX = this.iX().sizeOfIntersectionWith(that.iX());
+        int sizeIY = this.iY().sizeOfIntersectionWith(that.iY());
+        return (sizeIX * sizeIY);
     }
 
     /**
@@ -90,8 +91,9 @@ public final class Interval2D {
      * @return the bounding union
      */
     public Interval2D boundingUnion(Interval2D that) {
-        return new Interval2D(this.iX().boundingUnion(that.iX()),
-                this.iY().boundingUnion(that.iY()));
+        Interval1D iXUnion = this.iX().boundingUnion(that.iX());
+        Interval1D iYUnion = this.iY().boundingUnion(that.iY());
+        return new Interval2D(iXUnion, iYUnion);
     }
 
     /**
@@ -102,8 +104,7 @@ public final class Interval2D {
      * @return true if the two intervals are unionable, false otherwise
      */
     public boolean isUnionableWith(Interval2D that) {
-        int union = this.size() + that.size()
-                - this.sizeOfIntersectionWith(that);
+        int union = this.size() + that.size() - this.sizeOfIntersectionWith(that);
         return union == this.boundingUnion(that).size();
     }
 
@@ -121,41 +122,24 @@ public final class Interval2D {
         return this.boundingUnion(that);
     }
 
-    /**
-     * Overrides the inherited method from Object and and return true if that0
-     * is an instance of Interval2D and the set of both are equal.
-     * 
-     * @param that0 the other interval
-     * 
-     * @return true is that0 is the same than this
-     */
+
     @Override
     public boolean equals(Object thatO) {
         if (thatO instanceof Interval2D) {
-            return this.iX().equals(((Interval2D) thatO).iX()) && this.iY().equals(((Interval2D) thatO).iY());
+            return this.iX().equals(((Interval2D) thatO).iX())
+                    && this.iY().equals(((Interval2D) thatO).iY());
         } else {
             return false;
         }
     }
 
-    /**
-     * Overrides the inherited method from Object and and return the value of
-     * Hash on the object it is applied on.
-     * 
-     * @return hashCode of the Object
-     */
+
     @Override
     public int hashCode() {
         return hash(iX(), iY());
     }
 
-    /**
-     * Overrides the toString method inherited from Object and gives back a
-     * String composed of the bound of the two intervals.
-     * 
-     * @return the string composed of the bounds of the two intervals with the
-     * letter x for the cross.
-     */
+
     @Override
     public String toString() {
         return this.iX().toString() + "x" + this.iY().toString();

@@ -2,11 +2,10 @@ package ch.epfl.alpano.dem;
 
 import ch.epfl.alpano.Distance;
 import ch.epfl.alpano.GeoPoint;
-import ch.epfl.alpano.Math2;
 
 import static ch.epfl.alpano.Azimuth.isCanonical;
 import static ch.epfl.alpano.Azimuth.toMath;
-import static ch.epfl.alpano.Math2.PI2;
+import static ch.epfl.alpano.Math2.*;
 import static ch.epfl.alpano.Math2.floorMod;
 import static ch.epfl.alpano.Preconditions.checkArgument;
 import static java.lang.Math.*;
@@ -14,6 +13,7 @@ import static java.util.Objects.requireNonNull;
 
 /**
  * @author : Jeremy Zerbib (257715)
+ * @author : Etienne Caquot (249949)
  */
 public class ElevationProfile {
 
@@ -26,15 +26,16 @@ public class ElevationProfile {
 
     /**
      * ElevationProfile's constructor
+     * 
      * @param elevationModel
      * @param origin
      * @param azimuth
      * @param length
      */
     public ElevationProfile(ContinuousElevationModel elevationModel, GeoPoint origin, double azimuth, double length) {
-        checkArgument(length >= 0, "La longueur est négative");
+        checkArgument(length > 0, "La longueur est négative");
         this.length = length;
-        final int size = (int) Math.ceil(Distance.toRadians(length)/ STEP);
+        final int size = (int) Math.ceil(Distance.toRadians(length) / STEP);
         checkArgument(isCanonical(azimuth), "l'azimuth n'est pas canonique");
         this.elevationModel = requireNonNull(elevationModel);
         this.origin = requireNonNull(origin);
@@ -44,22 +45,24 @@ public class ElevationProfile {
             tab[i][0] = longitudeAt(i * STEP);
             tab[i][1] = latitudeAt(i * STEP);
         }
-        tab[size][0] = origin.longitude() + toRadians(1);
-        tab[size][1] = origin.latitude() + toRadians(1);
+        tab[size][0] = origin.longitude() + toRadians(1); //In this case and the following we are using the
+        tab[size][1] = origin.latitude() + toRadians(1); // static reference toRadians from Math.
     }
 
     /**
      * Calculates the elevation at a given distance.
+     * 
      * @param x
      * @return double
      */
     public double elevationAt(double x) {
-        checkArgument(x <= length && x >= 0, "la valeur x n'est pas comprise dans la longueur du profil");
+        checkArgument(x >= 0 && x <= length, "la valeur x n'est pas comprise dans la longueur du profil");
         return elevationModel.elevationAt(positionAt(x));
     }
 
     /**
      * Calculates the position of point at a given distance.
+     * 
      * @param x
      * @return double
      */
@@ -67,13 +70,14 @@ public class ElevationProfile {
         checkArgument(x <= length && x >= 0, "la valeur x n'est pas comprise dans la longueur du profil");
         double indexOfX = scalb(x, -12);
         int lowerBound = (int) floor(indexOfX);
-        double longitude = Math2.lerp(tab[lowerBound][0], tab[lowerBound + 1][0], indexOfX - lowerBound);
-        double latitude = Math2.lerp(tab[lowerBound][1], tab[lowerBound+ 1][1], indexOfX - lowerBound);
+        double longitude = lerp(tab[lowerBound][0], tab[lowerBound + 1][0], indexOfX - lowerBound);
+        double latitude = lerp(tab[lowerBound][1], tab[lowerBound + 1][1], indexOfX - lowerBound);
         return new GeoPoint(longitude, latitude);
     }
 
     /**
      * Calculates the slope at a given distance.
+     * 
      * @param x
      * @return double
      */
@@ -84,6 +88,7 @@ public class ElevationProfile {
 
     /**
      * Calculates the value of the latitude with the given formulae.
+     * 
      * @param x
      * @return double
      */
@@ -100,11 +105,12 @@ public class ElevationProfile {
 
     /**
      * Calculates the value of the longitude with the given formulae.
+     * 
      * @param x
      * @return double
      */
     private double longitudeAt(double x) {
-        //We do not check that the distance is in range because we call latitudeATt(x) that checks it.
+        checkArgument(x <= Distance.toRadians(length), "la valeur x n'est pas comprise dans la longueur du profil");
         double longitude = origin.longitude();
         double sinAz = sin(toMath(azimuth));
         double sinDist = sin(x);

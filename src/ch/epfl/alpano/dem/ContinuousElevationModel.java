@@ -5,6 +5,7 @@ import ch.epfl.alpano.Math2;
 
 import static ch.epfl.alpano.Distance.toMeters;
 import static ch.epfl.alpano.Math2.sq;
+import static ch.epfl.alpano.Math2.bilerp;
 import static ch.epfl.alpano.dem.DiscreteElevationModel.sampleIndex;
 import static java.lang.Math.acos;
 import static java.lang.Math.sqrt;
@@ -18,7 +19,7 @@ import static java.util.Objects.requireNonNull;
 
 public final class ContinuousElevationModel {
 
-    private DiscreteElevationModel dem;
+    private final DiscreteElevationModel dem;
     private static final double DNS = toMeters(
             1 / DiscreteElevationModel.SAMPLES_PER_RADIAN);
 
@@ -35,10 +36,10 @@ public final class ContinuousElevationModel {
     }
 
     /**
-     * Returns the altitude at a given point, in meters.
+     * Returns the altitude at a given Geopoint, in meters.
      *
      * @param p
-     *            the point
+     *            the Geopoint
      * @return the altitude
      */
     public double elevationAt(GeoPoint p) {
@@ -52,14 +53,14 @@ public final class ContinuousElevationModel {
         double z10 = elevationAtDEMExtent(neighborLg, lat);
         double z01 = elevationAtDEMExtent(lg, neighborLat);
         double z11 = elevationAtDEMExtent(neighborLg, neighborLat);
-        return Math2.bilerp(z00, z10, z01, z11, longIndex - lg, latIndex - lat);
+        return bilerp(z00, z10, z01, z11, longIndex - lg, latIndex - lat);
     }
 
     /**
-     * Returns the slope at a given point, in meters.
+     * Returns the slope at a given Geopoint, in meters.
      *
      * @param p
-     *            the point
+     *            the Geopoint
      * @return the slope
      */
     public double slopeAt(GeoPoint p) {
@@ -92,7 +93,6 @@ public final class ContinuousElevationModel {
             return 0;
         }
     }
-
 
     /**
      * Returns the slope at the index x and y.

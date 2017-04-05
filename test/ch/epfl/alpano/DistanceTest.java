@@ -11,7 +11,8 @@ import java.util.Random;
 import org.junit.Test;
 
 public class DistanceTest {
-    private static double EARTH_CIRCUMFERENCE = 40_030_174; // rounded to nearest integer
+    private static double EARTH_CIRCUMFERENCE = 40_030_174; // rounded to
+                                                            // nearest integer
 
     @Test
     public void toRadiansAndToMetersAreInverseForRandomValues() {
@@ -32,6 +33,7 @@ public class DistanceTest {
     @Test
     public void toRadiansIsCorrectForKnownValues() {
         assertEquals(0, Distance.toRadians(0), 0);
-        assertEquals(scalb(PI, 1), Distance.toRadians(EARTH_CIRCUMFERENCE), 1e-5);
+        assertEquals(scalb(PI, 1), Distance.toRadians(EARTH_CIRCUMFERENCE),
+                1e-5);
     }
 }

@@ -11,7 +11,7 @@ public interface Preconditions {
      * Checks if a given argument is valid without throwing a message.
      * 
      * @param b
-     *            the arument to check
+     *            the argument to check
      * @throws IllegalArgumentException
      *             if the argument is not valid
      */
@@ -27,7 +27,7 @@ public interface Preconditions {
      * @param b
      *            the argument to check
      * @param message
-     *            the message to give
+     *            the message to give if the argument is false
      * @throws IllegalArgumentException
      *             if the argument is not valid
      */

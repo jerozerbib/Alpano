@@ -30,9 +30,9 @@ public final class GeoPoint {
      */
 
     public GeoPoint(double longitude, double latitude) {
-        checkArgument(longitude > -Math.PI && longitude < Math.PI);
+        checkArgument((longitude >= -PI) && (longitude <= PI));
         this.longitude = longitude;
-        checkArgument(latitude > -Math.PI / 2 && latitude < Math.PI / 2);
+        checkArgument(latitude >= -PI / 2 && latitude <= PI / 2);
         this.latitude = latitude;
     }
 
@@ -42,9 +42,7 @@ public final class GeoPoint {
      * @return the longitude
      */
 
-    public double longitude() {
-        return longitude;
-    }
+    public double longitude() {return longitude;}
 
     /**
      * Returns the latitude.
@@ -93,19 +91,11 @@ public final class GeoPoint {
         double den = cos2 * sin2 - sin3 * cos3 * cos4;
         return fromMath(canonicalize(Math.atan2(num, den)));
     }
-
-    /**
-     * *overrides the toString method inherited from Object and gives back a
-     * String composed of the point's coordinates (in degrees) with a 0.0001
-     * precision.
-     * 
-     * @return the String corresponding to the GeoPoint
-     */
+    
     @Override
     public String toString() {
-        Locale l = null;
         double longitudeDegree = toDegrees(this.longitude);
         double latitudeDegree = toDegrees(this.latitude);
-        return format(l, "(%.4f,%.4f)", longitudeDegree, latitudeDegree);
+        return format((Locale) null, "(%.4f,%.4f)", longitudeDegree, latitudeDegree);
     }
 }
