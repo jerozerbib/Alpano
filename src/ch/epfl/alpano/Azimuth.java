@@ -1,6 +1,7 @@
 package ch.epfl.alpano;
 
 import static ch.epfl.alpano.Math2.PI2;
+import static ch.epfl.alpano.Math2.floorMod;
 import static ch.epfl.alpano.Preconditions.checkArgument;
 
 /**
@@ -11,7 +12,7 @@ import static ch.epfl.alpano.Preconditions.checkArgument;
 public interface Azimuth {
 
     /**
-     * Returns true if argument is a canonical azimuth, false otherwise
+     * Returns true if the azimuth given is a canonical azimuth, false otherwise
      * 
      * @param azimuth
      *            azimuth to check
@@ -29,12 +30,11 @@ public interface Azimuth {
      * @return the equivalent canonical azimuth
      */
     static double canonicalize(double azimuth) {
-        return Math2.floorMod(azimuth, PI2);
+        return floorMod(azimuth, PI2);
     }
 
     /**
-     * Transforms an azimuth in a mathematical angle, or throws the exception
-     * IllegalArgumentException if the argument is not a canonical azimut
+     * Transforms an azimuth in a mathematical angle.
      * 
      * @param azimuth
      *            the azimuth to convert
@@ -49,14 +49,13 @@ public interface Azimuth {
     }
 
     /**
-     * Transforms a mathematical angle in an azimuth, or throws the
-     * IllegalArgumentException if the mathematical angle is not canonical
+     * Transforms a mathematical angle in an azimuth.
      *
      * @param angle
      *            the angle to convert
      * @throws IllegalArgumentException
      *             if the angle is not canonical
-     * @return the correspinding azimuth
+     * @return the corresponding azimuth
      */
     static double fromMath(double angle) {
         checkArgument(isCanonical(angle), "The given angle is not canonical");
@@ -64,11 +63,10 @@ public interface Azimuth {
     }
 
     /**
-     * Returns a string cooresponding to the octant in which the azimuth is,
-     * throws the IllegalArgumentException if the azimuth is not canonical
+     * Returns a string corresponding to the octant in which the azimuth is.
      * 
      * @param azimuth
-     *            the azimuth for which we want to make corresponds an octant
+     *            the azimuth for which we want to make a corresponds an octant
      * @param n
      *            the north
      * @param e

@@ -1,7 +1,6 @@
 package ch.epfl.alpano.summit;
 
 import ch.epfl.alpano.GeoPoint;
-import org.junit.Test;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -12,6 +11,19 @@ import static java.lang.Math.toDegrees;
 import static java.lang.Math.toRadians;
 import static java.nio.charset.StandardCharsets.US_ASCII;
 import static org.junit.Assert.assertEquals;
+
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.List;
+
+import org.junit.Test;
 
 public class GazetteerParserTest {
     @Test(expected = IOException.class)
@@ -53,11 +65,13 @@ public class GazetteerParserTest {
         List<Summit> summits = Arrays.asList(
                 new Summit("A MONT UN", hmsPoint(7, 30, 00, 15, 16, 17), 30),
                 new Summit("B MONT ZWEI", hmsPoint(6, 12, 34, 1, 23, 45), 10),
-                new Summit("C MONTE TRE", hmsPoint(1, 33, 33, 15, 66, 66), 1000),
-                new Summit("D MONT AU NOM TRES LONG", hmsPoint(5, 00, 00, 5, 00, 00), 8000));
+                new Summit("C MONTE TRE", hmsPoint(1, 33, 33, 15, 66, 66),
+                        1000),
+                new Summit("D MONT AU NOM TRES LONG",
+                        hmsPoint(5, 00, 00, 5, 00, 00), 8000));
         String[] formattedSummits = new String[summits.size()];
         int i = 0;
-        for (Summit s: summits) {
+        for (Summit s : summits) {
             formattedSummits[i++] = formatSummit(s);
         }
         File f = tempFileWithLines(formattedSummits);
@@ -72,14 +86,10 @@ public class GazetteerParserTest {
             Summit actual = actualIt.next();
             assertEquals(expected.name(), actual.name());
             assertEquals(expected.elevation(), actual.elevation());
-            assertEquals(
-                    expected.position().longitude(),
-                    actual.position().longitude(),
-                    toRadians(1d / 3600d));
-            assertEquals(
-                    expected.position().latitude(),
-                    actual.position().latitude(),
-                    toRadians(1d / 3600d));
+            assertEquals(expected.position().longitude(),
+                    actual.position().longitude(), toRadians(1d / 3600d));
+            assertEquals(expected.position().latitude(),
+                    actual.position().latitude(), toRadians(1d / 3600d));
         }
     }
 
@@ -87,13 +97,14 @@ public class GazetteerParserTest {
         double lon = s.position().longitude();
         double lat = s.position().latitude();
         return String.format("%3d:%02d:%02d %2d:%02d:%02d %5d  R0 E07 BA %s",
-                h(lon), m(lon), s(lon), h(lat), m(lat), s(lat), s.elevation(), s.name());
+                h(lon), m(lon), s(lon), h(lat), m(lat), s(lat), s.elevation(),
+                s.name());
     }
 
-    private static GeoPoint hmsPoint(
-            int hLon, int mLon, int sLon,
-            int hLat, int mLat, int sLat) {
-        return new GeoPoint(hmsToRad(hLon, mLon, sLon), hmsToRad(hLat, mLat, sLat));
+    private static GeoPoint hmsPoint(int hLon, int mLon, int sLon, int hLat,
+            int mLat, int sLat) {
+        return new GeoPoint(hmsToRad(hLon, mLon, sLon),
+                hmsToRad(hLat, mLat, sLat));
     }
 
     private static double hmsToRad(int h, int m, int s) {
@@ -101,24 +112,23 @@ public class GazetteerParserTest {
     }
 
     private static int h(double d) {
-        return (int)toDegrees(d);
+        return (int) toDegrees(d);
     }
 
     private static int m(double d) {
-        return (int)(toDegrees(d) * 60d) % 60;
+        return (int) (toDegrees(d) * 60d) % 60;
     }
 
     private static int s(double d) {
-        return (int)(toDegrees(d) * 3600d) % 60;
+        return (int) (toDegrees(d) * 3600d) % 60;
     }
 
     private static File tempFileWithLines(String... lines) throws IOException {
         File f = Files.createTempFile("summits", ".txt").toFile();
         f.deleteOnExit();
         try (BufferedWriter b = new BufferedWriter(
-                new OutputStreamWriter(
-                        new FileOutputStream(f), US_ASCII))) {
-            for (String l: lines) {
+                new OutputStreamWriter(new FileOutputStream(f), US_ASCII))) {
+            for (String l : lines) {
                 b.write(l);
                 b.newLine();
             }

@@ -27,6 +27,7 @@ public class GazetteerParser {
      * 
      * @param file
      * @return List<Summit>
+     * @throws IOException
      */
     public static List<Summit> readSummitsFrom(File file) throws IOException {
         List<Summit> summits = new ArrayList<>();
