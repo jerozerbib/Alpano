@@ -18,7 +18,7 @@ import static java.util.Objects.requireNonNull;
 
 public final class ContinuousElevationModel {
 
-    private DiscreteElevationModel dem;
+    private final DiscreteElevationModel dem;
     private static final double DNS = toMeters(
             1 / DiscreteElevationModel.SAMPLES_PER_RADIAN);
 

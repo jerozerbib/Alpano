@@ -6,6 +6,7 @@ import static java.util.Objects.requireNonNull;
 
 /**
  * @author : Jeremy Zerbib (257715)
+ * @author : Etienne Caquot (249949)
  */
 public final class Summit {
     private final String name;

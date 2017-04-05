@@ -15,16 +15,18 @@ import static java.lang.Math.abs;
 
 /**
  * @author : Jeremy Zerbib (257715)
+ * @author : Etienne Caquot (249949)
  */
 public final class HgtDiscreteElevationModel implements DiscreteElevationModel {
 
     private final int FILE_LENGTH = 25934402;
-    private final File file;
     private final Interval2D extent;
     private ShortBuffer b;
     private FileInputStream s;
     private final int startingX;
     private final int startingY;
+    private final int SAMPLES_PER_LINE = 3601;
+    private final int LENGTH_OF_NAME = 11;
 
     /**
      * Constructor
@@ -34,8 +36,7 @@ public final class HgtDiscreteElevationModel implements DiscreteElevationModel {
     public HgtDiscreteElevationModel(File file) {
         String name = file.getName();
         checkArgument(checkName(name), "Le nom du fichier n'est pas le bon");
-        checkArgument(file.length() == FILE_LENGTH,
-                "La taille du fichier hgt n'est pas la bonne");
+        checkArgument(file.length() == FILE_LENGTH, "La taille du fichier hgt n'est pas la bonne");
 
         try (FileInputStream s = new FileInputStream(file)) {
             this.s = s;
@@ -52,47 +53,21 @@ public final class HgtDiscreteElevationModel implements DiscreteElevationModel {
         sign(name, 0, latitude, 'S');
         sign(name, 3, longitude, 'W');
 
-        this.file = file;
         this.startingX = longitude * SAMPLES_PER_DEGREE;
         this.startingY = latitude * SAMPLES_PER_DEGREE;
-        Interval1D iX = new Interval1D(startingX,
-                startingX + SAMPLES_PER_DEGREE);
-        Interval1D iY = new Interval1D(startingY,
-                startingY + SAMPLES_PER_DEGREE);
+        Interval1D iX = new Interval1D(startingX, startingX + SAMPLES_PER_DEGREE);
+        Interval1D iY = new Interval1D(startingY, startingY + SAMPLES_PER_DEGREE);
         this.extent = new Interval2D(iX, iY);
     }
 
-    @Override
-    public Interval2D extent() {
-        return extent;
-    }
-
-    @Override
-    public double elevationSample(int x, int y) {
-        checkArgument(this.extent().contains(x, y));
-        int relY = abs(y - startingY) + 1;
-        int lines = 3601 - relY;
-
-        int relX = abs(x - startingX);
-
-        int index = 3601 * lines + relX;
-        return b.get(index);
-    }
-
-    @Override
-    public void close() throws Exception {
-        s.close();
-        b = null;
-    }
-
     /**
-     * Checks that the file's name is acceptable.
-     * 
+     * Checks that the file's name is compatible with the wanted format.
+     *
      * @param name
      * @return boolean
      */
     private boolean checkName(String name) {
-        if (name.length() != 11) {
+        if (name.length() != LENGTH_OF_NAME) {
             return false;
         }
 
@@ -129,7 +104,7 @@ public final class HgtDiscreteElevationModel implements DiscreteElevationModel {
 
     /**
      * Returns the longitude or latitude given a character.
-     * 
+     *
      * @param name
      *            The name we want to check
      * @param index
@@ -146,5 +121,28 @@ public final class HgtDiscreteElevationModel implements DiscreteElevationModel {
         } else {
             return i;
         }
+    }
+
+    @Override
+    public Interval2D extent() {
+        return extent;
+    }
+
+    @Override
+    public double elevationSample(int x, int y) {
+        checkArgument(this.extent().contains(x, y));
+        int relY = abs(y - startingY) + 1;
+        int lines = SAMPLES_PER_LINE - relY;
+
+        int relX = abs(x - startingX);
+
+        int index = SAMPLES_PER_LINE * lines + relX;
+        return b.get(index);
+    }
+
+    @Override
+    public void close() throws Exception {
+        s.close();
+        b = null;
     }
 }

@@ -12,8 +12,13 @@ import static java.lang.Math.toRadians;
 
 /**
  * @author : Jeremy Zerbib (257715)
+ * @author : Etienne Caquot (249949)
  */
 public class GazetteerParser {
+
+    private final static double SECONDS_PER_MINUTES = 60.0;
+    private final static double SECONDS_PER_HOUR = SECONDS_PER_MINUTES * 60.0;
+
     private GazetteerParser() {
     }
 
@@ -38,9 +43,9 @@ public class GazetteerParser {
 
     /**
      * Returns the Summit of a line in the file.
-     * 
+     * What we want to do in this method is a decomposition of all the informations of a line.
      * @param line
-     * @return
+     * @return Summit
      */
     private static Summit correspondingSummit(String line) {
         String longitude = line.substring(0, 9).trim();
@@ -61,7 +66,7 @@ public class GazetteerParser {
      */
     private static double StringToRadians(String s) {
         String[] sDegrees = s.split(":");
-        double sDouble = parseInt(sDegrees[0]) + parseInt(sDegrees[1]) / 60.0 + parseInt(sDegrees[2]) / 3600.0;
+        double sDouble = parseInt(sDegrees[0]) + parseInt(sDegrees[1]) / SECONDS_PER_MINUTES + parseInt(sDegrees[2]) / SECONDS_PER_HOUR;
         return toRadians(sDouble);
     }
 }

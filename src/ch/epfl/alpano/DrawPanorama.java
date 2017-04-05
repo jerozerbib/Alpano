@@ -15,6 +15,7 @@ import static java.lang.Math.toRadians;
 
 /**
  * @author : Jeremy Zerbib (257715)
+ * @author : Etienne Caquot (249949)
  */
 public final class DrawPanorama {
     final static File HGT_FILE = new File("N46E007.hgt");

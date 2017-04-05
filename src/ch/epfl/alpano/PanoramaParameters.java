@@ -10,14 +10,15 @@ import static java.util.Objects.requireNonNull;
 
 /**
  * @author : Jeremy Zerbib (257715)
+ * @author : Etienne Caquot (249949)
  */
 public final class PanoramaParameters {
 
     private final GeoPoint observerPosition;
     private final int observerElevation, maxDistance, width, height;
     private final double centerAzimuth, horizontalFieldOfView;
-    private double delta;
-    private double arcDelta;
+    private final double delta;
+    private final double arcDelta;
 
     /**
      * PanoramaParameters' constructor

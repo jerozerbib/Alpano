@@ -13,9 +13,9 @@ import static java.util.Objects.requireNonNull;
 public final class CompositeDiscreteElevationModel
         implements DiscreteElevationModel {
 
-    private DiscreteElevationModel dem1;
-    private DiscreteElevationModel dem2;
-    private Interval2D extent;
+    private final DiscreteElevationModel dem1;
+    private final DiscreteElevationModel dem2;
+    private final Interval2D extent;
 
     /**
      * ContinuousElevationModel's constructor, union of two DEM's
