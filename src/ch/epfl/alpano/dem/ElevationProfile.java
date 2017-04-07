@@ -28,11 +28,18 @@ public class ElevationProfile {
      * ElevationProfile's constructor
      * 
      * @param elevationModel
+     *            the elevation model to set
      * @param origin
+     *            the origin Geopoint to set
      * @param azimuth
+     *            the azimuth to set
      * @param length
+     *            the length to set
+     * @throws IllegalArgumentException
+     *             if the length is negative or if the azimuth is not canonical
      */
-    public ElevationProfile(ContinuousElevationModel elevationModel, GeoPoint origin, double azimuth, double length) {
+    public ElevationProfile(ContinuousElevationModel elevationModel,
+            GeoPoint origin, double azimuth, double length) {
         checkArgument(length > 0, "La longueur est négative");
         this.length = length;
         final int size = (int) Math.ceil(Distance.toRadians(length) / STEP);
@@ -45,8 +52,11 @@ public class ElevationProfile {
             tab[i][0] = longitudeAt(i * STEP);
             tab[i][1] = latitudeAt(i * STEP);
         }
-        tab[size][0] = origin.longitude() + toRadians(1); //In this case and the following we are using the
-        tab[size][1] = origin.latitude() + toRadians(1); // static reference toRadians from Math.
+        tab[size][0] = origin.longitude() + toRadians(1); // In this case and
+                                                          // the following we
+                                                          // are using the
+        tab[size][1] = origin.latitude() + toRadians(1); // static reference
+                                                         // toRadians from Math.
     }
 
     /**
@@ -56,7 +66,8 @@ public class ElevationProfile {
      * @return double
      */
     public double elevationAt(double x) {
-        checkArgument(x >= 0 && x <= length, "la valeur x n'est pas comprise dans la longueur du profil");
+        checkArgument(x >= 0 && x <= length,
+                "la valeur x n'est pas comprise dans la longueur du profil");
         return elevationModel.elevationAt(positionAt(x));
     }
 
@@ -67,11 +78,14 @@ public class ElevationProfile {
      * @return double
      */
     public GeoPoint positionAt(double x) {
-        checkArgument(x <= length && x >= 0, "la valeur x n'est pas comprise dans la longueur du profil");
+        checkArgument(x <= length && x >= 0,
+                "la valeur x n'est pas comprise dans la longueur du profil");
         double indexOfX = scalb(x, -12);
         int lowerBound = (int) floor(indexOfX);
-        double longitude = lerp(tab[lowerBound][0], tab[lowerBound + 1][0], indexOfX - lowerBound);
-        double latitude = lerp(tab[lowerBound][1], tab[lowerBound + 1][1], indexOfX - lowerBound);
+        double longitude = lerp(tab[lowerBound][0], tab[lowerBound + 1][0],
+                indexOfX - lowerBound);
+        double latitude = lerp(tab[lowerBound][1], tab[lowerBound + 1][1],
+                indexOfX - lowerBound);
         return new GeoPoint(longitude, latitude);
     }
 
@@ -82,7 +96,8 @@ public class ElevationProfile {
      * @return double
      */
     public double slopeAt(double x) {
-        checkArgument(x <= length && x >= 0, "la valeur x n'est pas comprise dans la longueur du profil");
+        checkArgument(x <= length && x >= 0,
+                "la valeur x n'est pas comprise dans la longueur du profil");
         return elevationModel.slopeAt(positionAt(x));
     }
 
@@ -93,7 +108,8 @@ public class ElevationProfile {
      * @return double
      */
     private double latitudeAt(double x) {
-        checkArgument(x <= Distance.toRadians(length), "la valeur x n'est pas comprise dans la longueur du profil");
+        checkArgument(x <= Distance.toRadians(length),
+                "la valeur x n'est pas comprise dans la longueur du profil");
         double lat = origin.latitude();
         double sinLat = sin(lat);
         double cosDist = cos(x);
@@ -110,7 +126,8 @@ public class ElevationProfile {
      * @return double
      */
     private double longitudeAt(double x) {
-        checkArgument(x <= Distance.toRadians(length), "la valeur x n'est pas comprise dans la longueur du profil");
+        checkArgument(x <= Distance.toRadians(length),
+                "la valeur x n'est pas comprise dans la longueur du profil");
         double longitude = origin.longitude();
         double sinAz = sin(toMath(azimuth));
         double sinDist = sin(x);
