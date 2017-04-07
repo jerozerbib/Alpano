@@ -13,6 +13,16 @@ public final class Summit {
     private final GeoPoint position;
     private final int elevation;
 
+    /**
+     * Summit's Constructor
+     * 
+     * @param name
+     *            the name to set
+     * @param position
+     *            the position to set
+     * @param elevation
+     *            the elevation to set
+     */
     public Summit(String name, GeoPoint position, int elevation) {
         this.name = requireNonNull(name);
         this.position = requireNonNull(position);
@@ -22,7 +32,7 @@ public final class Summit {
     /**
      * name's getter
      * 
-     * @return String
+     * @return the name of the summit
      */
     public String name() {
         return this.name;
@@ -31,7 +41,7 @@ public final class Summit {
     /**
      * position's getter
      * 
-     * @return GeoPoint
+     * @return the position of the summit
      */
     public GeoPoint position() {
         return this.position;
@@ -40,7 +50,7 @@ public final class Summit {
     /**
      * elevation's getter
      * 
-     * @return int
+     * @return the elevation of the summit
      */
     public int elevation() {
         return elevation;

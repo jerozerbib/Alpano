@@ -24,12 +24,23 @@ public final class PanoramaParameters {
      * PanoramaParameters' constructor
      * 
      * @param observerPosition
+     *            the observerPosition to set
      * @param observerElevation
+     *            the observerElevation to set
      * @param centerAzimuth
+     *            the centerAzimuth to set
      * @param horizontalFieldOfView
+     *            the horizontalFieldOfView to set
      * @param maxDistance
+     *            the maxDistance to set
      * @param width
+     *            the width to set
      * @param height
+     *            the height to set
+     * @throws IllegalArgumentException
+     *             if the centerAzimuth is not canonical, if the
+     *             horizontalFielOfView is not between 0 and 2*PI or if
+     *             maxDistance, width, height are not positive
      */
     public PanoramaParameters(GeoPoint observerPosition, int observerElevation,
             double centerAzimuth, double horizontalFieldOfView, int maxDistance,
@@ -55,7 +66,7 @@ public final class PanoramaParameters {
     /**
      * observerPosition's getter
      * 
-     * @return GeoPoint
+     * @return the observerPosition
      */
     public GeoPoint observerPosition() {
         return this.observerPosition;
@@ -64,7 +75,7 @@ public final class PanoramaParameters {
     /**
      * observerElevation's getter
      * 
-     * @return int
+     * @return the observerElevation
      */
     public int observerElevation() {
         return this.observerElevation;
@@ -73,7 +84,7 @@ public final class PanoramaParameters {
     /**
      * maxDistance's getter
      * 
-     * @return int
+     * @return the maxDistance
      */
     public int maxDistance() {
         return this.maxDistance;
@@ -82,7 +93,7 @@ public final class PanoramaParameters {
     /**
      * width's getter
      * 
-     * @return int
+     * @return the width
      */
     public int width() {
         return this.width;
@@ -91,7 +102,7 @@ public final class PanoramaParameters {
     /**
      * height's getter
      * 
-     * @return int
+     * @return the height
      */
     public int height() {
         return this.height;
@@ -100,7 +111,7 @@ public final class PanoramaParameters {
     /**
      * horizontalFieldOfView's getter.
      * 
-     * @return double
+     * @return the horizontalFieldOfView
      */
     public double horizontalFieldOfView() {
         return this.horizontalFieldOfView;
@@ -109,7 +120,7 @@ public final class PanoramaParameters {
     /**
      * centerAzimuth's getter
      * 
-     * @return double
+     * @return the centerAzimuth
      */
     public double centerAzimuth() {
         return this.centerAzimuth;
@@ -118,7 +129,7 @@ public final class PanoramaParameters {
     /**
      * verticalFieldOfView's "getter".
      * 
-     * @return double
+     * @return the verticalFieldOfView
      */
     public double verticalFieldOfView() {
         return delta * (height - 1);
@@ -128,22 +139,23 @@ public final class PanoramaParameters {
      * Returns the azimuth for a given index.
      * 
      * @param x
-     *            This index can be a double
-     * @return double
+     *            the index (double)
+     * @return the azimuth
      */
     public double azimuthForX(double x) {
         checkArgument(x >= 0 && x <= width - 1,
                 "La largeur n'et pas dans les bornes");
         double indexForCenterAzimuth = (width() - 1) / 2.0;
-        return canonicalize(centerAzimuth - (indexForCenterAzimuth - x) * delta);
+        return canonicalize(
+                centerAzimuth - (indexForCenterAzimuth - x) * delta);
     }
 
     /**
      * Returns an index for a given azimuth
      * 
      * @param a
-     *            This azimuth is a double
-     * @return double
+     *            The azimuth
+     * @return the index
      */
     public double xForAzimuth(double a) {
         checkArgument(
@@ -151,14 +163,16 @@ public final class PanoramaParameters {
                         && (a >= centerAzimuth - horizontalFieldOfView() / 2.0),
                 "L'angle de vue est en dehors des limites");
         double indexForCenterAzimuth = (width() - 1) / 2.0;
-        return indexForCenterAzimuth - angularDistance(a, centerAzimuth) * arcDelta;
+        return indexForCenterAzimuth
+                - angularDistance(a, centerAzimuth) * arcDelta;
     }
 
     /**
      * Returns the altitude for a given index.
      * 
      * @param y
-     * @return double
+     *            the index (double)
+     * @return the altitude
      */
     public double altitudeForY(double y) {
         checkArgument(y >= 0 && y <= height - 1,
@@ -171,7 +185,8 @@ public final class PanoramaParameters {
      * Returns the y index for a given altitude.
      * 
      * @param a
-     * @return double
+     *            the azimuth
+     * @return the altitude
      */
     public double yForAltitude(double a) {
         checkArgument(abs(a) <= verticalFieldOfView() / 2.0,
@@ -184,8 +199,11 @@ public final class PanoramaParameters {
      * Checks the validity of a sample index
      * 
      * @param x
+     *            the first index
      * @param y
-     * @return boolean
+     *            the second index
+     * @return true is the first index and the second are positive or null and
+     *         respectively inferior to width and height
      */
     protected boolean isValidSampleIndex(int x, int y) {
         if (x >= 0 && x <= width() - 1 && y >= 0 && y <= height() - 1) {
@@ -199,8 +217,10 @@ public final class PanoramaParameters {
      * Returns the sample index as a linear index.
      * 
      * @param x
+     *            the first index
      * @param y
-     * @return int
+     *            the second index
+     * @return the linearIndex of x and y
      */
     protected int linearSampleIndex(int x, int y) {
         return width() * y + x;
