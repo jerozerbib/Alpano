@@ -82,14 +82,14 @@ public final class GeoPoint {
     public double azimuthTo(GeoPoint that) {
         double sin1 = sin(this.longitude - that.longitude);
         double cos1 = cos(that.latitude);
-        double num = sin1 * cos1;
+        double numerator = sin1 * cos1;
         double cos2 = cos(this.latitude);
         double sin2 = sin(that.latitude);
         double sin3 = sin(this.latitude);
         double cos3 = cos(that.latitude);
         double cos4 = cos(this.longitude - that.longitude());
-        double den = cos2 * sin2 - sin3 * cos3 * cos4;
-        return fromMath(canonicalize(Math.atan2(num, den)));
+        double denominator = cos2 * sin2 - sin3 * cos3 * cos4;
+        return fromMath(canonicalize(Math.atan2(numerator, denominator)));
     }
     
     @Override

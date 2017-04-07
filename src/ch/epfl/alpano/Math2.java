@@ -151,7 +151,6 @@ public interface Math2 {
             throw new IllegalArgumentException(
                     "f(x1) et f(x2) sont du même signe.");
         }
-        // TODO : Est ce qu'une lambda peut être utilisée ?
         while (x2 - x1 > epsilon) {
             double xm = (x1 + x2) / 2;
             if (f.applyAsDouble(xm) == 0) {

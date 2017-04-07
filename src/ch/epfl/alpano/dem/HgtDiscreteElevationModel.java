@@ -28,16 +28,20 @@ public final class HgtDiscreteElevationModel implements DiscreteElevationModel {
     private final int SAMPLES_PER_LINE = 3601;
     private final int LENGTH_OF_NAME = 11;
 
-
     /**
-     * Constructor
+     * Constructor of HgtDiscreteElevationModel
      * 
      * @param file
+     *            the file from which we want the data
+     * @throws IllegalArgumentException
+     *             if the name of the file or if the length of the file is not
+     *             correct
      */
     public HgtDiscreteElevationModel(File file) {
         String name = file.getName();
         checkArgument(checkName(name), "Le nom du fichier n'est pas le bon");
-        checkArgument(file.length() == FILE_LENGTH, "La taille du fichier hgt n'est pas la bonne");
+        checkArgument(file.length() == FILE_LENGTH,
+                "La taille du fichier hgt n'est pas la bonne");
 
         try (FileInputStream s = new FileInputStream(file)) {
             this.s = s;
@@ -56,39 +60,19 @@ public final class HgtDiscreteElevationModel implements DiscreteElevationModel {
 
         this.startingX = longitude * SAMPLES_PER_DEGREE;
         this.startingY = latitude * SAMPLES_PER_DEGREE;
-        Interval1D iX = new Interval1D(startingX, startingX + SAMPLES_PER_DEGREE);
-        Interval1D iY = new Interval1D(startingY, startingY + SAMPLES_PER_DEGREE);
+        Interval1D iX = new Interval1D(startingX,
+                startingX + SAMPLES_PER_DEGREE);
+        Interval1D iY = new Interval1D(startingY,
+                startingY + SAMPLES_PER_DEGREE);
         this.extent = new Interval2D(iX, iY);
-    }
-
-    @Override
-    public Interval2D extent(){
-        return extent;
-    }
-
-    @Override
-    public double elevationSample(int x, int y) {
-        checkArgument(this.extent().contains(x, y));
-        int relY = abs(y - this.startingY) + 1;
-        int lines = NUMBER_OF_SAMPLES - relY;
-
-        int relX = abs(x - this.startingX);
-
-        int index = NUMBER_OF_SAMPLES * lines + relX;
-        return b.get(index);
-    }
-
-    @Override
-    public void close() throws Exception {
-        s.close();
-        b = null;
     }
 
     /**
      * Checks that the file's name is compatible with the wanted format.
      *
      * @param name
-     * @return boolean
+     *            the name to check
+     * @return true is the name is correct false otherwise
      */
     private boolean checkName(String name) {
         if (name.length() != LENGTH_OF_NAME) {
@@ -123,7 +107,6 @@ public final class HgtDiscreteElevationModel implements DiscreteElevationModel {
         }
 
         return true;
-
     }
 
     /**
@@ -137,7 +120,7 @@ public final class HgtDiscreteElevationModel implements DiscreteElevationModel {
      *            Longitude or latitude
      * @param c1
      *            W or S
-     * @return int
+     * @return the longitude
      */
     private int sign(String name, int index, int i, char c1) {
         if (name.charAt(index) == c1) {
