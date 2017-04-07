@@ -28,7 +28,6 @@ public final class HgtDiscreteElevationModel implements DiscreteElevationModel {
     private final int SAMPLES_PER_LINE = 3601;
     private final int LENGTH_OF_NAME = 11;
 
-
     /**
      * Constructor of HgtDiscreteElevationModel
      * 
@@ -66,29 +65,6 @@ public final class HgtDiscreteElevationModel implements DiscreteElevationModel {
         Interval1D iY = new Interval1D(startingY,
                 startingY + SAMPLES_PER_DEGREE);
         this.extent = new Interval2D(iX, iY);
-    }
-
-    @Override
-    public Interval2D extent(){
-        return extent;
-    }
-
-    @Override
-    public double elevationSample(int x, int y) {
-        checkArgument(this.extent().contains(x, y));
-        int relY = abs(y - this.startingY) + 1;
-        int lines = NUMBER_OF_SAMPLES - relY;
-
-        int relX = abs(x - this.startingX);
-
-        int index = NUMBER_OF_SAMPLES * lines + relX;
-        return b.get(index);
-    }
-
-    @Override
-    public void close() throws Exception {
-        s.close();
-        b = null;
     }
 
     /**
@@ -131,7 +107,6 @@ public final class HgtDiscreteElevationModel implements DiscreteElevationModel {
         }
 
         return true;
-
     }
 
     /**
