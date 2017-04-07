@@ -70,7 +70,7 @@ public interface ChannelPainter {
     }
 
     /**
-     * Maps the value
+     * Maps the value of the ChannelPainter
      * @param d
      * @return
      */
