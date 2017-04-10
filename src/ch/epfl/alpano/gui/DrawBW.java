@@ -13,6 +13,7 @@ import javafx.scene.image.Image;
 import javax.imageio.ImageIO;
 import java.io.File;
 
+import static ch.epfl.alpano.gui.ChannelPainter.maxDistanceToNeighbors;
 import static java.lang.Math.toRadians;
 
 /**
@@ -41,7 +42,7 @@ public class DrawBW {
             ContinuousElevationModel cDEM = new ContinuousElevationModel(dDEM);
             Panorama p = new PanoramaComputer(cDEM).computePanorama(PARAMS);
 
-            ChannelPainter gray = ChannelPainter.maxDistanceToNeighbors(p).sub(500).div(4500).clamped().inverted();
+            ChannelPainter gray = maxDistanceToNeighbors(p).sub(500).div(4500).clamped().inverted();
 
 
             ChannelPainter distance = p::distanceAt;

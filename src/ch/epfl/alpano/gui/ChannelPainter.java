@@ -1,5 +1,6 @@
 package ch.epfl.alpano.gui;
 
+import ch.epfl.alpano.Math2;
 import ch.epfl.alpano.Panorama;
 
 import java.util.function.DoubleUnaryOperator;
@@ -30,7 +31,7 @@ public interface ChannelPainter {
                 max(
                         max(p.distanceAt(x -1, y, 0), p.distanceAt(x, y + 1, 0)),
                         p.distanceAt(x + 1, y, 0)),
-                p.distanceAt(x + 1, y - 1, 0)) - p.distanceAt(x, y, 0);
+                p.distanceAt(x, y - 1, 0)) - p.distanceAt(x, y);
     }
 
     /**
@@ -99,7 +100,7 @@ public interface ChannelPainter {
      * @return ChannelPainter
      */
     default ChannelPainter cycling(){
-        return (x, y) -> valueAt(x, y) % 1;
+        return (x, y) -> (float) Math2.floorMod(valueAt(x, y), 1);
     }
 
 }

@@ -23,8 +23,8 @@ public interface ImagePainter {
      * @param op
      * @return ImagePainter
      */
-    static ImagePainter hsb(ChannelPainter t, ChannelPainter sat, ChannelPainter lum, ChannelPainter op){
-        return (x, y) -> Color.hsb(t.valueAt(x, y), sat.valueAt(x, y), lum.valueAt(x, y), op.valueAt(x, y));
+    static ImagePainter hsb(ChannelPainter h, ChannelPainter s, ChannelPainter b, ChannelPainter op){
+        return (x, y) -> Color.hsb(h.valueAt(x, y), s.valueAt(x, y), b.valueAt(x, y), op.valueAt(x, y));
     }
 
     /**
