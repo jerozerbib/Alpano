@@ -13,7 +13,6 @@ import javafx.scene.image.Image;
 import javax.imageio.ImageIO;
 import java.io.File;
 
-import static ch.epfl.alpano.gui.ChannelPainter.maxDistanceToNeighbors;
 import static java.lang.Math.toRadians;
 
 /**
@@ -46,11 +45,10 @@ public class DrawColor {
             ChannelPainter slope = p::slopeAt;
 
 
-            ChannelPainter h = distance.div(100_00).cycling().mul(360);
-            ChannelPainter s = distance.div(200_00).clamped().inverted();
+            ChannelPainter h = distance.div(100_000).cycling().mul(360);
+            ChannelPainter s = distance.div(200_000).clamped().inverted();
             ChannelPainter b = slope.mul(2).div((float) Math.PI).inverted().mul(0.7f).add(0.3f);
             ChannelPainter opacity = distance.map(d -> d == Float.POSITIVE_INFINITY ? 0 : 1);
-            ChannelPainter gray = maxDistanceToNeighbors(p).sub(500).div(4500).clamped().inverted();
 
             ImagePainter l = ImagePainter.hsb(h, s, b, opacity);
 

@@ -118,10 +118,9 @@ public interface Math2 {
      * @return the lower bound of the interval if it exists, infinity otherwise.
      */
 
-    static double firstIntervalContainingRoot(DoubleUnaryOperator f,
-            double minX, double maxX, double dX) {
+    static double firstIntervalContainingRoot(DoubleUnaryOperator f, double minX, double maxX, double dX) {
         for (double i = minX; i <= (maxX - dX); i += dX) {
-            if (f.applyAsDouble(i) * f.applyAsDouble(i + dX) < 0) {
+            if (f.applyAsDouble(i) * f.applyAsDouble(i + dX) <= 0) {
                 return i;
             }
         }
@@ -155,7 +154,7 @@ public interface Math2 {
             double xm = (x1 + x2) / 2;
             if (f.applyAsDouble(xm) == 0) {
                 return xm;
-            } else if (f.applyAsDouble(x1) * f.applyAsDouble(xm) < 0) {
+            } else if (f.applyAsDouble(x1) * f.applyAsDouble(xm) <= 0) {
                 x2 = xm;
             } else {
                 x1 = xm;
