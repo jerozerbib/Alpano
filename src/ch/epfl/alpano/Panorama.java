@@ -186,7 +186,7 @@ public final class Panorama {
          */
         public Builder(PanoramaParameters parameters) {
             this.parameters = requireNonNull(parameters);
-            size = parameters.height() * parameters.width();
+            int size = parameters.height() * parameters.width();
             tabDistance = new float[size];
             tabLongitude = new float[size];
             tabLatitude = new float[size];

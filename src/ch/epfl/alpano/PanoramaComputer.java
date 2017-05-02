@@ -83,8 +83,7 @@ public final class PanoramaComputer {
      *            the slope of the ray
      * @return DoubleUnaryOperator a function that calculates the distance
      */
-    public static DoubleUnaryOperator rayToGroundDistance(
-            ElevationProfile profile, double ray0, double raySlope) {
+    public static DoubleUnaryOperator rayToGroundDistance(ElevationProfile profile, double ray0, double raySlope) {
         return x -> ray0 + x * raySlope - (profile.elevationAt(x) - K_RATIO * sq(x));
     }
 }
