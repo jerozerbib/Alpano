@@ -23,14 +23,13 @@ public enum  UserParameter {
     }
 
     public int sanitize(int v) {
-        for (UserParameter u : values()) {
-            if (v < u.min){
-                return min;
-            } else if(v > u.max){
-                return max;
-            }
+        if (v < min){
+            return min;
+        } else if(v > max){
+            return max;
+        } else {
+            return v;
         }
-        return v;
     }
 
 }

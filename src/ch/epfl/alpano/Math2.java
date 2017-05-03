@@ -115,10 +115,17 @@ public interface Math2 {
      *            the end of searching
      * @param dX
      *            the size of the interval
+     * @throws IllegalArgumentException
+     *             min is bigger than max or dx is 0 or less
      * @return the lower bound of the interval if it exists, infinity otherwise.
      */
 
-    static double firstIntervalContainingRoot(DoubleUnaryOperator f, double minX, double maxX, double dX) {
+    static double firstIntervalContainingRoot(DoubleUnaryOperator f,
+            double minX, double maxX, double dX) {
+        if (minX > maxX || dX <= 0) {
+            throw new IllegalArgumentException(
+                    "min est plus grand que max ou dX <= 0");
+        }
         for (double i = minX; i <= (maxX - dX); i += dX) {
             if (f.applyAsDouble(i) * f.applyAsDouble(i + dX) <= 0) {
                 return i;

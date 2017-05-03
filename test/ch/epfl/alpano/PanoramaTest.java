@@ -58,11 +58,8 @@ public class PanoramaTest {
     @Test(expected = IllegalStateException.class)
     public void buildFailsAfterBuild() {
         Panorama.Builder b = new Panorama.Builder(PARAMS());
-        System.out.println(b.ticker);
         b.build();
-        System.out.println(b.ticker);
         b.build();
-        System.out.println(b.ticker);
 
     }
 
