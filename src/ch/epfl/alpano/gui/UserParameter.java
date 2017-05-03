@@ -14,8 +14,8 @@ public enum  UserParameter {
     HEIGHT(100, 4_000),
     SUPER_SAMPLING_EXPONENT(0, 2);
 
-    private int min;
-    private int max;
+    private final int min;
+    private final int max;
 
     UserParameter(int min, int max){
         this.min = min;

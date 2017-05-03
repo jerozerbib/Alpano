@@ -1,0 +1,33 @@
+package ch.epfl.alpano.gui;
+
+import javafx.util.StringConverter;
+
+import java.math.BigDecimal;
+
+import static java.math.RoundingMode.HALF_UP;
+
+/**
+ * @author : Jeremy Zerbib (257715)
+ */
+
+//TODO : Demander si l'idée est bonne
+public class FixedPointStringConverter extends StringConverter<Integer> {
+
+    private final int fixedDecimal;
+
+    public FixedPointStringConverter(int fixedDecimal){
+        this.fixedDecimal = fixedDecimal;
+    }
+
+    @Override
+    public String toString(Integer object) {
+        BigDecimal b = new BigDecimal(object);
+        return b.movePointLeft(fixedDecimal).stripTrailingZeros().toPlainString();
+    }
+
+    @Override
+    public Integer fromString(String string) {
+        BigDecimal b = new BigDecimal(string);
+        return b.setScale(fixedDecimal, HALF_UP).movePointRight(fixedDecimal).stripTrailingZeros().intValueExact();
+    }
+}

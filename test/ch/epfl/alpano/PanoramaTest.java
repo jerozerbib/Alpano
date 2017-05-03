@@ -60,7 +60,6 @@ public class PanoramaTest {
         Panorama.Builder b = new Panorama.Builder(PARAMS());
         b.build();
         b.build();
-
     }
 
     @Test
