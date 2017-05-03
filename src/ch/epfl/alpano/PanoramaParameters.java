@@ -20,8 +20,8 @@ public final class PanoramaParameters {
     private final double delta;
     private final double arcDelta;
     private final double verticalFieldOfView;
-    double indexForCenterAzimuth;
-    double indexForAltZero;
+    private final double indexForCenterAzimuth;
+    private final double indexForAltZero;
 
 
 

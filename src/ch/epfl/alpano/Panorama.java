@@ -170,11 +170,11 @@ public final class Panorama {
 
     public static final class Builder {
         private final PanoramaParameters parameters;
-        private float[] tabDistance;
-        private float[] tabLongitude;
-        private float[] tabLatitude;
-        private float[] tabAltitude;
-        private float[] tabSlope;
+        private final float[] tabDistance;
+        private final float[] tabLongitude;
+        private final float[] tabLatitude;
+        private final float[] tabAltitude;
+        private final float[] tabSlope;
         private boolean ticker;
 
         /**
