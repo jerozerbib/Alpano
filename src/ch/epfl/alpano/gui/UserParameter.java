@@ -1,5 +1,8 @@
 package ch.epfl.alpano.gui;
 
+import static java.lang.Math.max;
+import static java.lang.Math.min;
+
 /**
  * @author : Jeremy Zerbib (257715)
  */
@@ -23,12 +26,7 @@ public enum  UserParameter {
     }
 
     public int sanitize(int v) {
-        if (v < this.min){
-            return min;
-        } else if (v > this.max){
-            return max;
-        }
-        return v;
+        return max(min, min(v, max));
     }
 
 }
