@@ -36,6 +36,7 @@ public final class Labelizer {
     private final int SPACE = 2;
     private final int MARGIN = 20;
     private final int VERTICAL_LIMIT = 170;
+    private final int ANGLE = 60;
 
     public Labelizer(ContinuousElevationModel cDEM, List<Summit> summits){
         this.cDEM = cDEM;
@@ -73,10 +74,9 @@ public final class Labelizer {
                     line.setStartY(roundedY);
                     line.setEndY(yHighestRounded - roundedY + LINE_SIZE);
                     line.setStartX(roundedX);
-                    Text name = new Text(roundedX, yHighestRounded - roundedY + LINE_SIZE + SPACE, s.name() + " (" + s.elevation() + " m)");
-                    //TODO : Demander si Translate utile ou non ?
-                    name.getTransforms().addAll(new Rotate(60, 0, 0), new Translate(0, 2, 0));
-                    bitSet.set(roundedX, roundedX + 20, false);
+                    Text name = new Text(roundedX, yHighestRounded - roundedY + LINE_SIZE, s.name() + " (" + s.elevation() + " m)");
+                    name.getTransforms().addAll(new Rotate(ANGLE, 0, 0), new Translate(0, SPACE, 0));
+                    bitSet.set(roundedX, roundedX + MARGIN, false);
                     listTag.add(line);
                     listTag.add(name);
                 }
