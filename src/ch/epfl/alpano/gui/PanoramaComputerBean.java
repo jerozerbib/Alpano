@@ -3,6 +3,7 @@ package ch.epfl.alpano.gui;
 import ch.epfl.alpano.Panorama;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
@@ -13,7 +14,7 @@ import java.util.List;
  * @author : Jeremy Zerbib (257715)
  */
 
-//TODO : Demander si appel à ObjectProperty ou changement dans le constructeur ?
+//TODO : Réponse est que changer constructeur !
 public class PanoramaComputerBean {
 
     private ObjectProperty<Panorama> panorama;
@@ -21,14 +22,14 @@ public class PanoramaComputerBean {
     private ObjectProperty<ImagePainter> imagePainter;
     private ObjectProperty<Labelizer> labelizer;
 
-    public PanoramaComputerBean(ObjectProperty<Panorama> panorama,
-                                ObjectProperty<PanoramaUserParameters> pUserParameters,
-                                ObjectProperty<ImagePainter> imagePainter,
-                                ObjectProperty<Labelizer> labelizer){
-        this.panorama = panorama;
-        this.pUserParameters = pUserParameters;
-        this.imagePainter = imagePainter;
-        this.labelizer = labelizer;
+    public PanoramaComputerBean(Panorama panorama,
+                                PanoramaUserParameters pUserParameters,
+                                ImagePainter imagePainter,
+                                Labelizer labelizer){
+        this.panorama = new SimpleObjectProperty<>(panorama);
+        this.pUserParameters = new SimpleObjectProperty<>(pUserParameters);
+        this.imagePainter = new SimpleObjectProperty<>(imagePainter);
+        this.labelizer = new SimpleObjectProperty<>(labelizer);
     }
 
     public ObjectProperty<PanoramaUserParameters> parametersProperty(){
