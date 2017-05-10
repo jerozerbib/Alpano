@@ -86,7 +86,7 @@ public final class Labelizer {
         return listTag;
     }
 
-    private List<Summit> visibleSummits(List<Summit> list, PanoramaParameters p){
+    public List<Summit> visibleSummits(List<Summit> list, PanoramaParameters p){
         ArrayList<Summit> visibleSummits = new ArrayList<>();
         for (Summit s : list){
             double distanceToSummit = p.observerPosition().distanceTo(s.position());
@@ -116,14 +116,14 @@ public final class Labelizer {
         return visibleSummits;
     }
 
-    private int yRounded(Summit s, PanoramaParameters p){
+  public static int yRounded(Summit s, PanoramaParameters p){
         double elevation = s.elevation() - p.observerElevation();
         double distanceToSummit = p.observerPosition().distanceTo(s.position());
         double altitudeInRAdians = Math.atan2(elevation, distanceToSummit);
         return (int) round(p.yForAltitude(altitudeInRAdians));
     }
 
-    private int xRounded(Summit s, PanoramaParameters p){
+   public static int xRounded(Summit s, PanoramaParameters p){
         double elevation = s.elevation() - p.observerElevation();
         double distanceToSummit = p.observerPosition().distanceTo(s.position());
         double altitudeInRAdians = Math.atan2(elevation, distanceToSummit);

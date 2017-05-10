@@ -17,11 +17,13 @@ import static java.util.Objects.hash;
  */
 public final class PanoramaUserParameters {
 
-    private Map<UserParameter, Integer> map = new EnumMap<>(UserParameter.class);
-    private final int MAX_HEIGHT = 14690; //From the instructions given by the teacher
+    private Map<UserParameter, Integer> map = new EnumMap<>(
+            UserParameter.class);
+    private final int MAX_HEIGHT = 14690; // From the instructions given by the
+                                          // teacher
 
-    public PanoramaUserParameters(Map<UserParameter, Integer> map){
-        for (Map.Entry<UserParameter, Integer> e : map.entrySet()){
+    public PanoramaUserParameters(Map<UserParameter, Integer> map) {
+        for (Map.Entry<UserParameter, Integer> e : map.entrySet()) {
             e.getKey().sanitize(e.getValue());
         }
 
@@ -29,7 +31,7 @@ public final class PanoramaUserParameters {
         int hfv = map.get(UserParameter.HORIZONTAL_FIELD_OF_VIEW);
         int w = map.get(UserParameter.WIDTH);
 
-        if (!(h <= (170 * (w - 1) / hfv) + 1)){
+        if (!(h <= (170 * (w - 1) / hfv) + 1)) {
             map.replace(UserParameter.HEIGHT, h, MAX_HEIGHT);
         }
 
@@ -37,25 +39,24 @@ public final class PanoramaUserParameters {
     }
 
     public PanoramaUserParameters(int observerLon, int observerLat,
-                                  int observerEl, int az,
-                                  int hfv, int maxD,
-                                  int w, int h, int exp){
-        this(fillMap(observerLon, observerLat, observerEl, az, hfv, maxD, w, h, exp));
+            int observerEl, int az, int hfv, int maxD, int w, int h, int exp) {
+        this(fillMap(observerLon, observerLat, observerEl, az, hfv, maxD, w, h,
+                exp));
     }
 
-    private static Map<UserParameter, Integer> fillMap(int... list){
+    private static Map<UserParameter, Integer> fillMap(int... list) {
         Map<UserParameter, Integer> map = new EnumMap<>(UserParameter.class);
-        for (int i = 0; i < UserParameter.values().length; i++){
+        for (int i = 0; i < UserParameter.values().length; i++) {
             map.put(UserParameter.values()[i], list[i]);
         }
         return map;
     }
 
-    public int get(UserParameter userParameter){
+    public int get(UserParameter userParameter) {
         return this.map.get(userParameter);
     }
 
-    public int observerLon(){
+    public int observerLon() {
         return map.get(OBSERVER_LONGITUDE);
     }
 
@@ -91,21 +92,30 @@ public final class PanoramaUserParameters {
         return map.get(SUPER_SAMPLING_EXPONENT);
     }
 
-    public PanoramaParameters panoramaParameters(){
+    public PanoramaParameters panoramaParameters() {
         int wp = (int) (w() * pow(2, exp()));
         int hp = (int) (h() * pow(2, exp()));
-        return new PanoramaParameters(new GeoPoint(observerLon(), observerLat()), observerEl(), az(), hfv(),maxD(), wp, hp);
+        return new PanoramaParameters(
+                new GeoPoint(Math.toRadians(observerLon() / 10_000),
+                        Math.toRadians(observerLat() / 10_000)),
+                observerEl(), Math.toRadians(az()), Math.toRadians(hfv()),
+                maxD() * 1000, wp, hp);
     }
 
-    public PanoramaParameters panoramaDisplayParameters(){
-        return new PanoramaParameters(new GeoPoint(observerLon(), observerLat()), observerEl(), az(), hfv(),maxD(), w(), h());
+    public PanoramaParameters panoramaDisplayParameters() {
+        return new PanoramaParameters(
+                new GeoPoint(Math.toRadians(observerLon() / 10_000),
+                        Math.toRadians(observerLat() / 10_000)),
+                observerEl(), Math.toRadians(az()), Math.toRadians(hfv()),
+                maxD() * 1000, w(), h());
     }
 
     @Override
     public boolean equals(Object that) {
         if (that instanceof PanoramaUserParameters) {
             for (Map.Entry<UserParameter, Integer> v : this.map.entrySet()) {
-                if (!Objects.equals(v.getValue(), ((PanoramaUserParameters) that).map.get(v.getKey()))) {
+                if (!Objects.equals(v.getValue(),
+                        ((PanoramaUserParameters) that).map.get(v.getKey()))) {
                     return false;
                 }
             }
@@ -114,7 +124,8 @@ public final class PanoramaUserParameters {
     }
 
     @Override
-    public int hashCode(){
-        return hash(observerLon(), observerEl(), observerLat(), az(), hfv(), maxD(), w(), h(), exp());
+    public int hashCode() {
+        return hash(observerLon(), observerEl(), observerLat(), az(), hfv(),
+                maxD(), w(), h(), exp());
     }
 }
