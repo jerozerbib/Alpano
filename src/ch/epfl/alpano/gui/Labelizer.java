@@ -95,8 +95,8 @@ public final class Labelizer {
             double maxD = p.maxDistance();
             GeoPoint obsPos = p.observerPosition();
             if (distanceToSummit < maxD && angularDistanceToSummit < p.horizontalFieldOfView()){
-                ElevationProfile e = new ElevationProfile(cDEM, obsPos, azimuthToSummit, distanceToSummit);
-                DoubleUnaryOperator f = PanoramaComputer.rayToGroundDistance(e, distanceToSummit, angularDistanceToSummit);
+                ElevationProfile e = new ElevationProfile(cDEM, obsPos, azimuthToSummit, distanceToSummit + TOLERANCE);
+                DoubleUnaryOperator f = PanoramaComputer.rayToGroundDistance(e, distanceToSummit + TOLERANCE, angularDistanceToSummit);
                 double rayToGround = firstIntervalContainingRoot(f, 0, distanceToSummit + TOLERANCE, STEP);
                 if (rayToGround != POSITIVE_INFINITY){
                     visibleSummits.add(s);

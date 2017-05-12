@@ -7,8 +7,8 @@ import static java.lang.Math.min;
  * @author : Jeremy Zerbib (257715)
  */
 public enum  UserParameter {
-    OBSERVER_LONGITUDE(60000, 120000),
-    OBSERVER_LATITUDE(450000, 480000),
+    OBSERVER_LONGITUDE(60_000, 120_000),
+    OBSERVER_LATITUDE(450_000, 480_000),
     OBSERVER_ELEVATION(300, 10_000),
     CENTER_AZIMUTH(0, 359),
     HORIZONTAL_FIELD_OF_VIEW(1, 360),

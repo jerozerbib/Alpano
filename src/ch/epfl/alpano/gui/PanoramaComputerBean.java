@@ -8,19 +8,17 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 
-import java.util.List;
-
 /**
  * @author : Jeremy Zerbib (257715)
  */
 
-//TODO : Réponse est que changer constructeur !
+
 public class PanoramaComputerBean {
 
-    private ObjectProperty<Panorama> panorama;
-    private ObjectProperty<PanoramaUserParameters> pUserParameters;
-    private ObjectProperty<ImagePainter> imagePainter;
-    private ObjectProperty<Labelizer> labelizer;
+    private final ObjectProperty<Panorama> panorama;
+    private final ObjectProperty<PanoramaUserParameters> pUserParameters;
+    private final ObjectProperty<ImagePainter> imagePainter;
+    private final ObjectProperty<Labelizer> labelizer;
 
     public PanoramaComputerBean(Panorama panorama,
                                 PanoramaUserParameters pUserParameters,
@@ -60,14 +58,14 @@ public class PanoramaComputerBean {
         return imageProperty().get();
     }
 
-    public ReadOnlyObjectProperty<Labelizer> labelsProperty(){
-        return labelizer;
+    public ReadOnlyObjectProperty<ObservableList<Node>> labelsProperty(){
+        ObservableList<Node> list = FXCollections.unmodifiableObservableList(FXCollections.observableArrayList(labelizer.get().labels(panoramaProperty().get().parameters())));
+        return new SimpleObjectProperty<>(list);
     }
 
     //TODO : demander à l'assistant l'utilité de l'appel à setAll !
     public ObservableList<Node> getLabels(){
-        List<Node> list = labelsProperty().get().labels(getPanorama().parameters());
-        return FXCollections.unmodifiableObservableList(FXCollections.observableArrayList(list));
+        return labelsProperty().get();
     }
 
 

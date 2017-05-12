@@ -17,8 +17,8 @@ import static javafx.application.Platform.runLater;
 
 public class PanoramaParametersBean {
 
-    private ObjectProperty<PanoramaUserParameters> syncronisedProps;
-    private Map<UserParameter, ObjectProperty<Integer>> mapPanoramaUserParameters = new EnumMap<>(UserParameter.class);
+    private final ObjectProperty<PanoramaUserParameters> syncronisedProps;
+    private final Map<UserParameter, ObjectProperty<Integer>> mapPanoramaUserParameters = new EnumMap<>(UserParameter.class);
 
     public PanoramaParametersBean(PanoramaUserParameters panoramaUserParameters){
         this.syncronisedProps = new SimpleObjectProperty<>(panoramaUserParameters);
@@ -69,12 +69,12 @@ public class PanoramaParametersBean {
         return mapPanoramaUserParameters.get(SUPER_SAMPLING_EXPONENT);
     }
 
-    private void synchronisedParameters(){
+    private PanoramaUserParameters synchronisedParameters(){
         Map<UserParameter, Integer> map = new EnumMap<>(UserParameter.class);
         for (Map.Entry<UserParameter, ObjectProperty<Integer>> e : mapPanoramaUserParameters.entrySet()){
             map.replace(e.getKey(), e.getValue().getValue());
         }
 
-        PanoramaUserParameters p = new PanoramaUserParameters(map);
+        return new PanoramaUserParameters(map);
     }
 }
