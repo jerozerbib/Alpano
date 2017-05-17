@@ -89,14 +89,14 @@ public final class PanoramaUserParameters {
     }
 
     public PanoramaParameters panoramaParameters() {
-        double convertedLon = toRadians(observerLon() / 10_000);
-        double convertedLat = toRadians(observerLat() / 10_000);
+        double convertedLon = toRadians(observerLon() / 10_000.0);
+        double convertedLat = toRadians(observerLat() / 10_000.0);
         double convertedAz = toRadians(az());
         double convertedHFV = toRadians(hfv());
         int wp = (int) (w() * pow(2, exp()));
         int hp = (int) (h() * pow(2, exp()));
-
-        return new PanoramaParameters(new GeoPoint(convertedLon, convertedLat), observerEl(), convertedAz, convertedHFV, maxD(), wp, hp);
+        int convertedmaxD = maxD() * 1000;
+        return new PanoramaParameters(new GeoPoint(convertedLon, convertedLat), observerEl(), convertedAz, convertedHFV, convertedmaxD, wp, hp);
     }
 
     public PanoramaParameters panoramaDisplayParameters() {
@@ -104,8 +104,8 @@ public final class PanoramaUserParameters {
         double convertedLat = toRadians(observerLat() / 10_000);
         double convertedAz = toRadians(az());
         double convertedHFV = toRadians(hfv());
-
-        return new PanoramaParameters(new GeoPoint(convertedLon, convertedLat), observerEl(), convertedAz, convertedHFV, maxD(), w(), h());
+        int convertedmaxD = maxD() * 1000;
+        return new PanoramaParameters(new GeoPoint(convertedLon, convertedLat), observerEl(), convertedAz, convertedHFV, convertedmaxD, w(), h());
     }
 
     @Override
