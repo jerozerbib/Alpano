@@ -44,7 +44,6 @@ public class DrawColor {
             ChannelPainter distance = p::distanceAt;
             ChannelPainter slope = p::slopeAt;
 
-
             ChannelPainter h = distance.div(100_000).cycling().mul(360);
             ChannelPainter s = distance.div(200_000).clamped().inverted();
             ChannelPainter b = slope.mul(2).div((float) Math.PI).inverted().mul(0.7f).add(0.3f);
