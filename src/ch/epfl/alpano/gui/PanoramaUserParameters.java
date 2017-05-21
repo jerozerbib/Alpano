@@ -100,8 +100,8 @@ public final class PanoramaUserParameters {
     }
 
     public PanoramaParameters panoramaDisplayParameters() {
-        double convertedLon = toRadians(observerLon() / 10_000);
-        double convertedLat = toRadians(observerLat() / 10_000);
+        double convertedLon = toRadians(observerLon() / 10_000.0);
+        double convertedLat = toRadians(observerLat() / 10_000.0);
         double convertedAz = toRadians(az());
         double convertedHFV = toRadians(hfv());
         int convertedmaxD = maxD() * 1000;

@@ -24,7 +24,6 @@ public final class Main {
         PanoramaParameters p = PredefinedPanoramas.NIESEN.panoramaParameters();
 
         List<Node> list = labelizer.labels(p);
-        System.out.println(list.isEmpty());
 
 
         for (Node n : list){

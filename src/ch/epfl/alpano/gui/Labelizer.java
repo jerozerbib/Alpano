@@ -21,8 +21,7 @@ import java.util.function.DoubleUnaryOperator;
 import static ch.epfl.alpano.Math2.angularDistance;
 import static ch.epfl.alpano.Math2.firstIntervalContainingRoot;
 import static java.lang.Double.compare;
-import static java.lang.Math.atan2;
-import static java.lang.Math.round;
+import static java.lang.Math.*;
 
 /**
  * @author : Jeremy Zerbib (257715)
@@ -102,38 +101,37 @@ public final class Labelizer {
     }
 
 
-    //TODO : Enlever les SysOut !!!
     private List<Summit> visibleSummits(List<Summit> list, PanoramaParameters p) {
         ArrayList<Summit> visibleSummits = new ArrayList<>();
         for (Summit s : list) {
-            double distanceToSummit = p.observerPosition().distanceTo(s.position());
-            double azimuthToSummit = p.observerPosition().azimuthTo(s.position());
+            GeoPoint obsPos = p.observerPosition();
+            double distanceToSummit = obsPos.distanceTo(s.position());
+            double azimuthToSummit = obsPos.azimuthTo(s.position());
             double angularDistanceToSummit = angularDistance(azimuthToSummit, p.centerAzimuth());
             double maxD = p.maxDistance();
-//            System.out.println(maxD);
-            GeoPoint obsPos = p.observerPosition();
-//            System.out.println(distanceToSummit + " test");
-            if (distanceToSummit <= maxD && Math.abs(angularDistanceToSummit) < p.horizontalFieldOfView()/2) {
-//            	System.out.println(cDEM.elevationAt(obsPos));
-                ElevationProfile e = new ElevationProfile(cDEM, obsPos, azimuthToSummit, distanceToSummit);
+
+            if (distanceToSummit <= maxD && abs(angularDistanceToSummit) < p.horizontalFieldOfView()/2) {
+                ElevationProfile e = new ElevationProfile(cDEM, obsPos, azimuthToSummit, maxD);
                 DoubleUnaryOperator f2 = PanoramaComputer.rayToGroundDistance(e, p.observerElevation(), 0);
                 double rayToSummit = -f2.applyAsDouble(distanceToSummit);
                 DoubleUnaryOperator f = PanoramaComputer.rayToGroundDistance(e, p.observerElevation(), rayToSummit / distanceToSummit);
                 double rayToGround = firstIntervalContainingRoot(f, 0, distanceToSummit, STEP);
-                if (atan2(distanceToSummit, rayToSummit) > p.verticalFieldOfView() / 2){
-//                    System.out.println(rayToGround + " test");
-//                    System.out.println(distanceToSummit - TOLERANCE);
-//                    System.out.println(e.elevationAt(0));
+
+                if (abs(atan2(rayToSummit, distanceToSummit)) > p.verticalFieldOfView() / 2){
+
                     if (Objects.equals(s.name(), "NIESEN")){
                         System.out.println(rayToSummit);
                         System.out.println(rayToGround);
+                        System.out.println(distanceToSummit - TOLERANCE);
                         System.out.println(s.elevation());
                         System.out.println(s.position());
                         System.out.println(distanceToSummit);
+                        System.out.println(toDegrees(p.verticalFieldOfView() / 2));
                         System.out.println(Math.toDegrees(atan2(distanceToSummit, rayToSummit)));
                         System.out.println(rayToGround / distanceToSummit);
 
                     }
+
                     if (rayToGround >= distanceToSummit - TOLERANCE) {
                     	System.out.println("test1");
                         visibleSummits.add(s);
@@ -141,6 +139,7 @@ public final class Labelizer {
                 }
             }
         }
+
         visibleSummits.sort((a, b) -> {
             int yARounded = yRounded(a, p);
             int yBRounded = yRounded(b, p);
@@ -151,6 +150,7 @@ public final class Labelizer {
 
             return compare(yARounded, yBRounded);
         });
+
         return visibleSummits;
     }
 

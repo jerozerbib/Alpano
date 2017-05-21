@@ -1,6 +1,5 @@
 package ch.epfl.alpano.gui;
 
-import ch.epfl.alpano.GeoPoint;
 import ch.epfl.alpano.Panorama;
 import ch.epfl.alpano.PanoramaComputer;
 import ch.epfl.alpano.PanoramaParameters;
@@ -32,9 +31,7 @@ public class DrawColor {
     final static double HORIZONTAL_FOV = toRadians(60);
     final static int MAX_DISTANCE = 100_000;
 
-    final static PanoramaParameters PARAMS = new PanoramaParameters(
-            new GeoPoint(ORIGIN_LON, ORIGIN_LAT), ELEVATION, CENTER_AZIMUTH,
-            HORIZONTAL_FOV, MAX_DISTANCE, IMAGE_WIDTH, IMAGE_HEIGHT);
+    final static PanoramaParameters PARAMS = PredefinedPanoramas.NIESEN.panoramaDisplayParameters();
 
     public static void main(String[] args){
         try (DiscreteElevationModel dDEM = new HgtDiscreteElevationModel(HGT_FILE)) {
