@@ -2,7 +2,10 @@ package ch.epfl.alpano;
 
 import java.util.function.DoubleUnaryOperator;
 
-import static java.lang.Math.*;
+import static java.lang.Double.POSITIVE_INFINITY;
+import static java.lang.Math.PI;
+import static java.lang.Math.floor;
+import static java.lang.Math.sin;
 
 /**
  * @author : Jeremy Zerbib (257715)
@@ -123,20 +126,12 @@ public interface Math2 {
             throw new IllegalArgumentException(
                     "min est plus grand que max ou dX <= 0");
         }
-        double x1 = minX;
-        double x2 = minX + dX;
-        while (x2 <= maxX && f.applyAsDouble(x1) * f.applyAsDouble(x2) > 0) {
-
-            x1 += dX;
-            x2 += dX;
-
+        for (double i = minX; i <= (maxX - dX); i += dX) {
+            if (f.applyAsDouble(i) * f.applyAsDouble(i + dX) <= 0) {
+                return i;
+            }
         }
-
-        if (f.applyAsDouble(x1) * f.applyAsDouble(x2) <= 0) {
-            return x1;
-        } else {
-            return Double.POSITIVE_INFINITY;
-        }
+        return POSITIVE_INFINITY;
     }
 
     /**
@@ -163,7 +158,7 @@ public interface Math2 {
                     "f(x1) et f(x2) sont du même signe.");
         }
         while (x2 - x1 > epsilon) {
-            double xm = (x1 + x2) / 2.0;
+            double xm = (x1 + x2) / 2;
             if (f.applyAsDouble(xm) == 0) {
                 return xm;
             } else if (f.applyAsDouble(x1) * f.applyAsDouble(xm) <= 0) {
