@@ -9,7 +9,13 @@ public class LabeledListStringConverter extends StringConverter<Integer> {
 
     private final String[] list;
 
-    public LabeledListStringConverter(String... list){
+    /**
+     * LabeledListStringConverter's constructor
+     * 
+     * @param list
+     *            the list of string to set
+     */
+    public LabeledListStringConverter(String... list) {
         this.list = list;
     }
 
@@ -20,11 +26,12 @@ public class LabeledListStringConverter extends StringConverter<Integer> {
 
     @Override
     public Integer fromString(String string) {
-        for (int i = 0; i < list.length; i++){
-            if (string.equals(list[i])){
+        for (int i = 0; i < list.length; i++) {
+            if (string.equals(list[i])) {
                 return i;
             }
         }
-        throw new IllegalArgumentException("La chaine n'est pas dans le tableau initial");
+        throw new IllegalArgumentException(
+                "La chaine n'est pas dans le tableau initial");
     }
 }

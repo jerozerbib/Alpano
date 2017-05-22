@@ -14,64 +14,132 @@ import static javafx.application.Platform.runLater;
  * @author : Jeremy Zerbib (257715)
  */
 
-
 public class PanoramaParametersBean {
 
     private final ObjectProperty<PanoramaUserParameters> syncronisedProps;
-    private final Map<UserParameter, ObjectProperty<Integer>> mapPanoramaUserParameters = new EnumMap<>(UserParameter.class);
+    private final Map<UserParameter, ObjectProperty<Integer>> mapPanoramaUserParameters = new EnumMap<>(
+            UserParameter.class);
 
-    public PanoramaParametersBean(PanoramaUserParameters panoramaUserParameters){
-        this.syncronisedProps = new SimpleObjectProperty<>(panoramaUserParameters);
-        for (Map.Entry<UserParameter, ObjectProperty<Integer>> e : mapPanoramaUserParameters.entrySet()){
+    /**
+     * PanoramaParametersBean's Constructor
+     * 
+     * @param panoramaUserParameters
+     *            the panoramaUserParameters to set
+     */
+    public PanoramaParametersBean(
+            PanoramaUserParameters panoramaUserParameters) {
+        this.syncronisedProps = new SimpleObjectProperty<>(
+                panoramaUserParameters);
+        for (Map.Entry<UserParameter, ObjectProperty<Integer>> e : mapPanoramaUserParameters
+                .entrySet()) {
             ObjectProperty<Integer> i = e.getValue();
-            this.mapPanoramaUserParameters.put(e.getKey(), new SimpleObjectProperty<>(panoramaUserParameters.get(e.getKey())));
-            i.addListener((b, o, n) -> runLater(this :: synchronisedParameters));
+            this.mapPanoramaUserParameters.put(e.getKey(),
+                    new SimpleObjectProperty<>(
+                            panoramaUserParameters.get(e.getKey())));
+            i.addListener((b, o, n) -> runLater(this::synchronisedParameters));
         }
     }
 
-    public ReadOnlyObjectProperty<PanoramaUserParameters> parametersProperty(){
+    /**
+     * Getter for the property containing the parameters
+     * 
+     * @return the property containing the parameters
+     */
+    public ReadOnlyObjectProperty<PanoramaUserParameters> parametersProperty() {
         return syncronisedProps;
     }
 
-    public ObjectProperty<Integer> observerLongitudeProperty(){
+    /**
+     * Getter for the property containing the observerLongitude
+     * 
+     * @return the property containing the observerLongitude
+     */
+    public ObjectProperty<Integer> observerLongitudeProperty() {
         return mapPanoramaUserParameters.get(OBSERVER_LONGITUDE);
     }
 
-    public ObjectProperty<Integer> observerLatitudeProperty(){
+    /**
+     * Getter for the property containing the observerLatitude
+     * 
+     * @return the property containing the observerLatitude
+     */
+    public ObjectProperty<Integer> observerLatitudeProperty() {
         return mapPanoramaUserParameters.get(OBSERVER_LATITUDE);
     }
 
-    public ObjectProperty<Integer> observerElevationProperty(){
+    /**
+     * Getter for the property containing the observerElevation
+     * 
+     * @return the property containing the observerElevation
+     */
+    public ObjectProperty<Integer> observerElevationProperty() {
         return mapPanoramaUserParameters.get(OBSERVER_ELEVATION);
     }
 
-    public ObjectProperty<Integer> centerAzimuthProperty(){
+    /**
+     * Getter for the property containing the centerAzimuth
+     * 
+     * @return the property containing the centerAzimuth
+     */
+    public ObjectProperty<Integer> centerAzimuthProperty() {
         return mapPanoramaUserParameters.get(CENTER_AZIMUTH);
     }
 
-    public ObjectProperty<Integer> horizontalFieldOfViewProperty(){
+    /**
+     * Getter for the property containing the horizontalFieldOfView
+     * 
+     * @return the property containing the horizontalFieldOfView
+     */
+    public ObjectProperty<Integer> horizontalFieldOfViewProperty() {
         return mapPanoramaUserParameters.get(HORIZONTAL_FIELD_OF_VIEW);
     }
 
-    public ObjectProperty<Integer> maxDistanceProperty(){
+    /**
+     * Getter for the property containing the maxDistance
+     * 
+     * @return the property containing the maxDistance
+     */
+    public ObjectProperty<Integer> maxDistanceProperty() {
         return mapPanoramaUserParameters.get(MAX_DISTANCE);
     }
 
-    public ObjectProperty<Integer> widthProperty(){
+    /**
+     * Getter for the property containing the widthProperty
+     * 
+     * @return the property containing the widthProperty
+     */
+    public ObjectProperty<Integer> widthProperty() {
         return mapPanoramaUserParameters.get(WIDTH);
     }
 
-    public ObjectProperty<Integer> heightProperty(){
+    /**
+     * Getter for the property containing the heightProperty
+     * 
+     * @return the property containing the heightProperty
+     */
+    public ObjectProperty<Integer> heightProperty() {
         return mapPanoramaUserParameters.get(HEIGHT);
     }
 
-    public ObjectProperty<Integer> superSamplingExponentProperty(){
+    /**
+     * Getter for the property containing the superSamplingExponent
+     * 
+     * @return the property containing the superSamplingExponent
+     */
+    public ObjectProperty<Integer> superSamplingExponentProperty() {
         return mapPanoramaUserParameters.get(SUPER_SAMPLING_EXPONENT);
     }
 
-    private PanoramaUserParameters synchronisedParameters(){
+    /**
+     * Makes sure the parameters of the individual property and the one in the
+     * instance of PanoramaUserParameters are sychronized.
+     * 
+     * @return the sychonized PanoramaUserParameters
+     */
+    private PanoramaUserParameters synchronisedParameters() {
         Map<UserParameter, Integer> map = new EnumMap<>(UserParameter.class);
-        for (Map.Entry<UserParameter, ObjectProperty<Integer>> e : mapPanoramaUserParameters.entrySet()){
+        for (Map.Entry<UserParameter, ObjectProperty<Integer>> e : mapPanoramaUserParameters
+                .entrySet()) {
             map.replace(e.getKey(), e.getValue().getValue());
         }
 
