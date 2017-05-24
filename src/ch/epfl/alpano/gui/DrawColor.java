@@ -1,5 +1,6 @@
 package ch.epfl.alpano.gui;
 
+import ch.epfl.alpano.GeoPoint;
 import ch.epfl.alpano.Panorama;
 import ch.epfl.alpano.PanoramaComputer;
 import ch.epfl.alpano.PanoramaParameters;
@@ -21,8 +22,8 @@ public class DrawColor {
 
     final static File HGT_FILE = new File("N46E007.hgt");
 
-    final static int IMAGE_WIDTH = 500;
-    final static int IMAGE_HEIGHT = 200;
+    final static int IMAGE_WIDTH = 2500;
+    final static int IMAGE_HEIGHT = 800;
 
     final static double ORIGIN_LON = toRadians(7.65);
     final static double ORIGIN_LAT = toRadians(46.73);
@@ -31,7 +32,7 @@ public class DrawColor {
     final static double HORIZONTAL_FOV = toRadians(60);
     final static int MAX_DISTANCE = 100_000;
 
-    final static PanoramaParameters PARAMS = PredefinedPanoramas.NIESEN.panoramaDisplayParameters();
+    final static PanoramaParameters PARAMS = new PanoramaParameters(new GeoPoint(ORIGIN_LON, ORIGIN_LAT), ELEVATION, CENTER_AZIMUTH, HORIZONTAL_FOV, MAX_DISTANCE, IMAGE_WIDTH, IMAGE_HEIGHT);
 
     public static void main(String[] args){
         try (DiscreteElevationModel dDEM = new HgtDiscreteElevationModel(HGT_FILE)) {

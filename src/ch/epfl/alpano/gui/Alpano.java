@@ -1,7 +1,6 @@
 package ch.epfl.alpano.gui;
 
 
-import ch.epfl.alpano.Azimuth;
 import ch.epfl.alpano.Panorama;
 import ch.epfl.alpano.dem.ContinuousElevationModel;
 import ch.epfl.alpano.dem.DiscreteElevationModel;
@@ -27,9 +26,11 @@ import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Locale;
 
+import static ch.epfl.alpano.Azimuth.toOctantString;
 import static ch.epfl.alpano.summit.GazetteerParser.readSummitsFrom;
 import static javafx.beans.binding.Bindings.bindContent;
 import static javafx.geometry.Pos.CENTER_RIGHT;
+import static javafx.scene.paint.Color.rgb;
 import static javafx.scene.text.TextAlignment.CENTER;
 
 /**
@@ -37,33 +38,33 @@ import static javafx.scene.text.TextAlignment.CENTER;
  */
 public final class Alpano extends Application {
 
+
+    private final static HgtDiscreteElevationModel HGT1 = new HgtDiscreteElevationModel(new File("N45E006.hgt"));
+    private final static HgtDiscreteElevationModel HGT2 = new HgtDiscreteElevationModel(new File("N45E007.hgt"));
+    private final static HgtDiscreteElevationModel HGT3 = new HgtDiscreteElevationModel(new File("N45E008.hgt"));
+    private final static HgtDiscreteElevationModel HGT4 = new HgtDiscreteElevationModel(new File("N45E009.hgt"));
+    private final static HgtDiscreteElevationModel HGT5 = new HgtDiscreteElevationModel(new File("N46E006.hgt"));
+    private final static HgtDiscreteElevationModel HGT6 = new HgtDiscreteElevationModel(new File("N46E007.hgt"));
+    private final static HgtDiscreteElevationModel HGT7 = new HgtDiscreteElevationModel(new File("N46E008.hgt"));
+    private final static HgtDiscreteElevationModel HGT8 = new HgtDiscreteElevationModel(new File("N46E009.hgt"));
+    private final static Color WHITE_BG = rgb(255, 255, 255, 0.90);
+    private final static DiscreteElevationModel line1 = HGT1.union(HGT2).union(HGT3).union(HGT4);
+    private final static DiscreteElevationModel line2 = HGT5.union(HGT6).union(HGT7).union(HGT8);
+    private final static ContinuousElevationModel cDEM1 = new ContinuousElevationModel(line1.union(line2));
+
     public static void main(String[] args) {
         Application.launch(args);
     }
 
+
+
     @Override
     public void start(Stage primaryStage) throws Exception {
-        List<Summit> summitList = readSummitsFrom(new File("alps.txt"));
+        final List<Summit> summitList = readSummitsFrom(new File("alps.txt"));
 
-        HgtDiscreteElevationModel HGT1 = new HgtDiscreteElevationModel(new File("N45E006.hgt"));
-        HgtDiscreteElevationModel HGT2 = new HgtDiscreteElevationModel(new File("N45E007.hgt"));
-        HgtDiscreteElevationModel HGT3 = new HgtDiscreteElevationModel(new File("N45E008.hgt"));
-        HgtDiscreteElevationModel HGT4 = new HgtDiscreteElevationModel(new File("N45E009.hgt"));
-        HgtDiscreteElevationModel HGT5 = new HgtDiscreteElevationModel(new File("N46E006.hgt"));
-        HgtDiscreteElevationModel HGT6 = new HgtDiscreteElevationModel(new File("N46E007.hgt"));
-        HgtDiscreteElevationModel HGT7 = new HgtDiscreteElevationModel(new File("N46E008.hgt"));
-        HgtDiscreteElevationModel HGT8 = new HgtDiscreteElevationModel(new File("N46E009.hgt"));
-
-
-        DiscreteElevationModel line1 = HGT1.union(HGT2).union(HGT3).union(HGT4);
-        DiscreteElevationModel line2 = HGT5.union(HGT6).union(HGT7).union(HGT8);
-        ContinuousElevationModel cDEM1 = new ContinuousElevationModel(line1.union(line2));
-
-
-        PanoramaComputerBean computPano = new PanoramaComputerBean(summitList, cDEM1);
-        Labelizer labels = new Labelizer(cDEM1, summitList);
-        PanoramaParametersBean paramsPano = new PanoramaParametersBean(computPano.getParamaters());
-
+        final PanoramaComputerBean computPano = new PanoramaComputerBean(summitList, cDEM1);
+        final Labelizer labels = new Labelizer(cDEM1, summitList);
+        final PanoramaParametersBean paramsPano = new PanoramaParametersBean(computPano.getParamaters());
 
         BorderPane root = new BorderPane();
         Scene scene = new Scene(root);
@@ -71,13 +72,11 @@ public final class Alpano extends Application {
         ImageView panoView = new ImageView();
         panoView.fitWidthProperty().bind(paramsPano.widthProperty());
         panoView.imageProperty().bind(computPano.imageProperty());
-        //TODO : setValue ou setPreserveRAtio ?????????????
         panoView.preserveRatioProperty().setValue(true);
         panoView.smoothProperty().setValue(true);
         TextArea textArea = mouseMoveEventHandler(panoView, computPano);
         mouseClickOnPointEventHandler(panoView, computPano);
 
-        //TODO : mettre la liste de Node retournée par labels de Labelizer après correction de la méthode et import fichiers HGT.
         Pane labelsPane = new Pane();
         labelsPane.getChildren().addAll(labels.labels(computPano.getPanorama().parameters()));
         labelsPane.prefWidthProperty().bind(panoView.fitWidthProperty());
@@ -90,9 +89,7 @@ public final class Alpano extends Application {
         StackPane panoGroup = new StackPane(panoView, labelsPane);
         ScrollPane panoScrollPane = new ScrollPane(panoGroup);
         StackPane updateNotice = new StackPane(updateText);
-        //TODO : Magic Number !!
-        Color color = Color.rgb(255, 255, 255, 0.90);
-        BackgroundFill fill = new BackgroundFill(color, CornerRadii.EMPTY, Insets.EMPTY);
+        BackgroundFill fill = new BackgroundFill(WHITE_BG, CornerRadii.EMPTY, Insets.EMPTY);
         Background background = new Background(fill);
         updateNotice.setBackground(background);
         updateText.setFont(new Font(40));
@@ -102,9 +99,7 @@ public final class Alpano extends Application {
         mouseClickOnRefresh(updateNotice, computPano, paramsPano.parametersProperty().get());
 
         StackPane panoPane = new StackPane(panoScrollPane, updateNotice);
-        //TODO : mettre les Nodes relatives à chaque param
         GridPane paramsGrid = new GridPane();
-        //TODO : Valeur par défaut ?!
         Label lat = new Label("Latitude (°) : ");
         TextField latT = createField(paramsPano.observerLongitudeProperty(), 4, 7);
         Label lon = new Label("Longitude (°) : ");
@@ -169,7 +164,7 @@ public final class Alpano extends Application {
             text.setText("Position : " + Math.toDegrees(lon) + "°N " + lat + "°E");
             text.setText("Distance : " + dist + "km");
             text.setText("Altitude : " + alt + "m");
-            text.setText("Azimut : " + az + Azimuth.toOctantString(az, "N", "E", "S", "W"));
+            text.setText("Azimut : " + az + toOctantString(az, "N", "E", "S", "W") + "  " + "Elévation : " + el);
         });
         return text;
     }
@@ -196,7 +191,6 @@ public final class Alpano extends Application {
     }
 
     private void mouseClickOnRefresh(StackPane stackPane, PanoramaComputerBean computPano, PanoramaUserParameters newParams) {
-        //TODO : Recalcul Pano ?
         stackPane.setOnMouseClicked(e2 -> computPano.setParameters(newParams));
     }
 }

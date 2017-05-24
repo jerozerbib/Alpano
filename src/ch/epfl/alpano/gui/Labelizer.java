@@ -1,7 +1,6 @@
 package ch.epfl.alpano.gui;
 
 import ch.epfl.alpano.GeoPoint;
-import ch.epfl.alpano.PanoramaComputer;
 import ch.epfl.alpano.PanoramaParameters;
 import ch.epfl.alpano.dem.ContinuousElevationModel;
 import ch.epfl.alpano.dem.ElevationProfile;
@@ -20,6 +19,8 @@ import java.util.function.DoubleUnaryOperator;
 
 import static ch.epfl.alpano.Math2.angularDistance;
 import static ch.epfl.alpano.Math2.firstIntervalContainingRoot;
+import static ch.epfl.alpano.Math2.firstIntervalContainingRootNiesen;
+import static ch.epfl.alpano.PanoramaComputer.rayToGroundDistance;
 import static java.lang.Double.compare;
 import static java.lang.Math.*;
 
@@ -112,26 +113,24 @@ public final class Labelizer {
 
             if (distanceToSummit <= maxD && abs(angularDistanceToSummit) < p.horizontalFieldOfView()/2) {
                 ElevationProfile e = new ElevationProfile(cDEM, obsPos, azimuthToSummit, maxD);
-                DoubleUnaryOperator f2 = PanoramaComputer.rayToGroundDistance(e, p.observerElevation(), 0);
+                DoubleUnaryOperator f2 = rayToGroundDistance(e, p.observerElevation(), 0);
                 double rayToSummit = -f2.applyAsDouble(distanceToSummit);
-                DoubleUnaryOperator f = PanoramaComputer.rayToGroundDistance(e, p.observerElevation(), rayToSummit / distanceToSummit);
+                DoubleUnaryOperator f = rayToGroundDistance(e, p.observerElevation(), rayToSummit / distanceToSummit);
                 double rayToGround = firstIntervalContainingRoot(f, 0, distanceToSummit, STEP);
 
+                if (Objects.equals(s.name(), "NIESEN")){
+                    firstIntervalContainingRootNiesen(f, 0, distanceToSummit + 100000, STEP);
+//                    System.out.println(rayToSummit);
+//                    System.out.println(rayToGround);
+//                    System.out.println(distanceToSummit - TOLERANCE);
+//                    System.out.println(s.elevation());
+//                    System.out.println(s.position());
+//                    System.out.println(distanceToSummit);
+//                    System.out.println(toDegrees(p.verticalFieldOfView() / 2));
+//                    System.out.println(Math.toDegrees(atan2(distanceToSummit, rayToSummit)));
+//                    System.out.println(rayToGround / distanceToSummit);
+                }
                 if (abs(atan2(rayToSummit, distanceToSummit)) > p.verticalFieldOfView() / 2){
-
-                    if (Objects.equals(s.name(), "NIESEN")){
-                        System.out.println(rayToSummit);
-                        System.out.println(rayToGround);
-                        System.out.println(distanceToSummit - TOLERANCE);
-                        System.out.println(s.elevation());
-                        System.out.println(s.position());
-                        System.out.println(distanceToSummit);
-                        System.out.println(toDegrees(p.verticalFieldOfView() / 2));
-                        System.out.println(Math.toDegrees(atan2(distanceToSummit, rayToSummit)));
-                        System.out.println(rayToGround / distanceToSummit);
-
-                    }
-
                     if (rayToGround >= distanceToSummit - TOLERANCE) {
                     	System.out.println("test1");
                         visibleSummits.add(s);

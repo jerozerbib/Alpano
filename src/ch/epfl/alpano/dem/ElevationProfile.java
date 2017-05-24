@@ -76,14 +76,11 @@ public class ElevationProfile {
      * @return double
      */
     public GeoPoint positionAt(double x) {
-        checkArgument(x <= length && x >= 0,
-                "la valeur x n'est pas comprise dans la longueur du profil");
+        checkArgument(x <= length && x >= 0, "la valeur x n'est pas comprise dans la longueur du profil");
         double indexOfX = scalb(x, -12);
         int lowerBound = (int) floor(indexOfX);
-        double longitude = lerp(tab[lowerBound][0], tab[lowerBound + 1][0],
-                indexOfX - lowerBound);
-        double latitude = lerp(tab[lowerBound][1], tab[lowerBound + 1][1],
-                indexOfX - lowerBound);
+        double longitude = lerp(tab[lowerBound][0], tab[lowerBound + 1][0], indexOfX - lowerBound);
+        double latitude = lerp(tab[lowerBound][1], tab[lowerBound + 1][1], indexOfX - lowerBound);
         return new GeoPoint(longitude, latitude);
     }
 

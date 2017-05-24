@@ -195,8 +195,7 @@ public final class PanoramaUserParameters {
         int wp = (int) (w() * pow(2, exp()));
         int hp = (int) (h() * pow(2, exp()));
         int convertedmaxD = maxD() * 1000;
-        return new PanoramaParameters(new GeoPoint(convertedLon, convertedLat),
-                observerEl(), convertedAz, convertedHFV, convertedmaxD, wp, hp);
+        return new PanoramaParameters(new GeoPoint(convertedLon, convertedLat), observerEl(), convertedAz, convertedHFV, convertedmaxD, wp, hp);
     }
 
     /**
