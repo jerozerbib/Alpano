@@ -23,26 +23,10 @@ public final class Main {
 
         Labelizer labelizer = new Labelizer(cDEM, listSummits);
 
-<<<<<<< HEAD
-=======
-        Labelizer labelizer = new Labelizer(cDEM,listSummits);
-
->>>>>>> origin/etape9
         PanoramaParameters p = PredefinedPanoramas.NIESEN.panoramaParameters();
 
         List<Node> list = labelizer.labels(p);
 
-<<<<<<< HEAD
-        for (Node n : list) {
-            if (n instanceof Text) {
-                System.out.println("Text[ text = ' " + n.toString() + "', x="
-                        + ((Text) n).getX() + ", y=" + ((Text) n).getY() + "]");
-            } else {
-                System.out.println("Line[ startX = " + ((Line) n).getStartX()
-                        + "startY = " + ((Line) n).getStartY() + "endX = "
-                        + ((Line) n).getEndX() + "endY ="
-                        + ((Line) n).getEndY());
-=======
         for (int i = 0; i < 10; ++i){
             if (list.get(i) instanceof Text){
                 System.out.println("Text[ text = ' " + list.get(i).toString() + "', x=" + ((Text) list.get(i)).getX() + ", y=" + ((Text) list.get(i)).getY() + "]");
@@ -55,7 +39,6 @@ public final class Main {
                         + ((Line) list.get(i)).getEndX()
                         + "endY ="
                         + ((Line) list.get(i)).getEndY() );
->>>>>>> origin/etape9
             }
         }
 
