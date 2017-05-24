@@ -51,33 +51,43 @@ public final class Alpano extends Application {
     private final static DiscreteElevationModel line1 = HGT1.union(HGT2).union(HGT3).union(HGT4);
     private final static DiscreteElevationModel line2 = HGT5.union(HGT6).union(HGT7).union(HGT8);
     private final static ContinuousElevationModel cDEM1 = new ContinuousElevationModel(line1.union(line2));
+    private final static PanoramaUserParameters JURA = PredefinedPanoramas.JURA;
+    private final static int FONT_SIZE = 40;
 
     public static void main(String[] args) {
         Application.launch(args);
     }
 
 
-
     @Override
     public void start(Stage primaryStage) throws Exception {
         final List<Summit> summitList = readSummitsFrom(new File("alps.txt"));
-
         final PanoramaComputerBean computPano = new PanoramaComputerBean(summitList, cDEM1);
         final Labelizer labels = new Labelizer(cDEM1, summitList);
-        final PanoramaParametersBean paramsPano = new PanoramaParametersBean(computPano.getParamaters());
-
-        BorderPane root = new BorderPane();
-        Scene scene = new Scene(root);
+        final PanoramaParametersBean paramsPano = new PanoramaParametersBean(JURA);
 
         ImageView panoView = new ImageView();
+        Pane labelsPane = new Pane();
+
+        Text updateText = new Text();
+        BackgroundFill fill = new BackgroundFill(WHITE_BG, CornerRadii.EMPTY, Insets.EMPTY);
+        updateText.setFont(new Font(FONT_SIZE));
+        updateText.setTextAlignment(CENTER);
+
+        StackPane updateNotice = new StackPane(updateText);
+        Background background = new Background(fill);
+        updateNotice.setBackground(background);
+
+        GridPane paramsGrid = new GridPane();
+
         panoView.fitWidthProperty().bind(paramsPano.widthProperty());
         panoView.imageProperty().bind(computPano.imageProperty());
         panoView.preserveRatioProperty().setValue(true);
         panoView.smoothProperty().setValue(true);
+
         TextArea textArea = mouseMoveEventHandler(panoView, computPano);
         mouseClickOnPointEventHandler(panoView, computPano);
 
-        Pane labelsPane = new Pane();
         labelsPane.getChildren().addAll(labels.labels(computPano.getPanorama().parameters()));
         labelsPane.prefWidthProperty().bind(panoView.fitWidthProperty());
         labelsPane.prefHeightProperty().bind(panoView.fitHeightProperty());
@@ -85,21 +95,10 @@ public final class Alpano extends Application {
         labelsPane.setMouseTransparent(true);
 
 
-        Text updateText = new Text();
-        StackPane panoGroup = new StackPane(panoView, labelsPane);
-        ScrollPane panoScrollPane = new ScrollPane(panoGroup);
-        StackPane updateNotice = new StackPane(updateText);
-        BackgroundFill fill = new BackgroundFill(WHITE_BG, CornerRadii.EMPTY, Insets.EMPTY);
-        Background background = new Background(fill);
-        updateNotice.setBackground(background);
-        updateText.setFont(new Font(40));
-        updateText.setTextAlignment(CENTER);
         boolean isNotEqual = computPano.parametersProperty().isNotEqualTo(paramsPano.parametersProperty()).get();
         updateNotice.visibleProperty().setValue(isNotEqual);
         mouseClickOnRefresh(updateNotice, computPano, paramsPano.parametersProperty().get());
 
-        StackPane panoPane = new StackPane(panoScrollPane, updateNotice);
-        GridPane paramsGrid = new GridPane();
         Label lat = new Label("Latitude (°) : ");
         TextField latT = createField(paramsPano.observerLongitudeProperty(), 4, 7);
         Label lon = new Label("Longitude (°) : ");
@@ -127,6 +126,13 @@ public final class Alpano extends Application {
         paramsGrid.addRow(2, w, wT, h, hT, samplingIndex, choiceBox);
         paramsGrid.add(textArea, 6, 0, 1, 3);
 
+
+        StackPane panoGroup = new StackPane(panoView, labelsPane);
+        ScrollPane panoScrollPane = new ScrollPane(panoGroup);
+        StackPane panoPane = new StackPane(panoScrollPane, updateNotice);
+
+        BorderPane root = new BorderPane();
+        Scene scene = new Scene(root);
 
         root.setCenter(panoPane);
         root.setBottom(paramsGrid);

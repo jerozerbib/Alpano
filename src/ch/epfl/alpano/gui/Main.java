@@ -20,25 +20,25 @@ public final class Main {
         List<Summit> listSummits = GazetteerParser.readSummitsFrom(new File("alps.txt"));
 
         Labelizer labelizer = new Labelizer(cDEM,listSummits);
-        
+
         PanoramaParameters p = PredefinedPanoramas.NIESEN.panoramaParameters();
 
         List<Node> list = labelizer.labels(p);
 
-
-        for (Node n : list){
-            if (n instanceof Text){
-                System.out.println("Text[ text = ' " + n.toString() + "', x=" + ((Text) n).getX() + ", y=" + ((Text) n).getY() + "]");
+        for (int i = 0; i < 10; ++i){
+            if (list.get(i) instanceof Text){
+                System.out.println("Text[ text = ' " + list.get(i).toString() + "', x=" + ((Text) list.get(i)).getX() + ", y=" + ((Text) list.get(i)).getY() + "]");
             } else {
                 System.out.println("Line[ startX = "
-                        + ((Line) n).getStartX()
+                        + ((Line) list.get(i)).getStartX()
                         + "startY = "
-                        + ((Line) n).getStartY()
+                        + ((Line) list.get(i)).getStartY()
                         + "endX = "
-                        + ((Line) n).getEndX()
+                        + ((Line) list.get(i)).getEndX()
                         + "endY ="
-                        + ((Line) n).getEndY() );
+                        + ((Line) list.get(i)).getEndY() );
             }
         }
+
     }
 }

@@ -15,11 +15,11 @@ import javafx.scene.transform.Translate;
 import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.List;
-import java.util.Objects;
 import java.util.function.DoubleUnaryOperator;
 
 import static ch.epfl.alpano.Math2.angularDistance;
 import static ch.epfl.alpano.Math2.firstIntervalContainingRoot;
+import static java.lang.Double.POSITIVE_INFINITY;
 import static java.lang.Double.compare;
 import static java.lang.Math.*;
 
@@ -42,11 +42,9 @@ public final class Labelizer {
 
     /**
      * Labilizer's constructor
-     * 
-     * @param cDEM
-     *            the continuous elevation model to set
-     * @param summits
-     *            the list of summit to set
+     *
+     * @param cDEM    the continuous elevation model to set
+     * @param summits the list of summit to set
      */
     public Labelizer(ContinuousElevationModel cDEM, List<Summit> summits) {
         this.cDEM = cDEM;
@@ -55,16 +53,13 @@ public final class Labelizer {
 
     /**
      * Returns the rounded y index for the position of the summit on a panorama.
-     * 
-     * @param s
-     *            the summit
-     * @param p
-     *            the parameters of the panorama
+     *
+     * @param s the summit
+     * @param p the parameters of the panorama
      * @return the rounded y index for the position of the summit on a panorama
      */
 
-    // TODO : static ??
-    private static int yRounded(Summit s, PanoramaParameters p) {
+    private int yRounded(Summit s, PanoramaParameters p) {
         double elevation = s.elevation() - p.observerElevation();
         double distanceToSummit = p.observerPosition().distanceTo(s.position());
         double altitudeInRadians = atan2(elevation, distanceToSummit);
@@ -73,16 +68,13 @@ public final class Labelizer {
 
     /**
      * Returns the rounded x index for the position of the summit on a panorama
-     * 
-     * @param s
-     *            the summits
-     * @param p
-     *            the parameters of the panorama
+     *
+     * @param s the summits
+     * @param p the parameters of the panorama
      * @return the rounded x index for the position of the summit on a panorama
      */
 
-    // TODO : static ??
-    private static int xRounded(Summit s, PanoramaParameters p) {
+    private int xRounded(Summit s, PanoramaParameters p) {
         double elevation = s.elevation() - p.observerElevation();
         double distanceToSummit = p.observerPosition().distanceTo(s.position());
         double altitudeInRadians = atan2(elevation, distanceToSummit);
@@ -91,14 +83,16 @@ public final class Labelizer {
 
     /**
      * Label's the visible summits of the panorama.
-     * 
-     * @param p
-     *            the parameters of the panorama we want to label form the
+     *
+     * @param p the parameters of the panorama we want to label form the
      * @return the list of javafx nodes representing the labels to attach on the
-     *         panorama.
+     * panorama.
      */
     public List<Node> labels(PanoramaParameters p) {
         List<Summit> visibleSummits = visibleSummits(summits, p);
+        for (int i = 0; i < 10; ++i){
+            System.out.println(visibleSummits.get(i));
+        }
         List<Node> listTag = new ArrayList<>();
         if (visibleSummits.isEmpty()) {
             return listTag;
@@ -145,59 +139,30 @@ public final class Labelizer {
 
     /**
      * Returns the list of summits which are visible on the panorama
-     * 
-     * @param list
-     *            the list of all summits
-     * @param p
-     *            the parameters of the panorama
+     *
+     * @param list the list of all summits
+     * @param p    the parameters of the panorama
      * @return the list of visible summits
      */
-    private List<Summit> visibleSummits(List<Summit> list,
-            PanoramaParameters p) {
+    private List<Summit> visibleSummits(List<Summit> list, PanoramaParameters p) {
         ArrayList<Summit> visibleSummits = new ArrayList<>();
         for (Summit s : list) {
             GeoPoint obsPos = p.observerPosition();
             double distanceToSummit = obsPos.distanceTo(s.position());
             double azimuthToSummit = obsPos.azimuthTo(s.position());
-            double angularDistanceToSummit = angularDistance(azimuthToSummit,
-                    p.centerAzimuth());
+            double angularDistanceToSummit = angularDistance(azimuthToSummit, p.centerAzimuth());
             double maxD = p.maxDistance();
+            double slope = atan2(s.elevation() - p.observerElevation(), distanceToSummit);
 
-            if (distanceToSummit <= maxD
-                    && abs(angularDistanceToSummit) < p.horizontalFieldOfView()
-                            / 2) {
-                ElevationProfile e = new ElevationProfile(cDEM, obsPos,
-                        azimuthToSummit, maxD);
-                DoubleUnaryOperator f2 = PanoramaComputer.rayToGroundDistance(e,
-                        p.observerElevation(), 0);
+            if (distanceToSummit <= maxD && abs(angularDistanceToSummit) < p.horizontalFieldOfView() / 2 && abs(slope) <= p.verticalFieldOfView() / 2) {
+                ElevationProfile e = new ElevationProfile(cDEM, obsPos, azimuthToSummit, distanceToSummit);
+                DoubleUnaryOperator f2 = PanoramaComputer.rayToGroundDistance(e, p.observerElevation(), 0);
                 double rayToSummit = -f2.applyAsDouble(distanceToSummit);
-                DoubleUnaryOperator f = PanoramaComputer.rayToGroundDistance(e,
-                        p.observerElevation(), rayToSummit / distanceToSummit);
-                double rayToGround = firstIntervalContainingRoot(f, 0,
-                        distanceToSummit, STEP);
+                DoubleUnaryOperator f = PanoramaComputer.rayToGroundDistance(e, p.observerElevation(), slope);
+                double rayToGround = firstIntervalContainingRoot(f, 0, distanceToSummit, STEP);
 
-                if (abs(atan2(rayToSummit, distanceToSummit)) > p
-                        .verticalFieldOfView() / 2) {
-
-                    if (Objects.equals(s.name(), "NIESEN")) {
-                        System.out.println(rayToSummit);
-                        System.out.println(rayToGround);
-                        System.out.println(distanceToSummit - TOLERANCE);
-                        System.out.println(s.elevation());
-                        System.out.println(s.position());
-                        System.out.println(distanceToSummit);
-                        System.out.println(
-                                toDegrees(p.verticalFieldOfView() / 2));
-                        System.out.println(Math.toDegrees(
-                                atan2(distanceToSummit, rayToSummit)));
-                        System.out.println(rayToGround / distanceToSummit);
-
-                    }
-
-                    if (rayToGround >= distanceToSummit - TOLERANCE) {
-                        System.out.println("test1");
-                        visibleSummits.add(s);
-                    }
+                if (rayToGround >= distanceToSummit - TOLERANCE || rayToGround == POSITIVE_INFINITY) {
+                    visibleSummits.add(s);
                 }
             }
         }

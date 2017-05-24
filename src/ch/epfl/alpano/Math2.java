@@ -129,17 +129,6 @@ public interface Math2 {
         return POSITIVE_INFINITY;
     }
 
-    static double firstIntervalContainingRootNiesen(DoubleUnaryOperator f, double minX, double maxX, double dX) {
-        checkArgument(!(minX > maxX || dX <= 0), "min est plus grand que max ou dX <= 0");
-        for (double i = minX; i <= (maxX - dX); i += dX) {
-            System.out.println(f.applyAsDouble(i));
-            if (f.applyAsDouble(i) * f.applyAsDouble(i + dX) <= 0) {
-                return i;
-            }
-        }
-        return POSITIVE_INFINITY;
-    }
-
     /**
      * Finds the lower bound of an interval of size inferior to epsilon in which
      * there is a zero of a function.

@@ -30,7 +30,6 @@ public class PanoramaComputerBean {
     private final Labelizer lab;
     private final PanoramaComputer panoramaComputer;
     private final ObservableList<Node> labels;
-    private final ObjectProperty<ObservableList<Node>> objectLabels;
 
     /**
      * PanoramaComputerBean's constructor
@@ -40,12 +39,12 @@ public class PanoramaComputerBean {
     public PanoramaComputerBean(List<Summit> list, ContinuousElevationModel cDEM){
         lab = new Labelizer(cDEM, list);
         labels = FXCollections.observableArrayList();
-        objectLabels = new SimpleObjectProperty<>(FXCollections.unmodifiableObservableList(labels));
         panoramaComputer = new PanoramaComputer(cDEM);
         panorama = new SimpleObjectProperty<>();
         image = new SimpleObjectProperty<>();
         pUserParameters = new SimpleObjectProperty<>();
         pUserParameters.addListener((b, o, n) -> {
+            pUserParameters.set(n);
             Panorama p = panoramaComputer.computePanorama(n.panoramaParameters());
             ChannelPainter distance = p::distanceAt;
             ChannelPainter slope = p::slopeAt;
@@ -118,20 +117,9 @@ public class PanoramaComputerBean {
     }
 
     /**
-     * Gets the labels as a ReadOnlyObjectProperty
-     * @return ReadOnlyObjectProperty<ObservableList<Node>>
-     */
-    public ReadOnlyObjectProperty<ObservableList<Node>> labelsProperty(){
-        return objectLabels;
-    }
-
-    /**
      * Gets the labels as a non modifiable list
      * @return ObservableList<Node>
      */
-    public ObservableList<Node> getLabels(){
-        return labelsProperty().get();
-    }
-
+    public ObservableList<Node> getLabels(){return labels;}
 
 }

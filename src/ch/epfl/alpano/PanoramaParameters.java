@@ -165,9 +165,7 @@ public final class PanoramaParameters {
      * @return the index
      */
     public double xForAzimuth(double a) {
-        checkArgument(
-                (a <= centerAzimuth + horizontalFieldOfView() / 2.0)
-                        && (a >= centerAzimuth - horizontalFieldOfView() / 2.0),
+        checkArgument((a <= centerAzimuth + horizontalFieldOfView() / 2.0) && (a >= centerAzimuth - horizontalFieldOfView() / 2.0),
                 "L'angle de vue est en dehors des limites");
         return indexForCenterAzimuth
                 - angularDistance(a, centerAzimuth) * arcDelta;
