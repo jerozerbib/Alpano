@@ -17,8 +17,7 @@ import static java.lang.Math.toRadians;
  */
 public final class PanoramaUserParameters {
 
-    private Map<UserParameter, Integer> map = new EnumMap<>(
-            UserParameter.class);
+    private Map<UserParameter, Integer> map = new EnumMap<>(UserParameter.class);
     private final int MAX_HEIGHT = 14690; // From the instructions given by the
                                           // teacher
 
@@ -210,9 +209,7 @@ public final class PanoramaUserParameters {
         double convertedAz = toRadians(az());
         double convertedHFV = toRadians(hfv());
         int convertedmaxD = maxD() * 1000;
-        return new PanoramaParameters(new GeoPoint(convertedLon, convertedLat),
-                observerEl(), convertedAz, convertedHFV, convertedmaxD, w(),
-                h());
+        return new PanoramaParameters(new GeoPoint(convertedLon, convertedLat), observerEl(), convertedAz, convertedHFV, convertedmaxD, w(), h());
     }
 
     @Override

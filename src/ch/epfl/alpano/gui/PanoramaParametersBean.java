@@ -17,8 +17,7 @@ import static javafx.application.Platform.runLater;
 public class PanoramaParametersBean {
 
     private final ObjectProperty<PanoramaUserParameters> syncronisedProps;
-    private final Map<UserParameter, ObjectProperty<Integer>> mapPanoramaUserParameters = new EnumMap<>(
-            UserParameter.class);
+    private final Map<UserParameter, ObjectProperty<Integer>> mapPanoramaUserParameters = new EnumMap<>(UserParameter.class);
 
     /**
      * PanoramaParametersBean's Constructor
@@ -26,18 +25,15 @@ public class PanoramaParametersBean {
      * @param panoramaUserParameters
      *            the panoramaUserParameters to set
      */
-    public PanoramaParametersBean(
-            PanoramaUserParameters panoramaUserParameters) {
-        this.syncronisedProps = new SimpleObjectProperty<>(
-                panoramaUserParameters);
-        for (Map.Entry<UserParameter, ObjectProperty<Integer>> e : mapPanoramaUserParameters
-                .entrySet()) {
-            ObjectProperty<Integer> i = e.getValue();
-            this.mapPanoramaUserParameters.put(e.getKey(),
-                    new SimpleObjectProperty<>(
-                            panoramaUserParameters.get(e.getKey())));
-            i.addListener((b, o, n) -> runLater(this::synchronisedParameters));
+    public PanoramaParametersBean(PanoramaUserParameters panoramaUserParameters) {
+        this.syncronisedProps = new SimpleObjectProperty<>(panoramaUserParameters);
+
+
+        for (UserParameter u : UserParameter.values()) {
+            this.mapPanoramaUserParameters.put(u, new SimpleObjectProperty<>(panoramaUserParameters.get(u)));
+            mapPanoramaUserParameters.get(u).addListener((b, o, n) -> runLater(this::synchronisedParameters));
         }
+
     }
 
     /**
@@ -138,8 +134,7 @@ public class PanoramaParametersBean {
      */
     private PanoramaUserParameters synchronisedParameters() {
         Map<UserParameter, Integer> map = new EnumMap<>(UserParameter.class);
-        for (Map.Entry<UserParameter, ObjectProperty<Integer>> e : mapPanoramaUserParameters
-                .entrySet()) {
+        for (Map.Entry<UserParameter, ObjectProperty<Integer>> e : mapPanoramaUserParameters.entrySet()) {
             map.replace(e.getKey(), e.getValue().getValue());
         }
 
