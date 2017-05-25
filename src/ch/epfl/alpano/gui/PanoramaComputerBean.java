@@ -40,7 +40,8 @@ public class PanoramaComputerBean {
      */
     public PanoramaComputerBean(List<Summit> list, ContinuousElevationModel cDEM) {
         lab = new Labelizer(cDEM, list);
-        labels = FXCollections.observableArrayList();
+        ObservableList<Node> labels = FXCollections.observableArrayList();
+        this.labels = FXCollections.unmodifiableObservableList(labels);
         panoramaComputer = new PanoramaComputer(cDEM);
         panorama = new SimpleObjectProperty<>();
         image = new SimpleObjectProperty<>();
@@ -131,7 +132,7 @@ public class PanoramaComputerBean {
      */
     //TODO unmodifaible ?
     public ObservableList<Node> getLabels() {
-        return FXCollections.unmodifiableObservableList(labels);
+        return labels;
     }
 
 }
