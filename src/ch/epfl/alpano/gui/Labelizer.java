@@ -62,7 +62,7 @@ public final class Labelizer {
      *            the parameters of the panorama
      * @return the rounded y index for the position of the summit on a panorama
      */
-
+    //TODO : private  
     public int yRounded(Summit s, PanoramaParameters p) {
         GeoPoint obsPos = p.observerPosition();
         double distanceToSummit = obsPos.distanceTo(s.position());
@@ -84,7 +84,7 @@ public final class Labelizer {
      *            the parameters of the panorama
      * @return the rounded x index for the position of the summit on a panorama
      */
-
+  //TODO : private  
     public int xRounded(Summit s, PanoramaParameters p) {
         GeoPoint obsPos = p.observerPosition();
         double azimuthToSummit = obsPos.azimuthTo(s.position());
