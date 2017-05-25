@@ -14,29 +14,52 @@ import java.io.IOException;
 import java.util.List;
 
 public final class Main {
+    /*public static void main(String[] args) throws IOException {
 
-    public static void main(String[] args) throws IOException{
-        ContinuousElevationModel cDEM = new ContinuousElevationModel(new HgtDiscreteElevationModel(new File("N46E007.hgt")));
-        List<Summit> listSummits = GazetteerParser.readSummitsFrom(new File("alps.txt"));
+        ContinuousElevationModel cDEM = new ContinuousElevationModel(
+                new HgtDiscreteElevationModel(new File("N46E007.hgt")));
+        List<Summit> listSummits = GazetteerParser
+                .readSummitsFrom(new File("alps.txt"));
 
-        Labelizer labelizer = new Labelizer(cDEM,listSummits);
+        Labelizer labelizer = new Labelizer(cDEM, listSummits);
+
+        PanoramaParameters p = PredefinedPanoramas.NIESEN
+                .panoramaDisplayParameters();
+        List<Summit> visibleSummits = labelizer.visibleSummits(listSummits, p);
+
+        System.out.println(visibleSummits.size());
+
+        for (int i = 0; i < 10; ++i) {
+            System.out.println(visibleSummits.get(i).name() + " ("
+                    + labelizer.xRounded(visibleSummits.get(i), p) + ", "
+                    + labelizer.yRounded(visibleSummits.get(i), p) + ")");
+        }
+    }*/
+
+    public static void main(String[] args) throws IOException {
+
+        ContinuousElevationModel cDEM = new ContinuousElevationModel(
+                new HgtDiscreteElevationModel(new File("N46E007.hgt")));
+        List<Summit> listSummits = GazetteerParser
+                .readSummitsFrom(new File("alps.txt"));
+
+        Labelizer labelizer = new Labelizer(cDEM, listSummits);
 
         PanoramaParameters p = PredefinedPanoramas.NIESEN.panoramaParameters();
 
         List<Node> list = labelizer.labels(p);
 
-        for (int i = 0; i < 10; ++i){
-            if (list.get(i) instanceof Text){
-                System.out.println("Text[ text = ' " + list.get(i).toString() + "', x=" + ((Text) list.get(i)).getX() + ", y=" + ((Text) list.get(i)).getY() + "]");
+        for (int i = 0; i < 20; ++i) {
+            if (list.get(i) instanceof Text) {
+                System.out.println(i +" Text[ text = ' " + list.get(i).toString()
+                        + "', x=" + ((Text) list.get(i)).getX() + ", y="
+                        + ((Text) list.get(i)).getY() + "]");
             } else {
-                System.out.println("Line[ startX = "
-                        + ((Line) list.get(i)).getStartX()
-                        + "startY = "
-                        + ((Line) list.get(i)).getStartY()
-                        + "endX = "
-                        + ((Line) list.get(i)).getEndX()
-                        + "endY ="
-                        + ((Line) list.get(i)).getEndY() );
+                System.out.println(i +
+                        " Line[ startX = " + ((Line) list.get(i)).getStartX()
+                                + "startY = " + ((Line) list.get(i)).getStartY()
+                                + "endX = " + ((Line) list.get(i)).getEndX()
+                                + "endY =" + ((Line) list.get(i)).getEndY());
             }
         }
 
