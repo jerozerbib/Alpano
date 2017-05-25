@@ -10,8 +10,7 @@ public interface PredefinedPanoramas {
     /**
      * Predefined UserParameters for NIESEN
      */
-    PanoramaUserParameters NIESEN = new PanoramaUserParameters(76_500,
-            467_300, 600, 180, 110, 300, 2_500, 800, 0);
+    PanoramaUserParameters NIESEN = new PanoramaUserParameters(76_500, 467_300, 600, 180, 110, 300, 2_500, 800, 0);
 
     /**
      * Predefined UserParameters for JURA

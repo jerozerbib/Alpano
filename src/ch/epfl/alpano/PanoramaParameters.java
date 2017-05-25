@@ -179,8 +179,7 @@ public final class PanoramaParameters {
      * @return the altitude
      */
     public double altitudeForY(double y) {
-        checkArgument(y >= 0 && y <= height - 1,
-                "La hauteur n'est pas dans les bornes");
+        checkArgument(y >= 0 && y <= height - 1, "La hauteur n'est pas dans les bornes");
         return (indexForAltZero - y) * delta;
     }
 
@@ -188,7 +187,7 @@ public final class PanoramaParameters {
      * Returns the y index for a given altitude.
      * 
      * @param a
-     *            the azimuth
+     *            the altitude in radians
      * @return the altitude
      */
     public double yForAltitude(double a) {
