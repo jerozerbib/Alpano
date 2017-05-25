@@ -22,7 +22,8 @@ import static ch.epfl.alpano.gui.PanoramaRenderer.renderPanorama;
  */
 
 public class PanoramaComputerBean {
-    private final int HUE_DIV = 100_000, HUE_MUL = 360, SAT_DIV = 200_000, BR_MUL1 = 2;
+    private final int HUE_DIV = 100_000, HUE_MUL = 360, SAT_DIV = 200_000,
+            BR_MUL1 = 2;
     private final float BR_MUL2 = 0.7f, BR_ADD = 0.3f;
     private final ObjectProperty<Panorama> panorama;
     private final ObjectProperty<PanoramaUserParameters> pUserParameters;
@@ -33,10 +34,11 @@ public class PanoramaComputerBean {
 
     /**
      * PanoramaComputerBean's constructor
+     * 
      * @param list
      * @param cDEM
      */
-    public PanoramaComputerBean(List<Summit> list, ContinuousElevationModel cDEM){
+    public PanoramaComputerBean(List<Summit> list, ContinuousElevationModel cDEM) {
         lab = new Labelizer(cDEM, list);
         labels = FXCollections.observableArrayList();
         panoramaComputer = new PanoramaComputer(cDEM);
@@ -61,64 +63,75 @@ public class PanoramaComputerBean {
 
     /**
      * Gets the PanoramaUserParameters as an ObjectProperty.
+     * 
      * @return ObjectProperty<PanoramaUserParameters>
      */
-    public ObjectProperty<PanoramaUserParameters> parametersProperty(){
+    public ObjectProperty<PanoramaUserParameters> parametersProperty() {
         return pUserParameters;
     }
 
     /**
      * Gets the PanoramaUserParameters as themselves
+     * 
      * @return PanoramaUserParameters
      */
-    public PanoramaUserParameters getParamaters(){
+    public PanoramaUserParameters getParamaters() {
         return parametersProperty().get();
     }
 
     /**
      * Sets the ParoramaUserParameters with new ones
+     * 
      * @param newParameters
      */
-    public void setParameters(PanoramaUserParameters newParameters){
+    public void setParameters(PanoramaUserParameters newParameters) {
         parametersProperty().set(newParameters);
     }
 
     /**
      * Gets the Panorama as a ReadOnlyObjectProperty
+     * 
      * @return ReadOnlyObjectProperty<Panorama>
      */
-    public ReadOnlyObjectProperty<Panorama> panoramaProperty(){
+    public ReadOnlyObjectProperty<Panorama> panoramaProperty() {
         return panorama;
     }
 
     /**
      * Gets the Panoramt as himself
+     * 
      * @return Panorama
      */
-    public Panorama getPanorama(){
+    public Panorama getPanorama() {
         return panoramaProperty().get();
     }
 
     /**
      * Gets the Image as a ReadOnlyObjectProperty
+     * 
      * @return ReadOnlyObjectProperty<Image>
      */
-    public ReadOnlyObjectProperty<Image> imageProperty(){
+    public ReadOnlyObjectProperty<Image> imageProperty() {
         return image;
     }
 
     /**
      * Gets the Image as itself
+     * 
      * @return Image
      */
-    public Image getImage(){
+    public Image getImage() {
         return imageProperty().get();
     }
 
     /**
      * Gets the labels as a non modifiable list
+     * 
      * @return ObservableList<Node>
      */
-    public ObservableList<Node> getLabels(){return labels;}
+    //TODO unmodifaible ?
+    public ObservableList<Node> getLabels() {
+        return FXCollections.unmodifiableObservableList(labels);
+    }
 
 }
