@@ -27,9 +27,11 @@ public class FixedPointStringConverter extends StringConverter<Integer> {
 
     @Override
     public String toString(Integer object) {
+        if (object == null){
+            return "";
+        }
         BigDecimal b = new BigDecimal(object);
-        return b.movePointLeft(fixedDecimal).stripTrailingZeros()
-                .toPlainString();
+        return b.movePointLeft(fixedDecimal).stripTrailingZeros().toPlainString();
     }
 
     @Override

@@ -53,6 +53,7 @@ public final class Alpano extends Application {
     private final static ContinuousElevationModel cDEM1 = new ContinuousElevationModel(line1.union(line2));
     private final static PanoramaUserParameters JURA = PredefinedPanoramas.JURA;
     private final static int FONT_SIZE = 40;
+    private final static BackgroundFill fill = new BackgroundFill(WHITE_BG, CornerRadii.EMPTY, Insets.EMPTY);
 
     public static void main(String[] args) {
         Application.launch(args);
@@ -66,13 +67,23 @@ public final class Alpano extends Application {
         final Labelizer labels = new Labelizer(cDEM1, summitList);
         final PanoramaParametersBean paramsPano = new PanoramaParametersBean(JURA);
 
-        ImageView panoView = new ImageView();
+        ImageView panoView = new ImageView(computPano.getImage());
+        panoView.fitWidthProperty().bind(paramsPano.widthProperty());
+        panoView.imageProperty().bind(computPano.imageProperty());
+        panoView.preserveRatioProperty().setValue(true);
+        panoView.smoothProperty().setValue(true);
+
         Pane labelsPane = new Pane();
+        labelsPane.getChildren().addAll(labels.labels(paramsPano.parametersProperty().get().panoramaParameters()));
+        labelsPane.prefWidthProperty().bind(paramsPano.widthProperty());
+        labelsPane.prefHeightProperty().bind(paramsPano.heightProperty());
+        bindContent(labelsPane.getChildren(), computPano.getLabels());
+        labelsPane.setMouseTransparent(true);
 
         Text updateText = new Text();
-        BackgroundFill fill = new BackgroundFill(WHITE_BG, CornerRadii.EMPTY, Insets.EMPTY);
         updateText.setFont(new Font(FONT_SIZE));
         updateText.setTextAlignment(CENTER);
+        updateText.setText("Les paramètres du panorama ont changé. Cliquez ici pour mettre le dessin à jour.");
 
         StackPane updateNotice = new StackPane(updateText);
         Background background = new Background(fill);
@@ -80,29 +91,17 @@ public final class Alpano extends Application {
 
         GridPane paramsGrid = new GridPane();
 
-        panoView.fitWidthProperty().bind(paramsPano.widthProperty());
-        panoView.imageProperty().bind(computPano.imageProperty());
-        panoView.preserveRatioProperty().setValue(true);
-        panoView.smoothProperty().setValue(true);
-
         TextArea textArea = mouseMoveEventHandler(panoView, computPano);
         mouseClickOnPointEventHandler(panoView, computPano);
 
-        labelsPane.getChildren().addAll(labels.labels(computPano.getPanorama().parameters()));
-        labelsPane.prefWidthProperty().bind(panoView.fitWidthProperty());
-        labelsPane.prefHeightProperty().bind(panoView.fitHeightProperty());
-        bindContent(labels.labels(computPano.getPanorama().parameters()), computPano.getLabels());
-        labelsPane.setMouseTransparent(true);
 
-
-        boolean isNotEqual = computPano.parametersProperty().isNotEqualTo(paramsPano.parametersProperty()).get();
-        updateNotice.visibleProperty().setValue(isNotEqual);
-        mouseClickOnRefresh(updateNotice, computPano, paramsPano.parametersProperty().get());
+        updateNotice.visibleProperty().setValue(computPano.parametersProperty().isNotEqualTo(paramsPano.parametersProperty()).get());
+        updateNotice.setOnMouseClicked(e2 -> computPano.setParameters(paramsPano.parametersProperty().get()));
 
         Label lat = new Label("Latitude (°) : ");
-        TextField latT = createField(paramsPano.observerLongitudeProperty(), 4, 7);
+        TextField latT = createField(paramsPano.observerLatitudeProperty(), 4, 7);
         Label lon = new Label("Longitude (°) : ");
-        TextField lonT = createField(paramsPano.observerLatitudeProperty(), 4, 7);
+        TextField lonT = createField(paramsPano.observerLongitudeProperty(), 4, 7);
         Label alt = new Label("Altitude (m) : ");
         TextField altT = createField(paramsPano.observerElevationProperty(), 0, 4);
         Label az = new Label("Azimuth (°) : ");
@@ -158,8 +157,16 @@ public final class Alpano extends Application {
         TextArea text = new TextArea();
         text.setPrefRowCount(2);
         imageView.setOnMouseMoved(e -> {
-            int x = (int) e.getX();
-            int y = (int) e.getY();
+            int x;
+            int y;
+            //TODO : Demander par rapport au suréchantillonage !
+            if (computPano.getParamaters().exp() == 0) {
+                x = (int) e.getX();
+                y = (int) e.getY();
+            } else {
+                x = (int) e.getX() * computPano.getParamaters().exp();
+                y = (int) e.getY() * computPano.getParamaters().exp();
+            }
             Panorama p = computPano.getPanorama();
             double az = p.parameters().azimuthForX(x);
             double alt = p.parameters().altitudeForY(y);
@@ -167,6 +174,7 @@ public final class Alpano extends Application {
             double lon = p.longitudeAt(x, y);
             double lat = p.latitudeAt(x, y);
             double el = p.elevationAt(x, y);
+            //TODO : Demander par rapport à l'aligmement
             text.setText("Position : " + Math.toDegrees(lon) + "°N " + lat + "°E");
             text.setText("Distance : " + dist + "km");
             text.setText("Altitude : " + alt + "m");
@@ -177,8 +185,16 @@ public final class Alpano extends Application {
 
     private void mouseClickOnPointEventHandler(ImageView imageView, PanoramaComputerBean computPano) {
         imageView.setOnMouseClicked(e -> {
-            int x = (int) e.getX();
-            int y = (int) e.getY();
+            int x;
+            int y;
+            //TODO : Demander par rapport au suréchantillonage !
+            if (computPano.getParamaters().exp() == 0) {
+                x = (int) e.getX();
+                y = (int) e.getY();
+            } else {
+                x = (int) e.getX() * computPano.getParamaters().exp();
+                y = (int) e.getY() * computPano.getParamaters().exp();
+            }
             Panorama p = computPano.getPanorama();
             double lon = p.longitudeAt(x, y);
             double lat = p.latitudeAt(x, y);
@@ -196,7 +212,4 @@ public final class Alpano extends Application {
         });
     }
 
-    private void mouseClickOnRefresh(StackPane stackPane, PanoramaComputerBean computPano, PanoramaUserParameters newParams) {
-        stackPane.setOnMouseClicked(e2 -> computPano.setParameters(newParams));
-    }
 }

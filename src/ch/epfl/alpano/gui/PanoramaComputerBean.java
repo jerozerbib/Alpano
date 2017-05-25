@@ -44,7 +44,6 @@ public class PanoramaComputerBean {
         image = new SimpleObjectProperty<>();
         pUserParameters = new SimpleObjectProperty<>();
         pUserParameters.addListener((b, o, n) -> {
-            pUserParameters.set(n);
             Panorama p = panoramaComputer.computePanorama(n.panoramaParameters());
             ChannelPainter distance = p::distanceAt;
             ChannelPainter slope = p::slopeAt;
@@ -52,7 +51,7 @@ public class PanoramaComputerBean {
             ChannelPainter s = distance.div(SAT_DIV).clamped().inverted();
             ChannelPainter br = slope.mul(BR_MUL1).div((float) Math.PI).inverted().mul(BR_MUL2).add(BR_ADD);
             ChannelPainter opacity = distance.map(d -> d == Float.POSITIVE_INFINITY ? 0 : 1);
-            List<Node> newNodeList = lab.labels(n.panoramaParameters());
+            List<Node> newNodeList = lab.labels(n.panoramaDisplayParameters());
             ImagePainter l = ImagePainter.hsb(h, s, br, opacity);
 
             labels.setAll(newNodeList);

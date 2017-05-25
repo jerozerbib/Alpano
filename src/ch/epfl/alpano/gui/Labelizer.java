@@ -19,7 +19,6 @@ import java.util.function.DoubleUnaryOperator;
 
 import static ch.epfl.alpano.Math2.angularDistance;
 import static ch.epfl.alpano.Math2.firstIntervalContainingRoot;
-import static java.lang.Double.POSITIVE_INFINITY;
 import static java.lang.Double.compare;
 import static java.lang.Math.*;
 
@@ -38,13 +37,16 @@ public final class Labelizer {
     private final int MARGIN = 20;
     private final int VERTICAL_LIMIT = 170;
     private final int ANGLE = 60;
+    private final int ZERO = 0;
     private List<Summit> summits = new ArrayList<>();
 
     /**
      * Labilizer's constructor
      *
-     * @param cDEM    the continuous elevation model to set
-     * @param summits the list of summit to set
+     * @param cDEM
+     *            the continuous elevation model to set
+     * @param summits
+     *            the list of summit to set
      */
     public Labelizer(ContinuousElevationModel cDEM, List<Summit> summits) {
         this.cDEM = cDEM;
@@ -54,8 +56,10 @@ public final class Labelizer {
     /**
      * Returns the rounded y index for the position of the summit on a panorama.
      *
-     * @param s the summit
-     * @param p the parameters of the panorama
+     * @param s
+     *            the summit
+     * @param p
+     *            the parameters of the panorama
      * @return the rounded y index for the position of the summit on a panorama
      */
 
@@ -81,11 +85,10 @@ public final class Labelizer {
      * @return the rounded x index for the position of the summit on a panorama
      */
 
-    private int xRounded(Summit s, PanoramaParameters p) {
-        double elevation = s.elevation() - p.observerElevation();
-        double distanceToSummit = p.observerPosition().distanceTo(s.position());
-        double altitudeInRadians = atan2(elevation, distanceToSummit);
-        return (int) round(p.xForAzimuth(altitudeInRadians));
+    public int xRounded(Summit s, PanoramaParameters p) {
+        GeoPoint obsPos = p.observerPosition();
+        double azimuthToSummit = obsPos.azimuthTo(s.position());
+        return (int) round(p.xForAzimuth(azimuthToSummit));
     }
 
     /**
@@ -98,9 +101,6 @@ public final class Labelizer {
      */
     public List<Node> labels(PanoramaParameters p) {
         List<Summit> visibleSummits = visibleSummits(summits, p);
-        for (int i = 0; i < 10; ++i){
-            System.out.println(visibleSummits.get(i));
-        }
         List<Node> listTag = new ArrayList<>();
         if (visibleSummits.isEmpty()) {
             return listTag;
