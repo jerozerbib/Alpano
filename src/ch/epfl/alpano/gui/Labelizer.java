@@ -66,13 +66,12 @@ public final class Labelizer {
     public int yRounded(Summit s, PanoramaParameters p) {
         GeoPoint obsPos = p.observerPosition();
         double distanceToSummit = obsPos.distanceTo(s.position());
-        /*double azimuthToSummit = obsPos.azimuthTo(s.position());
+        double azimuthToSummit = obsPos.azimuthTo(s.position());
         ElevationProfile e = new ElevationProfile(cDEM, obsPos, azimuthToSummit, distanceToSummit);
         DoubleUnaryOperator f = PanoramaComputer.rayToGroundDistance(e, p.observerElevation(), 0);
         double summitElevation = -f.applyAsDouble(distanceToSummit);
-        double altitude = atan2(s.elevation() - summitElevation, distanceToSummit);*/
-        double altitude = atan2(s.elevation() - p.observerElevation(), distanceToSummit);
-        return (int) round(p.yForAltitude(altitude));
+        double slope = atan2(summitElevation, distanceToSummit);
+        return (int) round(p.yForAltitude(slope));
     }
 
     /**
@@ -100,7 +99,7 @@ public final class Labelizer {
      *         panorama.
      */
     public List<Node> labels(PanoramaParameters p) {
-        List<Summit> visibleSummits = visibleSummits(summits, p);
+        List<Summit> visibleSummits = visibleSummits(p);
         List<Node> listTag = new ArrayList<>();
         if (visibleSummits.isEmpty()) {
             return listTag;
@@ -154,9 +153,9 @@ public final class Labelizer {
      *            the parameters of the panorama
      * @return the list of visible summits
      */
-    public List<Summit> visibleSummits(List<Summit> list, PanoramaParameters p) {
+    public List<Summit> visibleSummits(PanoramaParameters p) {
         ArrayList<Summit> visibleSummits = new ArrayList<>();
-        for (Summit s : list) {
+        for (Summit s : summits) {
             GeoPoint obsPos = p.observerPosition();
             double distanceToSummit = obsPos.distanceTo(s.position());
             double azimuthToSummit = obsPos.azimuthTo(s.position());
@@ -165,15 +164,12 @@ public final class Labelizer {
 
             if (distanceToSummit <= maxD && abs(angularDistanceToSummit) <= p.horizontalFieldOfView() / 2.0) {
                 ElevationProfile e = new ElevationProfile(cDEM, obsPos, azimuthToSummit, distanceToSummit);
-               /* DoubleUnaryOperator f = PanoramaComputer.rayToGroundDistance(e, p.observerElevation(), 0);
+                DoubleUnaryOperator f = PanoramaComputer.rayToGroundDistance(e, p.observerElevation(), 0);
                 double summitElevation = -f.applyAsDouble(distanceToSummit);
-                double slope = atan2(s.elevation() - summitElevation, distanceToSummit);*/
-                double slope = atan2(s.elevation() - p.observerElevation(),distanceToSummit);
+                double slope = atan2(summitElevation, distanceToSummit);
                 if (abs(slope) <= p.verticalFieldOfView() / 2.0) {
-                    /*if(s.name().equals("NIESEN")){
-                        System.out.println(summitElevation);
-                    }*/
-                    DoubleUnaryOperator f1 = PanoramaComputer.rayToGroundDistance(e, p.observerElevation(), slope);
+    
+                    DoubleUnaryOperator f1 = PanoramaComputer.rayToGroundDistance(e, p.observerElevation(), summitElevation / distanceToSummit);
                     double rayToGround = firstIntervalContainingRoot(f1, 0, distanceToSummit, STEP);
                     if (rayToGround >= distanceToSummit - TOLERANCE) {
                         visibleSummits.add(s);

@@ -21,7 +21,7 @@ public final class PanoramaComputer {
     private final static int dX = 64;
     private final static int epsilon = 4;
     private final static double k = 0.13;
-    private final static double K_RATIO = (1 - k) / (2 * EARTH_RADIUS);
+    private final static double K_RATIO = (1d - k) / (2d * EARTH_RADIUS);
 
     /**
      * Panorama's Constructor
@@ -81,6 +81,6 @@ public final class PanoramaComputer {
      * @return DoubleUnaryOperator a function that calculates the distance
      */
     public static DoubleUnaryOperator rayToGroundDistance(ElevationProfile profile, double ray0, double raySlope) {
-        return x -> ray0 + x * raySlope - (profile.elevationAt(x) - K_RATIO * sq(x));
+        return x -> (ray0 + x * raySlope) - (profile.elevationAt(x) - K_RATIO * sq(x));
     }
 }

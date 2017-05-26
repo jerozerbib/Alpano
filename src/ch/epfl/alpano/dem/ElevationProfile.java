@@ -128,6 +128,6 @@ public class ElevationProfile {
         double sinDist = sin(x);
         double cosLatAt = cos(latitudeAt(x));
         double arcsin = asin((sinAz * sinDist) / cosLatAt);
-        return floorMod(((longitude - arcsin) + PI), PI2) - PI;
+        return (((longitude - arcsin) + PI) % PI2) - PI;
     }
 }

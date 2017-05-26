@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.util.List;
 
 public final class Main {
-    /*public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException {
 
         ContinuousElevationModel cDEM = new ContinuousElevationModel(
                 new HgtDiscreteElevationModel(new File("N46E007.hgt")));
@@ -25,7 +25,7 @@ public final class Main {
 
         PanoramaParameters p = PredefinedPanoramas.NIESEN
                 .panoramaDisplayParameters();
-        List<Summit> visibleSummits = labelizer.visibleSummits(listSummits, p);
+        List<Summit> visibleSummits = labelizer.visibleSummits(p);
 
         System.out.println(visibleSummits.size());
 
@@ -34,9 +34,9 @@ public final class Main {
                     + labelizer.xRounded(visibleSummits.get(i), p) + ", "
                     + labelizer.yRounded(visibleSummits.get(i), p) + ")");
         }
-    }*/
+    }
 
-    public static void main(String[] args) throws IOException {
+    /*public static void main(String[] args) throws IOException {
 
         ContinuousElevationModel cDEM = new ContinuousElevationModel(
                 new HgtDiscreteElevationModel(new File("N46E007.hgt")));
@@ -63,5 +63,5 @@ public final class Main {
             }
         }
 
-    }
+    }*/
 }
