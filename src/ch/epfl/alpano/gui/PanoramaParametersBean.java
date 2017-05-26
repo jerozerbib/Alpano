@@ -28,8 +28,7 @@ public class PanoramaParametersBean {
      */
     public PanoramaParametersBean(
             PanoramaUserParameters panoramaUserParameters) {
-        this.syncronisedProps = new SimpleObjectProperty<>(
-                panoramaUserParameters);
+        this.syncronisedProps = new SimpleObjectProperty<>(panoramaUserParameters);
 
         for (UserParameter u : UserParameter.values()) {
             this.mapPanoramaUserParameters.put(u,

@@ -36,7 +36,7 @@ public final class Main {
         }
     }
 
-    /*public static void main(String[] args) throws IOException {
+   /* public static void main(String[] args) throws IOException {
 
         ContinuousElevationModel cDEM = new ContinuousElevationModel(
                 new HgtDiscreteElevationModel(new File("N46E007.hgt")));

@@ -30,8 +30,10 @@ public final class PanoramaUserParameters {
      *            the map to set
      */
     public PanoramaUserParameters(Map<UserParameter, Integer> map) {
+        Map<UserParameter, Integer> map1 = new EnumMap<>(UserParameter.class);
+        
         for (Map.Entry<UserParameter, Integer> e : map.entrySet()) {
-            e.getKey().sanitize(e.getValue());
+            map1.put(e.getKey(),e.getKey().sanitize(e.getValue()));
         }
 
         int h = map.get(UserParameter.HEIGHT);
@@ -42,7 +44,7 @@ public final class PanoramaUserParameters {
             map.replace(UserParameter.HEIGHT, h, MAX_HEIGHT);
         }
 
-        this.map = Collections.unmodifiableMap(new EnumMap<>(map));
+        this.map = Collections.unmodifiableMap(map1);
     }
 
     /**

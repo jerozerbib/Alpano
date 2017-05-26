@@ -42,33 +42,21 @@ import static javafx.geometry.Pos.CENTER_RIGHT;
  */
 public final class Alpano extends Application {
 
-    private final static HgtDiscreteElevationModel HGT1 = new HgtDiscreteElevationModel(
-            new File("N45E006.hgt"));
-    private final static HgtDiscreteElevationModel HGT2 = new HgtDiscreteElevationModel(
-            new File("N45E007.hgt"));
-    private final static HgtDiscreteElevationModel HGT3 = new HgtDiscreteElevationModel(
-            new File("N45E008.hgt"));
-    private final static HgtDiscreteElevationModel HGT4 = new HgtDiscreteElevationModel(
-            new File("N45E009.hgt"));
-    private final static HgtDiscreteElevationModel HGT5 = new HgtDiscreteElevationModel(
-            new File("N46E006.hgt"));
-    private final static HgtDiscreteElevationModel HGT6 = new HgtDiscreteElevationModel(
-            new File("N46E007.hgt"));
-    private final static HgtDiscreteElevationModel HGT7 = new HgtDiscreteElevationModel(
-            new File("N46E008.hgt"));
-    private final static HgtDiscreteElevationModel HGT8 = new HgtDiscreteElevationModel(
-            new File("N46E009.hgt"));
+    private final static HgtDiscreteElevationModel HGT1 = new HgtDiscreteElevationModel(new File("N45E006.hgt"));
+    private final static HgtDiscreteElevationModel HGT2 = new HgtDiscreteElevationModel(new File("N45E007.hgt"));
+    private final static HgtDiscreteElevationModel HGT3 = new HgtDiscreteElevationModel(new File("N45E008.hgt"));
+    private final static HgtDiscreteElevationModel HGT4 = new HgtDiscreteElevationModel(new File("N45E009.hgt"));
+    private final static HgtDiscreteElevationModel HGT5 = new HgtDiscreteElevationModel(new File("N46E006.hgt"));
+    private final static HgtDiscreteElevationModel HGT6 = new HgtDiscreteElevationModel(new File("N46E007.hgt"));
+    private final static HgtDiscreteElevationModel HGT7 = new HgtDiscreteElevationModel(new File("N46E008.hgt"));
+    private final static HgtDiscreteElevationModel HGT8 = new HgtDiscreteElevationModel(new File("N46E009.hgt"));
     private final static Color WHITE_BG = rgb(255, 255, 255, 0.90);
-    private final static DiscreteElevationModel line1 = HGT1.union(HGT2)
-            .union(HGT3).union(HGT4);
-    private final static DiscreteElevationModel line2 = HGT5.union(HGT6)
-            .union(HGT7).union(HGT8);
-    private final static ContinuousElevationModel cDEM1 = new ContinuousElevationModel(
-            line1.union(line2));
+    private final static DiscreteElevationModel line1 = HGT1.union(HGT2).union(HGT3).union(HGT4);
+    private final static DiscreteElevationModel line2 = HGT5.union(HGT6).union(HGT7).union(HGT8);
+    private final static ContinuousElevationModel cDEM1 = new ContinuousElevationModel(line1.union(line2));
     private final static PanoramaUserParameters JURA = PredefinedPanoramas.JURA;
     private final static int FONT_SIZE = 40;
-    private final static BackgroundFill fill = new BackgroundFill(WHITE_BG,
-            CornerRadii.EMPTY, Insets.EMPTY);
+    private final static BackgroundFill fill = new BackgroundFill(WHITE_BG, CornerRadii.EMPTY, Insets.EMPTY);
 
     public static void main(String[] args) {
         Application.launch(args);
@@ -115,34 +103,25 @@ public final class Alpano extends Application {
 
         StackPane panoPane = new StackPane(panoScrollPane, updateNotice);
 
-        StringConverter<Integer> FixedPointstringConverter = new FixedPointStringConverter(
-                4);
+        StringConverter<Integer> FixedPointstringConverter = new FixedPointStringConverter(4);
         StringConverter<Integer> IntegerstringConverter = new IntegerStringConverter();
 
         Label lat = new Label("Latitude (°) : ");
-        TextField latT = createField(paramsPano.observerLatitudeProperty(), 7,
-                FixedPointstringConverter);
+        TextField latT = createField(paramsPano.observerLatitudeProperty(), 7, FixedPointstringConverter);
         Label lon = new Label("Longitude (°) : ");
-        TextField lonT = createField(paramsPano.observerLongitudeProperty(), 4,
-                FixedPointstringConverter);
+        TextField lonT = createField(paramsPano.observerLongitudeProperty(), 4, FixedPointstringConverter);
         Label alt = new Label("Altitude (m) : ");
-        TextField altT = createField(paramsPano.observerElevationProperty(), 4,
-                IntegerstringConverter);
+        TextField altT = createField(paramsPano.observerElevationProperty(), 4, IntegerstringConverter);
         Label az = new Label("Azimuth (°) : ");
-        TextField azT = createField(paramsPano.centerAzimuthProperty(), 3,
-                IntegerstringConverter);
+        TextField azT = createField(paramsPano.centerAzimuthProperty(), 3, IntegerstringConverter);
         Label hfv = new Label("Angle de vue (°) : ");
-        TextField hfvT = createField(paramsPano.horizontalFieldOfViewProperty(),
-                3, IntegerstringConverter);
+        TextField hfvT = createField(paramsPano.horizontalFieldOfViewProperty(), 3, IntegerstringConverter);
         Label visibility = new Label("Visibilité (km) : ");
-        TextField visibilityT = createField(paramsPano.maxDistanceProperty(), 3,
-                IntegerstringConverter);
+        TextField visibilityT = createField(paramsPano.maxDistanceProperty(), 3, IntegerstringConverter);
         Label w = new Label("Largeur (px) : ");
-        TextField wT = createField(paramsPano.widthProperty(), 4,
-                IntegerstringConverter);
+        TextField wT = createField(paramsPano.widthProperty(), 4, IntegerstringConverter);
         Label h = new Label("Hauteur (px) : ");
-        TextField hT = createField(paramsPano.heightProperty(), 4,
-                IntegerstringConverter);
+        TextField hT = createField(paramsPano.heightProperty(), 4, IntegerstringConverter);
         Label samplingIndex = new Label("Suréchantillonage : ");
 
         ChoiceBox<Integer> choiceBox = new ChoiceBox<Integer>();

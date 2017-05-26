@@ -1,133 +1,169 @@
+/**
+ * 
+ */
 package ch.epfl.alpano.dem;
 
-import ch.epfl.alpano.Distance;
-import ch.epfl.alpano.GeoPoint;
-
-import static ch.epfl.alpano.Azimuth.isCanonical;
-import static ch.epfl.alpano.Azimuth.toMath;
-import static ch.epfl.alpano.Math2.*;
-import static ch.epfl.alpano.Math2.floorMod;
+import static ch.epfl.alpano.Math2.PI2;
 import static ch.epfl.alpano.Preconditions.checkArgument;
-import static java.lang.Math.*;
+import static java.lang.Math.PI;
+import static java.lang.Math.asin;
+import static java.lang.Math.cos;
+import static java.lang.Math.sin;
 import static java.util.Objects.requireNonNull;
 
+import ch.epfl.alpano.Azimuth;
+import ch.epfl.alpano.Distance;
+import ch.epfl.alpano.GeoPoint;
+import ch.epfl.alpano.Math2;
+
 /**
- * @author : Jeremy Zerbib (257715)
- * @author : Etienne Caquot (249949)
+ * @author Jean Chambras (271630)
+ * @author Aymeri Servanin (272661)
+ *
  */
-public class ElevationProfile {
+
+/**
+ * Représente un profil altimétrique, comprenant l'atlitude, la pente et la
+ * position, suivant un arc de grand cercle
+ *
+ */
+public final class ElevationProfile {
 
     private final ContinuousElevationModel elevationModel;
-    private final GeoPoint origin;
-    private final double azimuth;
     private final double length;
-    private final double STEP = Distance.toRadians(4096);
-    private final double[][] tab;
+    private final double[][] discreteElevation;
+    private final static int TWO_POW_INDEX =12;
+    private final static int INDEX_EXTENSION=2;
+    
 
     /**
-     * ElevationProfile's constructor
+     * construit un profil altimétrique basé sur le MNT donné et dont le tracé
+     * débute au point origin, suit le grand cercle dans la direction donnée par
+     * azimuth, et a une longueur de length mètres. .
      * 
      * @param elevationModel
-     *            the elevation model to set
+     *            MNT
      * @param origin
-     *            the origin Geopoint to set
+     *            point d'origin
      * @param azimuth
-     *            the azimuth to set
+     *            direction du profil
      * @param length
-     *            the length to set
+     *            longueur du profil
      * @throws IllegalArgumentException
-     *             if the length is negative or if the azimuth is not canonical
+     *             si l'azimuth n'est pas canonique ou si la longueur n'est pas
+     *             strictement positive
+     * @throws NullPointerException
+     *             si l'un des deux autres arguments est null
      */
-    public ElevationProfile(ContinuousElevationModel elevationModel, GeoPoint origin, double azimuth, double length) {
-        checkArgument(length > 0, "La longueur est négative");
+    public ElevationProfile(ContinuousElevationModel elevationModel,
+            GeoPoint origin, double azimuth, double length) {
+
+        checkArgument(Azimuth.isCanonical(azimuth));
+        checkArgument(length > 0);
         this.length = length;
-        final int size = (int) Math.ceil(Distance.toRadians(length) / STEP);
-        checkArgument(isCanonical(azimuth), "l'azimuth n'est pas canonique");
         this.elevationModel = requireNonNull(elevationModel);
-        this.origin = requireNonNull(origin);
-        this.azimuth = azimuth;
-        tab = new double[size + 1][2];
-        for (int i = 0; i < size; i += 1) {
-            tab[i][0] = longitudeAt(i * STEP);
-            tab[i][1] = latitudeAt(i * STEP);
-        }
-        tab[size][0] = origin.longitude() + toRadians(1); // In this case and
-                                                          // the following we
-                                                          // are using the
-        tab[size][1] = origin.latitude() + toRadians(1); // static reference
-                                                         // toRadians from Math.
+        requireNonNull(origin);
+
+        int upperBoundModel = (int) (Math.scalb(length, -TWO_POW_INDEX)) + INDEX_EXTENSION;
+
+        discreteElevation = new double[upperBoundModel][3];
+        discreteElevationCalculation(discreteElevation,origin,azimuth);
+
     }
 
     /**
-     * Calculates the elevation at a given distance.
+     * retourne les coordonnées du point à la position donnée du profil
      * 
      * @param x
-     * @return double
-     */
-    public double elevationAt(double x) {
-        checkArgument(x >= 0 && x <= length, "la valeur x n'est pas comprise dans la longueur du profil");
-        return elevationModel.elevationAt(positionAt(x));
-    }
-
-    /**
-     * Calculates the position of point at a given distance.
+     *            position dans le profil
+     * @return les coordonnées du point à la position donnée du profil
      * 
-     * @param x
-     * @return double
+     * @throws IllegalArgumentException
+     *             si cette position n'est pas dans les bornes du profil
      */
     public GeoPoint positionAt(double x) {
-        checkArgument(x <= length && x >= 0, "la valeur x n'est pas comprise dans la longueur du profil");
-        double indexOfX = scalb(x, -12);
-        int lowerBound = (int) floor(indexOfX);
-        double longitude = lerp(tab[lowerBound][0], tab[lowerBound + 1][0], indexOfX - lowerBound);
-        double latitude = lerp(tab[lowerBound][1], tab[lowerBound + 1][1], indexOfX - lowerBound);
+        checkArgument((x >= 0) && (x <= length));
+
+        double i = Math.scalb(x, -TWO_POW_INDEX);
+        int lowerIndex = (int) Math.floor(i);
+
+        double latitudeLowerBound = discreteElevation[lowerIndex][2];
+        double latitudeUpperBound = discreteElevation[lowerIndex + 1][2];
+        double longitudeLowerBound = discreteElevation[lowerIndex][1];
+        double longitudeUpperBound = discreteElevation[lowerIndex + 1][1];
+
+        double latitude = Math2.lerp(latitudeLowerBound, latitudeUpperBound,
+                i - lowerIndex);
+        double longitude = Math2.lerp(longitudeLowerBound, longitudeUpperBound,
+                i - lowerIndex);
+
         return new GeoPoint(longitude, latitude);
+
     }
 
     /**
-     * Calculates the slope at a given distance.
+     * retourne la pente du terrain à la position donnée du profil
      * 
      * @param x
-     * @return double
+     *            position dans le profil altimétrique
+     * @return la pente du terrain à la position donnée du profil
+     * 
+     * @throws IllegalArgumentException
+     *             si cette position n'est pas dans les bornes du profil
      */
     public double slopeAt(double x) {
-        checkArgument(x <= length && x >= 0,
-                "la valeur x n'est pas comprise dans la longueur du profil");
+        checkArgument((x >= 0) && (x <= length));
+
         return elevationModel.slopeAt(positionAt(x));
     }
 
     /**
-     * Calculates the value of the latitude with the given formulae.
+     * retourne l'altitude du terrain à la position donnée du profil
      * 
      * @param x
-     * @return double
+     *            position dans le profil altimétrique
+     * @return l'altitude du terrain à la position donnée du profil
+     *
+     * @throws IllegalArgumentException
+     *             si cette position n'est pas dans les bornes du profil
      */
-    private double latitudeAt(double x) {
-        checkArgument(x <= Distance.toRadians(length),
-                "la valeur x n'est pas comprise dans la longueur du profil");
-        double lat = origin.latitude();
-        double sinLat = sin(lat);
-        double cosDist = cos(x);
-        double cosLat = cos(lat);
-        double sinDist = sin(x);
-        double cosAz = cos(toMath(azimuth));
-        return asin(sinLat * cosDist + cosLat * sinDist * cosAz);
+    public double elevationAt(double x) {
+        checkArgument((x >= 0) && (x <= length));
+
+        return elevationModel.elevationAt(positionAt(x));
+
     }
 
     /**
-     * Calculates the value of the longitude with the given formulae.
+     * Calcul intermédiaire de la longitude de la latitude ainsi que la distance
+     * de quelques points discrets du DEM et les stocke dans un tableau de
+     * double
      * 
-     * @param x
-     * @return double
+     * @param discreteElevation
+     *            tableau ou seront stockés ces valeurs discretes
      */
-    private double longitudeAt(double x) {
-        checkArgument(x <= Distance.toRadians(length),
-                "la valeur x n'est pas comprise dans la longueur du profil");
-        double longitude = origin.longitude();
-        double sinAz = sin(toMath(azimuth));
-        double sinDist = sin(x);
-        double cosLatAt = cos(latitudeAt(x));
-        double arcsin = asin((sinAz * sinDist) / cosLatAt);
-        return (((longitude - arcsin) + PI) % PI2) - PI;
+    private void discreteElevationCalculation(double[][] discreteElevation,GeoPoint origin, double azimuth) {
+        for (int i = 0; i < discreteElevation.length; ++i) {
+
+            discreteElevation[i][0] = Math.scalb(i, TWO_POW_INDEX);
+
+            double xInRadians = Distance.toRadians(discreteElevation[i][0]);
+            double originLatitude = origin.latitude();
+            double originLongitude = origin.longitude();
+            double MathAzimuth = Azimuth.toMath(azimuth);
+
+            double pointLatitude = Math.asin(
+                    sin(originLatitude) * cos(xInRadians) + cos(originLatitude)
+                            * sin(xInRadians) * cos(MathAzimuth));
+
+            double pointLongitude = (originLongitude - asin(
+                    sin(MathAzimuth) * sin(xInRadians) / cos(pointLatitude))
+                    + PI) % PI2 - PI;
+
+            discreteElevation[i][1] = pointLongitude;
+
+            discreteElevation[i][2] = pointLatitude;
+        }
+
     }
-}
+} 
