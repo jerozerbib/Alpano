@@ -33,6 +33,7 @@ import static ch.epfl.alpano.Azimuth.toOctantString;
 import static ch.epfl.alpano.summit.GazetteerParser.readSummitsFrom;
 
 import static javafx.beans.binding.Bindings.bindContent;
+import static javafx.scene.layout.GridPane.setHalignment;
 import static javafx.scene.paint.Color.rgb;
 import static javafx.scene.text.TextAlignment.CENTER;
 import static javafx.geometry.Pos.CENTER_RIGHT;
@@ -65,11 +66,13 @@ public final class Alpano extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         final List<Summit> summitList = readSummitsFrom(new File("alps.txt"));
-        final PanoramaComputerBean computPano = new PanoramaComputerBean(
-                summitList, cDEM1);
+        final PanoramaComputerBean computPano = new PanoramaComputerBean(summitList, cDEM1);
         final Labelizer labels = new Labelizer(cDEM1, summitList);
-        final PanoramaParametersBean paramsPano = new PanoramaParametersBean(
-                JURA);
+        final PanoramaParametersBean paramsPano = new PanoramaParametersBean(JURA);
+
+        if (computPano.getParamaters() != null){
+            System.out.println(computPano.getParamaters().w());
+        }
 
         ImageView panoView = new ImageView(computPano.getImage());
         panoView.fitWidthProperty().bind(paramsPano.widthProperty());
@@ -94,8 +97,7 @@ public final class Alpano extends Application {
         updateNotice.setBackground(new Background(fill));
         updateNotice.visibleProperty().setValue(computPano.parametersProperty()
                 .isNotEqualTo(paramsPano.parametersProperty()).get());
-        updateNotice.setOnMouseClicked(e -> computPano
-                .setParameters(paramsPano.parametersProperty().get()));
+        updateNotice.setOnMouseClicked(e -> computPano.setParameters(paramsPano.parametersProperty().get()));
 
         StackPane panoGroup = new StackPane(panoView, labelsPane);
 
@@ -124,11 +126,10 @@ public final class Alpano extends Application {
         TextField hT = createField(paramsPano.heightProperty(), 4, IntegerstringConverter);
         Label samplingIndex = new Label("Suréchantillonage : ");
 
-        ChoiceBox<Integer> choiceBox = new ChoiceBox<Integer>();
+        ChoiceBox<Integer> choiceBox = new ChoiceBox<>();
         choiceBox.getItems().addAll(0, 1, 2);
         choiceBox.getSelectionModel().selectFirst();
-        StringConverter<Integer> stringConverter = new LabeledListStringConverter(
-                "non", "2x", "4x");
+        StringConverter<Integer> stringConverter = new LabeledListStringConverter("non", "2x", "4x");
         choiceBox.setConverter(stringConverter);
 
         TextArea text = new TextArea();
@@ -147,15 +148,15 @@ public final class Alpano extends Application {
         paramsGrid.addRow(2, w, wT, h, hT, samplingIndex, choiceBox);
         paramsGrid.add(text, 6, 0, 1, 3);
 
-        GridPane.setHalignment(lat, HPos.RIGHT);
-        GridPane.setHalignment(lon, HPos.RIGHT);
-        GridPane.setHalignment(alt, HPos.RIGHT);
-        GridPane.setHalignment(az, HPos.RIGHT);
-        GridPane.setHalignment(hfv, HPos.RIGHT);
-        GridPane.setHalignment(visibility, HPos.RIGHT);
-        GridPane.setHalignment(w, HPos.RIGHT);
-        GridPane.setHalignment(h, HPos.RIGHT);
-        GridPane.setHalignment(samplingIndex, HPos.RIGHT);
+        setHalignment(lat, HPos.RIGHT);
+        setHalignment(lon, HPos.RIGHT);
+        setHalignment(alt, HPos.RIGHT);
+        setHalignment(az, HPos.RIGHT);
+        setHalignment(hfv, HPos.RIGHT);
+        setHalignment(visibility, HPos.RIGHT);
+        setHalignment(w, HPos.RIGHT);
+        setHalignment(h, HPos.RIGHT);
+        setHalignment(samplingIndex, HPos.RIGHT);
 
         BorderPane root = new BorderPane();
         root.setCenter(panoPane);
@@ -204,9 +205,7 @@ public final class Alpano extends Application {
                     + Math.toDegrees(lat) + "°E");
             text.setText("Distance : " + dist + "km");
             text.setText("Altitude : " + alt + "m");
-            text.setText(
-                    "Azimut : " + az + toOctantString(az, "N", "E", "S", "W")
-                            + "  " + "Elévation : " + el);
+            text.setText("Azimut : " + az + toOctantString(az, "N", "E", "S", "W") + "  " + "Elévation : " + el);
         });
     }
 

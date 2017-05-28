@@ -26,15 +26,12 @@ public class PanoramaParametersBean {
      * @param panoramaUserParameters
      *            the panoramaUserParameters to set
      */
-    public PanoramaParametersBean(
-            PanoramaUserParameters panoramaUserParameters) {
+    public PanoramaParametersBean(PanoramaUserParameters panoramaUserParameters) {
         this.syncronisedProps = new SimpleObjectProperty<>(panoramaUserParameters);
 
         for (UserParameter u : UserParameter.values()) {
-            this.mapPanoramaUserParameters.put(u,
-                    new SimpleObjectProperty<>(panoramaUserParameters.get(u)));
-            mapPanoramaUserParameters.get(u).addListener(
-                    (b, o, n) -> runLater(this::synchronisedParameters));
+            this.mapPanoramaUserParameters.put(u, new SimpleObjectProperty<>(panoramaUserParameters.get(u)));
+            mapPanoramaUserParameters.get(u).addListener((b, o, n) -> runLater(this::synchronisedParameters));
         }
 
     }
@@ -137,8 +134,8 @@ public class PanoramaParametersBean {
      */
     private PanoramaUserParameters synchronisedParameters() {
         Map<UserParameter, Integer> map = new EnumMap<>(UserParameter.class);
-        for (Map.Entry<UserParameter, ObjectProperty<Integer>> e : mapPanoramaUserParameters
-                .entrySet()) {
+        for (Map.Entry<UserParameter, ObjectProperty<Integer>> e : mapPanoramaUserParameters.entrySet()) {
+            System.out.println(e.getKey() + " : " + e.getValue().getValue());
             map.replace(e.getKey(), e.getValue().getValue());
         }
 

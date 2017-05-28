@@ -15,6 +15,7 @@ import javafx.scene.image.Image;
 import java.util.List;
 
 import static ch.epfl.alpano.gui.PanoramaRenderer.renderPanorama;
+import static java.util.Objects.requireNonNull;
 
 /**
  * @author : Jeremy Zerbib (257715)
@@ -22,15 +23,14 @@ import static ch.epfl.alpano.gui.PanoramaRenderer.renderPanorama;
  */
 
 public class PanoramaComputerBean {
-    private final int HUE_DIV = 100_000, HUE_MUL = 360, SAT_DIV = 200_000,
-            BR_MUL1 = 2;
+    private final int HUE_DIV = 100_000, HUE_MUL = 360, SAT_DIV = 200_000, BR_MUL1 = 2;
     private final float BR_MUL2 = 0.7f, BR_ADD = 0.3f;
     private final ObjectProperty<Panorama> panorama;
-    private final ObjectProperty<PanoramaUserParameters> pUserParameters;
+    private ObjectProperty<PanoramaUserParameters> pUserParameters;
     private final ObjectProperty<Image> image;
-    private final Labelizer lab;
-    private final PanoramaComputer panoramaComputer;
     private final ObservableList<Node> labels;
+    private final List<Summit> summits;
+    private final ContinuousElevationModel cDEM;
 
     /**
      * PanoramaComputerBean's constructor
@@ -38,28 +38,16 @@ public class PanoramaComputerBean {
      * @param list
      * @param cDEM
      */
-    public PanoramaComputerBean(List<Summit> list, ContinuousElevationModel cDEM) {
-        lab = new Labelizer(cDEM, list);
+    public PanoramaComputerBean(List<Summit> summits, ContinuousElevationModel cDEM) {
+        this.cDEM = requireNonNull(cDEM);
+        this.summits = requireNonNull(summits);
+
+        panorama = new SimpleObjectProperty<>();
         ObservableList<Node> labels = FXCollections.observableArrayList();
         this.labels = FXCollections.unmodifiableObservableList(labels);
-        panoramaComputer = new PanoramaComputer(cDEM);
-        panorama = new SimpleObjectProperty<>();
         image = new SimpleObjectProperty<>();
         pUserParameters = new SimpleObjectProperty<>();
-        pUserParameters.addListener((b, o, n) -> {
-            Panorama p = panoramaComputer.computePanorama(n.panoramaParameters());
-            ChannelPainter distance = p::distanceAt;
-            ChannelPainter slope = p::slopeAt;
-            ChannelPainter h = distance.div(HUE_DIV).cycling().mul(HUE_MUL);
-            ChannelPainter s = distance.div(SAT_DIV).clamped().inverted();
-            ChannelPainter br = slope.mul(BR_MUL1).div((float) Math.PI).inverted().mul(BR_MUL2).add(BR_ADD);
-            ChannelPainter opacity = distance.map(d -> d == Float.POSITIVE_INFINITY ? 0 : 1);
-            List<Node> newNodeList = lab.labels(n.panoramaDisplayParameters());
-            ImagePainter l = ImagePainter.hsb(h, s, br, opacity);
-
-            labels.setAll(newNodeList);
-            image.set(renderPanorama(p, l));
-        });
+        pUserParameters.addListener((b, o, n) -> synchronizeAllProps());
     }
 
     /**
@@ -130,9 +118,26 @@ public class PanoramaComputerBean {
      * 
      * @return ObservableList<Node>
      */
-    //TODO unmodifaible ?
     public ObservableList<Node> getLabels() {
         return labels;
+    }
+
+    private void synchronizeAllProps(){
+        panorama.set(new PanoramaComputer(cDEM).computePanorama(getParamaters().panoramaParameters()));
+
+
+        List<Node> newNodeList = new Labelizer(cDEM, summits).labels(getParamaters().panoramaDisplayParameters());
+        labels.setAll(newNodeList);
+
+        ChannelPainter distance = getPanorama()::distanceAt;
+        ChannelPainter slope = getPanorama()::slopeAt;
+        ChannelPainter h = distance.div(HUE_DIV).cycling().mul(HUE_MUL);
+        ChannelPainter s = distance.div(SAT_DIV).clamped().inverted();
+        ChannelPainter br = slope.mul(BR_MUL1).div((float) Math.PI).inverted().mul(BR_MUL2).add(BR_ADD);
+        ChannelPainter opacity = distance.map(d -> d == Float.POSITIVE_INFINITY ? 0 : 1);
+        ImagePainter painter = ImagePainter.hsb(h, s, br, opacity);
+
+        image.set(renderPanorama(getPanorama(), painter));
     }
 
 }

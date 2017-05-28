@@ -21,6 +21,7 @@ import static ch.epfl.alpano.Math2.angularDistance;
 import static ch.epfl.alpano.Math2.firstIntervalContainingRoot;
 import static java.lang.Double.compare;
 import static java.lang.Math.*;
+import static java.util.Objects.requireNonNull;
 
 /**
  * @author : Jeremy Zerbib (257715)
@@ -49,8 +50,8 @@ public final class Labelizer {
      *            the list of summit to set
      */
     public Labelizer(ContinuousElevationModel cDEM, List<Summit> summits) {
-        this.cDEM = cDEM;
-        this.summits = summits;
+        this.cDEM = requireNonNull(cDEM);
+        this.summits = requireNonNull(summits);
     }
 
     /**

@@ -1,25 +1,19 @@
-/**
- * 
- */
 package ch.epfl.alpano.dem;
-
-import static ch.epfl.alpano.Math2.PI2;
-import static ch.epfl.alpano.Preconditions.checkArgument;
-import static java.lang.Math.PI;
-import static java.lang.Math.asin;
-import static java.lang.Math.cos;
-import static java.lang.Math.sin;
-import static java.util.Objects.requireNonNull;
 
 import ch.epfl.alpano.Azimuth;
 import ch.epfl.alpano.Distance;
 import ch.epfl.alpano.GeoPoint;
 import ch.epfl.alpano.Math2;
 
+import static ch.epfl.alpano.Math2.PI2;
+import static ch.epfl.alpano.Preconditions.checkArgument;
+import static java.lang.Math.*;
+import static java.util.Objects.requireNonNull;
+
+
 /**
- * @author Jean Chambras (271630)
- * @author Aymeri Servanin (272661)
- *
+ * @author : Jeremy Zerbib (257715)
+ * @author : Etienne Caquot (249949)
  */
 
 /**
@@ -27,20 +21,20 @@ import ch.epfl.alpano.Math2;
  * position, suivant un arc de grand cercle
  *
  */
-public final class ElevationProfile {
+public final class ElevationProfile{
 
     private final ContinuousElevationModel elevationModel;
     private final double length;
     private final double[][] discreteElevation;
-    private final static int TWO_POW_INDEX =12;
-    private final static int INDEX_EXTENSION=2;
-    
+    private final static int TWO_POW_INDEX = 12;
+    private final static int INDEX_EXTENSION = 2;
+
 
     /**
      * construit un profil altimétrique basé sur le MNT donné et dont le tracé
      * débute au point origin, suit le grand cercle dans la direction donnée par
      * azimuth, et a une longueur de length mètres. .
-     * 
+     *
      * @param elevationModel
      *            MNT
      * @param origin
@@ -55,8 +49,7 @@ public final class ElevationProfile {
      * @throws NullPointerException
      *             si l'un des deux autres arguments est null
      */
-    public ElevationProfile(ContinuousElevationModel elevationModel,
-            GeoPoint origin, double azimuth, double length) {
+    public ElevationProfile(ContinuousElevationModel elevationModel, GeoPoint origin, double azimuth, double length) {
 
         checkArgument(Azimuth.isCanonical(azimuth));
         checkArgument(length > 0);
@@ -73,11 +66,11 @@ public final class ElevationProfile {
 
     /**
      * retourne les coordonnées du point à la position donnée du profil
-     * 
+     *
      * @param x
      *            position dans le profil
      * @return les coordonnées du point à la position donnée du profil
-     * 
+     *
      * @throws IllegalArgumentException
      *             si cette position n'est pas dans les bornes du profil
      */
@@ -92,10 +85,8 @@ public final class ElevationProfile {
         double longitudeLowerBound = discreteElevation[lowerIndex][1];
         double longitudeUpperBound = discreteElevation[lowerIndex + 1][1];
 
-        double latitude = Math2.lerp(latitudeLowerBound, latitudeUpperBound,
-                i - lowerIndex);
-        double longitude = Math2.lerp(longitudeLowerBound, longitudeUpperBound,
-                i - lowerIndex);
+        double latitude = Math2.lerp(latitudeLowerBound, latitudeUpperBound, i - lowerIndex);
+        double longitude = Math2.lerp(longitudeLowerBound, longitudeUpperBound, i - lowerIndex);
 
         return new GeoPoint(longitude, latitude);
 
@@ -103,11 +94,11 @@ public final class ElevationProfile {
 
     /**
      * retourne la pente du terrain à la position donnée du profil
-     * 
+     *
      * @param x
      *            position dans le profil altimétrique
      * @return la pente du terrain à la position donnée du profil
-     * 
+     *
      * @throws IllegalArgumentException
      *             si cette position n'est pas dans les bornes du profil
      */
@@ -119,7 +110,7 @@ public final class ElevationProfile {
 
     /**
      * retourne l'altitude du terrain à la position donnée du profil
-     * 
+     *
      * @param x
      *            position dans le profil altimétrique
      * @return l'altitude du terrain à la position donnée du profil
@@ -138,7 +129,7 @@ public final class ElevationProfile {
      * Calcul intermédiaire de la longitude de la latitude ainsi que la distance
      * de quelques points discrets du DEM et les stocke dans un tableau de
      * double
-     * 
+     *
      * @param discreteElevation
      *            tableau ou seront stockés ces valeurs discretes
      */
@@ -152,9 +143,7 @@ public final class ElevationProfile {
             double originLongitude = origin.longitude();
             double MathAzimuth = Azimuth.toMath(azimuth);
 
-            double pointLatitude = Math.asin(
-                    sin(originLatitude) * cos(xInRadians) + cos(originLatitude)
-                            * sin(xInRadians) * cos(MathAzimuth));
+            double pointLatitude = Math.asin(sin(originLatitude) * cos(xInRadians) + cos(originLatitude) * sin(xInRadians) * cos(MathAzimuth));
 
             double pointLongitude = (originLongitude - asin(
                     sin(MathAzimuth) * sin(xInRadians) / cos(pointLatitude))
@@ -166,4 +155,4 @@ public final class ElevationProfile {
         }
 
     }
-} 
+}

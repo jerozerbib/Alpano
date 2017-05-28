@@ -14,34 +14,11 @@ import java.io.IOException;
 import java.util.List;
 
 public final class Main {
-    public static void main(String[] args) throws IOException {
+   public static void main(String[] args) throws IOException {
 
         ContinuousElevationModel cDEM = new ContinuousElevationModel(
                 new HgtDiscreteElevationModel(new File("N46E007.hgt")));
-        List<Summit> listSummits = GazetteerParser
-                .readSummitsFrom(new File("alps.txt"));
-
-        Labelizer labelizer = new Labelizer(cDEM, listSummits);
-
-        PanoramaParameters p = PredefinedPanoramas.NIESEN
-                .panoramaDisplayParameters();
-        List<Summit> visibleSummits = labelizer.visibleSummits(p);
-
-        System.out.println(visibleSummits.size());
-
-        for (int i = 0; i < 10; ++i) {
-            System.out.println(visibleSummits.get(i).name() + " ("
-                    + labelizer.xRounded(visibleSummits.get(i), p) + ", "
-                    + labelizer.yRounded(visibleSummits.get(i), p) + ")");
-        }
-    }
-
-   /* public static void main(String[] args) throws IOException {
-
-        ContinuousElevationModel cDEM = new ContinuousElevationModel(
-                new HgtDiscreteElevationModel(new File("N46E007.hgt")));
-        List<Summit> listSummits = GazetteerParser
-                .readSummitsFrom(new File("alps.txt"));
+        List<Summit> listSummits = GazetteerParser.readSummitsFrom(new File("alps.txt"));
 
         Labelizer labelizer = new Labelizer(cDEM, listSummits);
 
@@ -49,7 +26,7 @@ public final class Main {
 
         List<Node> list = labelizer.labels(p);
 
-        for (int i = 0; i < 20; ++i) {
+        for (int i = 0; i < 10; ++i) {
             if (list.get(i) instanceof Text) {
                 System.out.println(i +" Text[ text = ' " + list.get(i).toString()
                         + "', x=" + ((Text) list.get(i)).getX() + ", y="
@@ -63,5 +40,5 @@ public final class Main {
             }
         }
 
-    }*/
+    }
 }
