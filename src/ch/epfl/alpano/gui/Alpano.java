@@ -70,10 +70,6 @@ public final class Alpano extends Application {
         final Labelizer labels = new Labelizer(cDEM1, summitList);
         final PanoramaParametersBean paramsPano = new PanoramaParametersBean(JURA);
 
-        if (computPano.getParamaters() != null){
-            System.out.println(computPano.getParamaters().w());
-        }
-
         ImageView panoView = new ImageView(computPano.getImage());
         panoView.fitWidthProperty().bind(paramsPano.widthProperty());
         panoView.imageProperty().bind(computPano.imageProperty());
