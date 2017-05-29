@@ -35,7 +35,7 @@ public final class PanoramaUserParameters {
         for (Map.Entry<UserParameter, Integer> e : map.entrySet()) {
             map1.put(e.getKey(),e.getKey().sanitize(e.getValue()));
         }
-        
+
         int h = map1.get(UserParameter.HEIGHT);
         int hfv = map1.get(UserParameter.HORIZONTAL_FIELD_OF_VIEW);
         int w = map1.get(UserParameter.WIDTH);
