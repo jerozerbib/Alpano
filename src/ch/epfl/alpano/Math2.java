@@ -153,10 +153,8 @@ public interface Math2 {
                     "f(x1) et f(x2) sont du même signe.");
         }
         while (x2 - x1 > epsilon) {
-            double xm = (x1 + x2) / 2;
-            if (f.applyAsDouble(xm) == 0) {
-                return xm;
-            } else if (f.applyAsDouble(x1) * f.applyAsDouble(xm) <= 0) {
+            double xm = (x1 + x2) / 2.0;
+            if (f.applyAsDouble(x1) * f.applyAsDouble(xm) <= 0) {
                 x2 = xm;
             } else {
                 x1 = xm;

@@ -5,7 +5,6 @@ import ch.epfl.alpano.dem.ContinuousElevationModel;
 import ch.epfl.alpano.dem.DiscreteElevationModel;
 import ch.epfl.alpano.dem.HgtDiscreteElevationModel;
 import ch.epfl.alpano.summit.Summit;
-
 import javafx.application.Application;
 import javafx.beans.property.ObjectProperty;
 import javafx.geometry.HPos;
@@ -31,11 +30,14 @@ import java.util.Locale;
 
 import static ch.epfl.alpano.Azimuth.toOctantString;
 import static ch.epfl.alpano.summit.GazetteerParser.readSummitsFrom;
+
+import static java.lang.Math.toDegrees;
+
 import static javafx.beans.binding.Bindings.bindContent;
+import static javafx.geometry.Pos.CENTER_RIGHT;
 import static javafx.scene.layout.GridPane.setHalignment;
 import static javafx.scene.paint.Color.rgb;
 import static javafx.scene.text.TextAlignment.CENTER;
-import static javafx.geometry.Pos.CENTER_RIGHT;
 
 /**
  * @author : Jeremy Zerbib (257715)
@@ -76,26 +78,30 @@ public final class Alpano extends Application {
         panoView.smoothProperty().setValue(true);
 
         Pane labelsPane = new Pane();
-        labelsPane.getChildren().addAll(labels.labels(
-                paramsPano.parametersProperty().get().panoramaParameters()));
+        labelsPane.getChildren().addAll(labels.labels(paramsPano.parametersProperty().get().panoramaParameters()));
         labelsPane.prefWidthProperty().bind(paramsPano.widthProperty());
         labelsPane.prefHeightProperty().bind(paramsPano.heightProperty());
         bindContent(labelsPane.getChildren(), computPano.getLabels());
         labelsPane.setMouseTransparent(true);
+        if(labels.labels(paramsPano.parametersProperty().get().panoramaParameters()) instanceof Text){
+            System.out.println(((Text) labels.labels(paramsPano.parametersProperty().get().panoramaParameters())).getX());
+        }
 
         Text updateText = new Text(
-                "Les paramètres du panorama ont changé.\nCliquez ici pour mettre le dessin à jour.");
+                "Les paramètres du panorama ont changé.\n Cliquez ici pour mettre le dessin à jour.");
         updateText.setFont(new Font(FONT_SIZE));
         updateText.setTextAlignment(CENTER);
 
         StackPane updateNotice = new StackPane(updateText);
         updateNotice.setBackground(new Background(fill));
+
         updateNotice.setVisible(computPano.parametersProperty().isNotEqualTo(paramsPano.parametersProperty()).get());
-        updateNotice.setOnMouseClicked(e -> {
-            computPano.setParameters(paramsPano.parametersProperty().get());
-            updateNotice.setVisible(computPano.parametersProperty().isNotEqualTo(paramsPano.parametersProperty()).get());
+        updateNotice.setOnMouseClicked(e -> { computPano.setParameters(paramsPano.parametersProperty().get());
+            updateNotice.visibleProperty().setValue(computPano.parametersProperty().isNotEqualTo(paramsPano.parametersProperty()).get());
         });
-      
+
+        paramsPano.parametersProperty().addListener((b, o, n) -> updateNotice.setVisible(computPano.parametersProperty().isNotEqualTo(paramsPano.parametersProperty()).get()));
+
         StackPane panoGroup = new StackPane(panoView, labelsPane);
 
         ScrollPane panoScrollPane = new ScrollPane(panoGroup);
@@ -197,18 +203,25 @@ public final class Alpano extends Application {
             double lon = p.longitudeAt(x, y);
             double lat = p.latitudeAt(x, y);
             double el = p.elevationAt(x, y);
-            // TODO : Demander par rapport à l'aligmement
-            text.setText("Position : " + Math.toDegrees(lon) + "°N "
-                    + Math.toDegrees(lat) + "°E");
-            text.setText("Distance : " + dist + "km");
-            text.setText("Altitude : " + alt + "m");
-            text.setText("Azimut : " + az + toOctantString(az, "N", "E", "S", "W") + "  " + "Elévation : " + el);
+
+            String lonFormat = String.format((Locale) null, "%.4f", toDegrees(lon));
+            String latFormat = String.format((Locale) null, "%.4f", toDegrees(lat));
+
+
+            String s = "Position : " + lonFormat + "°N " + latFormat + "°E" +
+                    "\n" +
+                    "Distance : " + dist/1000.0 + " km" +
+                    "\n" +
+                    "Altitude : " + alt + " m" +
+                    "\n" +
+                    "Azimut : " + toDegrees(az) + " °" + toOctantString(az, "N", "E", "S", "W") + "\t" + "Elévation : " + toDegrees(el) + "°";
+            text.setText(s);
         });
     }
 
-    private void mouseClickOnPointEventHandler(ImageView imageView,
-            PanoramaComputerBean computPano) {
+    private void mouseClickOnPointEventHandler(ImageView imageView, PanoramaComputerBean computPano) {
         imageView.setOnMouseClicked(e -> {
+            System.out.println("Salut");
             int x;
             int y;
             // TODO : Demander par rapport au suréchantillonage !
@@ -220,22 +233,24 @@ public final class Alpano extends Application {
                 y = (int) e.getY() * computPano.getParamaters().exp();
             }
             Panorama p = computPano.getPanorama();
-            double lon = Math.toDegrees(p.longitudeAt(x, y));
-            double lat = Math.toDegrees(p.latitudeAt(x, y));
-            String lonFormat = String.format((Locale) null, "%.4f", lon);
-            String latFormat = String.format((Locale) null, "%.4f", lat);
+
+            double lon = p.longitudeAt(x, y);
+            double lat = p.latitudeAt(x, y);
+            String lonFormat = String.format((Locale) null, "%.4f", toDegrees(lon));
+            String latFormat = String.format((Locale) null, "%.4f", toDegrees(lat));
+
             String qy = "?mlat=" + latFormat + "&mlon=" + lonFormat; // "query"
                                                                      // : partie
                                                                      // après le
                                                                      // ?
             String fg = "#map=15/" + latFormat + "/" + lonFormat; // "fragment"
                                                                   // : partie
-                                                                  // après le #
+
+
             try {
-                URI osmURI = new URI("http", "www.openstreetmap.org", "/", qy,
-                        fg);
-                System.out.print("salut");
-                System.out.println(osmURI);
+
+                URI osmURI = new URI("http", "www.openstreetmap.org", "/", qy, fg);
+
                 java.awt.Desktop.getDesktop().browse(osmURI);
             } catch (URISyntaxException | IOException e2) {
                 throw new Error(e2);
