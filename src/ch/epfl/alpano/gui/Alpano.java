@@ -31,7 +31,7 @@ import java.util.Locale;
 
 import static ch.epfl.alpano.Azimuth.toOctantString;
 import static ch.epfl.alpano.summit.GazetteerParser.readSummitsFrom;
-
+import static javafx.application.Platform.runLater;
 import static javafx.beans.binding.Bindings.bindContent;
 import static javafx.scene.layout.GridPane.setHalignment;
 import static javafx.scene.paint.Color.rgb;
@@ -70,10 +70,6 @@ public final class Alpano extends Application {
         final Labelizer labels = new Labelizer(cDEM1, summitList);
         final PanoramaParametersBean paramsPano = new PanoramaParametersBean(JURA);
 
-        if (computPano.getParamaters() != null){
-            System.out.println(computPano.getParamaters().w());
-        }
-
         ImageView panoView = new ImageView(computPano.getImage());
         panoView.fitWidthProperty().bind(paramsPano.widthProperty());
         panoView.imageProperty().bind(computPano.imageProperty());
@@ -95,10 +91,10 @@ public final class Alpano extends Application {
 
         StackPane updateNotice = new StackPane(updateText);
         updateNotice.setBackground(new Background(fill));
-        updateNotice.visibleProperty().setValue(computPano.parametersProperty()
-                .isNotEqualTo(paramsPano.parametersProperty()).get());
+        updateNotice.setVisible(computPano.parametersProperty().isNotEqualTo(paramsPano.parametersProperty()).get());
         updateNotice.setOnMouseClicked(e -> computPano.setParameters(paramsPano.parametersProperty().get()));
-
+        computPano.parametersProperty().addListener((b, o, n) -> System.out.println("---" + computPano.parametersProperty().isNotEqualTo(paramsPano.parametersProperty()).get()));
+        System.out.println("--" + computPano.parametersProperty().isEqualTo(paramsPano.parametersProperty()).get());
         StackPane panoGroup = new StackPane(panoView, labelsPane);
 
         ScrollPane panoScrollPane = new ScrollPane(panoGroup);

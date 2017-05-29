@@ -26,7 +26,7 @@ public class PanoramaComputerBean {
     private final int HUE_DIV = 100_000, HUE_MUL = 360, SAT_DIV = 200_000, BR_MUL1 = 2;
     private final float BR_MUL2 = 0.7f, BR_ADD = 0.3f;
     private final ObjectProperty<Panorama> panorama;
-    private ObjectProperty<PanoramaUserParameters> pUserParameters;
+    private final ObjectProperty<PanoramaUserParameters> pUserParameters;
     private final ObjectProperty<Image> image;
     private final ObservableList<Node> labels;
     private final List<Summit> summits;
@@ -43,8 +43,9 @@ public class PanoramaComputerBean {
         this.summits = requireNonNull(summits);
 
         panorama = new SimpleObjectProperty<>();
-        ObservableList<Node> labels = FXCollections.observableArrayList();
-        this.labels = FXCollections.unmodifiableObservableList(labels);
+        //ObservableList<Node> labels = FXCollections.observableArrayList();
+        //this.labels = FXCollections.unmodifiableObservableList(labels);
+        labels = FXCollections.observableArrayList();
         image = new SimpleObjectProperty<>();
         pUserParameters = new SimpleObjectProperty<>();
         pUserParameters.addListener((b, o, n) -> synchronizeAllProps());
@@ -124,8 +125,7 @@ public class PanoramaComputerBean {
 
     private void synchronizeAllProps(){
         panorama.set(new PanoramaComputer(cDEM).computePanorama(getParamaters().panoramaParameters()));
-
-
+        System.out.println("test");
         List<Node> newNodeList = new Labelizer(cDEM, summits).labels(getParamaters().panoramaDisplayParameters());
         labels.setAll(newNodeList);
 

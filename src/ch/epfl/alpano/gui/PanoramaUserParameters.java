@@ -35,13 +35,13 @@ public final class PanoramaUserParameters {
         for (Map.Entry<UserParameter, Integer> e : map.entrySet()) {
             map1.put(e.getKey(),e.getKey().sanitize(e.getValue()));
         }
-
-        int h = map.get(UserParameter.HEIGHT);
-        int hfv = map.get(UserParameter.HORIZONTAL_FIELD_OF_VIEW);
-        int w = map.get(UserParameter.WIDTH);
+        
+        int h = map1.get(UserParameter.HEIGHT);
+        int hfv = map1.get(UserParameter.HORIZONTAL_FIELD_OF_VIEW);
+        int w = map1.get(UserParameter.WIDTH);
 
         if (!(h <= (170 * (w - 1) / hfv) + 1)) {
-            map.replace(UserParameter.HEIGHT, h, MAX_HEIGHT);
+            map1.replace(UserParameter.HEIGHT, h, MAX_HEIGHT);
         }
 
         this.map = Collections.unmodifiableMap(map1);

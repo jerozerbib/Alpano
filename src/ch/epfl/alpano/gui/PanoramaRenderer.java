@@ -19,9 +19,12 @@ public interface PanoramaRenderer {
      *          returns an image with all the right colorization.
      */
     static WritableImage renderPanorama(Panorama p, ImagePainter im){
-        WritableImage pix = new WritableImage(p.parameters().width(), p.parameters().height());
-        for (int i = 0; i < p.parameters().width(); ++i){
-            for (int j = 0; j < p.parameters().height(); ++j){
+        int width = p.parameters().width();
+        int height = p.parameters().height();
+        WritableImage pix = new WritableImage(width, height);
+        int i,j;
+        for (i = 0; i < width; ++i){
+            for (j = 0; j < height; ++j){
                 pix.getPixelWriter().setColor(i, j, im.colorAt(i, j));
             }
         }
