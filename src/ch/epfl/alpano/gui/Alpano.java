@@ -31,7 +31,6 @@ import java.util.Locale;
 
 import static ch.epfl.alpano.Azimuth.toOctantString;
 import static ch.epfl.alpano.summit.GazetteerParser.readSummitsFrom;
-import static javafx.application.Platform.runLater;
 import static javafx.beans.binding.Bindings.bindContent;
 import static javafx.scene.layout.GridPane.setHalignment;
 import static javafx.scene.paint.Color.rgb;
@@ -92,9 +91,11 @@ public final class Alpano extends Application {
         StackPane updateNotice = new StackPane(updateText);
         updateNotice.setBackground(new Background(fill));
         updateNotice.setVisible(computPano.parametersProperty().isNotEqualTo(paramsPano.parametersProperty()).get());
-        updateNotice.setOnMouseClicked(e -> computPano.setParameters(paramsPano.parametersProperty().get()));
-        computPano.parametersProperty().addListener((b, o, n) -> System.out.println("---" + computPano.parametersProperty().isNotEqualTo(paramsPano.parametersProperty()).get()));
-        System.out.println("--" + computPano.parametersProperty().isEqualTo(paramsPano.parametersProperty()).get());
+        updateNotice.setOnMouseClicked(e -> {
+            computPano.setParameters(paramsPano.parametersProperty().get());
+            updateNotice.setVisible(computPano.parametersProperty().isNotEqualTo(paramsPano.parametersProperty()).get());
+        });
+      
         StackPane panoGroup = new StackPane(panoView, labelsPane);
 
         ScrollPane panoScrollPane = new ScrollPane(panoGroup);
@@ -219,11 +220,10 @@ public final class Alpano extends Application {
                 y = (int) e.getY() * computPano.getParamaters().exp();
             }
             Panorama p = computPano.getPanorama();
-            double lon = p.longitudeAt(x, y);
-            double lat = p.latitudeAt(x, y);
-            String lonFormat = String.format((Locale) null, "%.2f", lon);
-            String latFormat = String.format((Locale) null, "%.2f", lat);
-
+            double lon = Math.toDegrees(p.longitudeAt(x, y));
+            double lat = Math.toDegrees(p.latitudeAt(x, y));
+            String lonFormat = String.format((Locale) null, "%.4f", lon);
+            String latFormat = String.format((Locale) null, "%.4f", lat);
             String qy = "?mlat=" + latFormat + "&mlon=" + lonFormat; // "query"
                                                                      // : partie
                                                                      // après le
@@ -234,6 +234,8 @@ public final class Alpano extends Application {
             try {
                 URI osmURI = new URI("http", "www.openstreetmap.org", "/", qy,
                         fg);
+                System.out.print("salut");
+                System.out.println(osmURI);
                 java.awt.Desktop.getDesktop().browse(osmURI);
             } catch (URISyntaxException | IOException e2) {
                 throw new Error(e2);

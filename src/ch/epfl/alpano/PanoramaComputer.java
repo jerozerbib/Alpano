@@ -49,12 +49,12 @@ public final class PanoramaComputer {
         int stop = parameters.width();
         int i;
         for (i = 0; i < stop; i++) {
-            System.out.println("--i : " + i);
             double rayX = 0;
             ElevationProfile e = new ElevationProfile(dem, obsPos, parameters.azimuthForX(i), maxD);
             int start = parameters.height() - 1 ;
             int j;
-            for (j = start; j > -1; j--) {
+            boolean exit = false;
+            for (j = start; j > -1 && !exit; j--) {
                 double raySlope = parameters.altitudeForY(j);
                 DoubleUnaryOperator f = rayToGroundDistance(e, ray0, tan(raySlope));
                 double lowerBoundFirst = firstIntervalContainingRoot(f, rayX, maxD, dX);
@@ -67,10 +67,11 @@ public final class PanoramaComputer {
                             .setSlopeAt(i, j, (float) dem.slopeAt(position))
                             .setLongitudeAt(i, j, (float) position.longitude())
                             .setLatitudeAt(i, j, (float) position.latitude());
+                }else {
+                    exit = true;
                 }
             }
         }
-        System.out.println("testfinal");
         return p.build();
     }
 

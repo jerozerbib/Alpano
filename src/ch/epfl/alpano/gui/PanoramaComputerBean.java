@@ -125,7 +125,6 @@ public class PanoramaComputerBean {
 
     private void synchronizeAllProps(){
         panorama.set(new PanoramaComputer(cDEM).computePanorama(getParamaters().panoramaParameters()));
-        System.out.println("test");
         List<Node> newNodeList = new Labelizer(cDEM, summits).labels(getParamaters().panoramaDisplayParameters());
         labels.setAll(newNodeList);
 

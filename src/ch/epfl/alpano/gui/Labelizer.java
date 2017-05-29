@@ -37,8 +37,7 @@ public final class Labelizer {
     private final int SPACE = 2;
     private final int MARGIN = 20;
     private final int VERTICAL_LIMIT = 170;
-    private final int ANGLE = 60;
-    private final int ZERO = 0;
+    private final int ANGLE = -60;
     private List<Summit> summits = new ArrayList<>();
 
     /**
@@ -133,9 +132,10 @@ public final class Labelizer {
                     line.setEndY(roundedY);
                     line.setEndX(roundedX);
 
-                    Text name = new Text(ZERO, ZERO , s.name() + " (" + s.elevation() + " m)");
-                    name.getTransforms().addAll(new Rotate(ANGLE, ZERO, ZERO ), new Translate(roundedX,yHighestRounded - LINE_SIZE -SPACE, 0));
-
+                    Text name = new Text(0, 0 , s.name() + " (" + s.elevation() + " m)");
+                    name.getTransforms().addAll(new Rotate(ANGLE, 0, 0));
+                    name.setTranslateX(roundedX);
+                    name.setTranslateY(yHighestRounded - LINE_SIZE -SPACE);
                     listTag.add(name);
                     listTag.add(line);
                 }
