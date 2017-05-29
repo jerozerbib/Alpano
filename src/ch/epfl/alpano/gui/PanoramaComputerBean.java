@@ -35,8 +35,11 @@ public class PanoramaComputerBean {
     /**
      * PanoramaComputerBean's constructor
      * 
-     * @param list
+     * @param summits
+     *  the list of summits to set
      * @param cDEM
+     *  the ContiuoursElevationModel to set 
+     *  
      */
     public PanoramaComputerBean(List<Summit> summits, ContinuousElevationModel cDEM) {
         this.cDEM = requireNonNull(cDEM);

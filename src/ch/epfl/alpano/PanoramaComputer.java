@@ -46,15 +46,11 @@ public final class PanoramaComputer {
         final GeoPoint obsPos = parameters.observerPosition();
         double ray0 = parameters.observerElevation();
         Panorama.Builder p = new Panorama.Builder(parameters);
-        int stop = parameters.width();
-        int i;
-        for (i = 0; i < stop; i++) {
+        for (int i = 0; i < parameters.width(); i++) {
             double rayX = 0;
             ElevationProfile e = new ElevationProfile(dem, obsPos, parameters.azimuthForX(i), maxD);
-            int start = parameters.height() - 1 ;
-            int j;
             boolean exit = false;
-            for (j = start; j > -1 && !exit; j--) {
+            for (int j = parameters.height() - 1; j > -1 && !exit; j--) {
                 double raySlope = parameters.altitudeForY(j);
                 DoubleUnaryOperator f = rayToGroundDistance(e, ray0, tan(raySlope));
                 double lowerBoundFirst = firstIntervalContainingRoot(f, rayX, maxD, dX);

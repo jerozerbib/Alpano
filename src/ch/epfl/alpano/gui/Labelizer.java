@@ -153,7 +153,7 @@ public final class Labelizer {
      *            the parameters of the panorama
      * @return the list of visible summits
      */
-    public List<Summit> visibleSummits(PanoramaParameters p) {
+    private List<Summit> visibleSummits(PanoramaParameters p) {
         ArrayList<Summit> visibleSummits = new ArrayList<>();
         for (Summit s : summits) {
             GeoPoint obsPos = p.observerPosition();

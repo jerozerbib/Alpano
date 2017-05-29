@@ -4,39 +4,51 @@ import javafx.scene.paint.Color;
 
 /**
  * @author : Jeremy Zerbib (257715)
+ * @author : Etienne Caquot (249949)
  */
 public interface ImagePainter {
 
     /**
      * Returns the Color at a given position
+     * 
      * @param x
+     *            the x index
      * @param y
-     * @return Color
+     *            the y index
+     * @return Color at a given position
      */
     Color colorAt(int x, int y);
 
     /**
-     * Returns ImagePainter of a value given a hab Color
-     * @param t
-     * @param sat
-     * @param lum
+     * Returns a HSB ImagePainter corresponding to the given ones
+     * 
+     * @param h
+     *            the hue ChannelPainter
+     * @param s
+     *            the saturation ChannelPainter
+     * @param b
+     *            the brightness ChannelPainter
      * @param op
-     * @return ImagePainter
+     *            the opacity ChannelPainter
+     * @return ImagePainter from several ChannelPainter
      */
-    static ImagePainter hsb(ChannelPainter h, ChannelPainter s, ChannelPainter b, ChannelPainter op){
-        return (x, y) -> Color.hsb(h.valueAt(x, y), s.valueAt(x, y), b.valueAt(x, y), op.valueAt(x, y));
+    static ImagePainter hsb(ChannelPainter h, ChannelPainter s,
+            ChannelPainter b, ChannelPainter op) {
+        return (x, y) -> Color.hsb(h.valueAt(x, y), s.valueAt(x, y),
+                b.valueAt(x, y), op.valueAt(x, y));
     }
 
     /**
-     * Returns ImagePainter of a value given a gray Color
-     * @param t
-     * @param sat
-     * @param lum
+     * Returns gray ImagePainter corresponding to the given ones
+     * 
+     * @param g
+     *            the gray ChannelPainter
      * @param op
+     *            the opacity ChannelPainter
      * @return ImagePainter
      */
-    static ImagePainter gray(ChannelPainter t, ChannelPainter op){
-        return (x, y) -> Color.gray(t.valueAt(x, y), op.valueAt(x, y));
+    static ImagePainter gray(ChannelPainter g, ChannelPainter op) {
+        return (x, y) -> Color.gray(g.valueAt(x, y), op.valueAt(x, y));
     }
 
 }

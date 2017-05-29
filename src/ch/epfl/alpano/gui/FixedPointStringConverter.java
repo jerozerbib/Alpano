@@ -6,6 +6,8 @@ import java.math.BigDecimal;
 
 import static java.math.RoundingMode.HALF_UP;
 
+import static ch.epfl.alpano.Preconditions.checkArgument;
+
 /**
  * @author : Jeremy Zerbib (257715)
  * @author : Etienne Caquot (249949)
@@ -22,6 +24,7 @@ public class FixedPointStringConverter extends StringConverter<Integer> {
      *            the number of decimal to set
      */
     public FixedPointStringConverter(int fixedDecimal) {
+        checkArgument(fixedDecimal >= 0, "FixedDecimal ne peut pas etre un nombre negatif");
         this.fixedDecimal = fixedDecimal;
     }
 

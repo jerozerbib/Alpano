@@ -8,6 +8,8 @@ import java.util.EnumMap;
 import java.util.Map;
 
 import static ch.epfl.alpano.gui.UserParameter.*;
+import static ch.epfl.alpano.Preconditions.checkArgument;
+
 import static java.lang.Math.pow;
 import static java.lang.Math.toRadians;
 
@@ -18,6 +20,7 @@ import static java.lang.Math.toRadians;
 public final class PanoramaUserParameters {
 
     private Map<UserParameter, Integer> map = new EnumMap<>(UserParameter.class);
+    //TODO Pourquoi 14690 et pas 4000 ?
     private final int MAX_HEIGHT = 14690; // From the instructions given by the
                                           // teacher
 
@@ -29,11 +32,13 @@ public final class PanoramaUserParameters {
      * @param map
      *            the map to set
      */
+    //TODO : require non null ?
     public PanoramaUserParameters(Map<UserParameter, Integer> map) {
+        checkArgument(!map.isEmpty(),"La map est vide");
         Map<UserParameter, Integer> map1 = new EnumMap<>(UserParameter.class);
-        
+
         for (Map.Entry<UserParameter, Integer> e : map.entrySet()) {
-            map1.put(e.getKey(),e.getKey().sanitize(e.getValue()));
+            map1.put(e.getKey(), e.getKey().sanitize(e.getValue()));
         }
 
         int h = map1.get(UserParameter.HEIGHT);
@@ -196,7 +201,8 @@ public final class PanoramaUserParameters {
         int wp = (int) (w() * pow(2, exp()));
         int hp = (int) (h() * pow(2, exp()));
         int convertedmaxD = maxD() * 1000;
-        return new PanoramaParameters(new GeoPoint(convertedLon, convertedLat), observerEl(), convertedAz, convertedHFV, convertedmaxD, wp, hp);
+        return new PanoramaParameters(new GeoPoint(convertedLon, convertedLat),
+                observerEl(), convertedAz, convertedHFV, convertedmaxD, wp, hp);
     }
 
     /**
@@ -211,7 +217,9 @@ public final class PanoramaUserParameters {
         double convertedAz = toRadians(az());
         double convertedHFV = toRadians(hfv());
         int convertedmaxD = maxD() * 1000;
-        return new PanoramaParameters(new GeoPoint(convertedLon, convertedLat), observerEl(), convertedAz, convertedHFV, convertedmaxD, w(), h());
+        return new PanoramaParameters(new GeoPoint(convertedLon, convertedLat),
+                observerEl(), convertedAz, convertedHFV, convertedmaxD, w(),
+                h());
     }
 
     @Override

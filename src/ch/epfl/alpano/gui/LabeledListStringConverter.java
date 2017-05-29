@@ -1,5 +1,7 @@
 package ch.epfl.alpano.gui;
 
+import static ch.epfl.alpano.Preconditions.checkArgument;
+
 import javafx.util.StringConverter;
 
 /**
@@ -16,6 +18,7 @@ public class LabeledListStringConverter extends StringConverter<Integer> {
      *            the list of string to set
      */
     public LabeledListStringConverter(String... list) {
+        checkArgument(list.length > 0, "La liste ne peut pas etre vide");
         this.list = list;
     }
 
