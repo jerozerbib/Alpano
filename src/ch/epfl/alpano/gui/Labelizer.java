@@ -10,7 +10,6 @@ import javafx.scene.Node;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
 import javafx.scene.transform.Rotate;
-import javafx.scene.transform.Translate;
 
 import java.util.ArrayList;
 import java.util.BitSet;
@@ -37,8 +36,7 @@ public final class Labelizer {
     private final int SPACE = 2;
     private final int MARGIN = 20;
     private final int VERTICAL_LIMIT = 170;
-    private final int ANGLE = 60;
-    private final int ZERO = 0;
+    private final int ANGLE = -60;
     private List<Summit> summits = new ArrayList<>();
 
     /**
@@ -63,8 +61,8 @@ public final class Labelizer {
      *            the parameters of the panorama
      * @return the rounded y index for the position of the summit on a panorama
      */
-    //TODO : private  
-    public int yRounded(Summit s, PanoramaParameters p) {
+
+    private int yRounded(Summit s, PanoramaParameters p) {
         GeoPoint obsPos = p.observerPosition();
         double distanceToSummit = obsPos.distanceTo(s.position());
         double azimuthToSummit = obsPos.azimuthTo(s.position());
@@ -84,8 +82,7 @@ public final class Labelizer {
      *            the parameters of the panorama
      * @return the rounded x index for the position of the summit on a panorama
      */
-  //TODO : private  
-    public int xRounded(Summit s, PanoramaParameters p) {
+    private int xRounded(Summit s, PanoramaParameters p) {
         GeoPoint obsPos = p.observerPosition();
         double azimuthToSummit = obsPos.azimuthTo(s.position());
         return (int) round(p.xForAzimuth(azimuthToSummit));
@@ -133,8 +130,11 @@ public final class Labelizer {
                     line.setEndY(roundedY);
                     line.setEndX(roundedX);
 
-                    Text name = new Text(ZERO, ZERO , s.name() + " (" + s.elevation() + " m)");
-                    name.getTransforms().addAll(new Rotate(ANGLE, ZERO, ZERO ), new Translate(roundedX,yHighestRounded - LINE_SIZE -SPACE, 0));
+                    Text name = new Text(0, 0, s.name() + " (" + s.elevation() + " m)");
+                    name.getTransforms().addAll(new Rotate(ANGLE, 0, 0));
+                    name.setTranslateX(roundedX);
+                    name.setTranslateY(yHighestRounded - LINE_SIZE - SPACE);
+
 
                     listTag.add(name);
                     listTag.add(line);

@@ -3,9 +3,10 @@ package ch.epfl.alpano.dem;
 import ch.epfl.alpano.Azimuth;
 import ch.epfl.alpano.Distance;
 import ch.epfl.alpano.GeoPoint;
-import ch.epfl.alpano.Math2;
 
+import static ch.epfl.alpano.Azimuth.toMath;
 import static ch.epfl.alpano.Math2.PI2;
+import static ch.epfl.alpano.Math2.lerp;
 import static ch.epfl.alpano.Preconditions.checkArgument;
 import static java.lang.Math.*;
 import static java.util.Objects.requireNonNull;
@@ -57,7 +58,7 @@ public final class ElevationProfile{
         this.elevationModel = requireNonNull(elevationModel);
         requireNonNull(origin);
 
-        int upperBoundModel = (int) (Math.scalb(length, -TWO_POW_INDEX)) + INDEX_EXTENSION;
+        int upperBoundModel = (int) (scalb(length, -TWO_POW_INDEX)) + INDEX_EXTENSION;
 
         discreteElevation = new double[upperBoundModel][3];
         discreteElevationCalculation(discreteElevation,origin,azimuth);
@@ -77,16 +78,16 @@ public final class ElevationProfile{
     public GeoPoint positionAt(double x) {
         checkArgument((x >= 0) && (x <= length));
 
-        double i = Math.scalb(x, -TWO_POW_INDEX);
-        int lowerIndex = (int) Math.floor(i);
+        double i = scalb(x, -TWO_POW_INDEX);
+        int lowerIndex = (int) floor(i);
 
         double latitudeLowerBound = discreteElevation[lowerIndex][2];
         double latitudeUpperBound = discreteElevation[lowerIndex + 1][2];
         double longitudeLowerBound = discreteElevation[lowerIndex][1];
         double longitudeUpperBound = discreteElevation[lowerIndex + 1][1];
 
-        double latitude = Math2.lerp(latitudeLowerBound, latitudeUpperBound, i - lowerIndex);
-        double longitude = Math2.lerp(longitudeLowerBound, longitudeUpperBound, i - lowerIndex);
+        double latitude = lerp(latitudeLowerBound, latitudeUpperBound, i - lowerIndex);
+        double longitude = lerp(longitudeLowerBound, longitudeUpperBound, i - lowerIndex);
 
         return new GeoPoint(longitude, latitude);
 
@@ -141,7 +142,7 @@ public final class ElevationProfile{
             double xInRadians = Distance.toRadians(discreteElevation[i][0]);
             double originLatitude = origin.latitude();
             double originLongitude = origin.longitude();
-            double MathAzimuth = Azimuth.toMath(azimuth);
+            double MathAzimuth = toMath(azimuth);
 
             double pointLatitude = Math.asin(sin(originLatitude) * cos(xInRadians) + cos(originLatitude) * sin(xInRadians) * cos(MathAzimuth));
 
@@ -156,3 +157,4 @@ public final class ElevationProfile{
 
     }
 }
+
