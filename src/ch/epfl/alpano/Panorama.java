@@ -31,7 +31,6 @@ public final class Panorama {
      */
     private Panorama(PanoramaParameters p, float[] distance, float[] longitude,
             float[] latitude, float[] altitude, float[] slope) {
-        System.out.println("test2");
         this.p = p;
         this.distance = distance;
         this.longitude = longitude;

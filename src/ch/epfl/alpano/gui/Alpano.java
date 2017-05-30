@@ -60,6 +60,11 @@ public final class Alpano extends Application {
     private final static int FONT_SIZE = 40;
     private final static BackgroundFill fill = new BackgroundFill(WHITE_BG, CornerRadii.EMPTY, Insets.EMPTY);
 
+
+    /**
+     * Creates the graphical interface for the Panorama.
+     * @param args
+     */
     public static void main(String[] args) {
         Application.launch(args);
     }
@@ -71,12 +76,14 @@ public final class Alpano extends Application {
         final Labelizer labels = new Labelizer(cDEM1, summitList);
         final PanoramaParametersBean paramsPano = new PanoramaParametersBean(JURA);
 
+        //We take care of the image part here.
         ImageView panoView = new ImageView(computPano.getImage());
         panoView.fitWidthProperty().bind(paramsPano.widthProperty());
         panoView.imageProperty().bind(computPano.imageProperty());
         panoView.preserveRatioProperty().setValue(true);
         panoView.smoothProperty().setValue(true);
 
+        //Here is the labels part
         Pane labelsPane = new Pane();
         labelsPane.getChildren().addAll(labels.labels(paramsPano.parametersProperty().get().panoramaParameters()));
         labelsPane.prefWidthProperty().bind(paramsPano.widthProperty());
@@ -84,26 +91,25 @@ public final class Alpano extends Application {
         bindContent(labelsPane.getChildren(), computPano.getLabels());
         labelsPane.setMouseTransparent(true);
 
+        //Now we want to create the update panel
         Text updateText = new Text("Les paramètres du panorama ont changé.\n Cliquez ici pour mettre le dessin à jour.");
         updateText.setFont(new Font(FONT_SIZE));
         updateText.setTextAlignment(CENTER);
 
         StackPane updateNotice = new StackPane(updateText);
         updateNotice.setBackground(new Background(fill));
-
-        updateNotice.setVisible(computPano.parametersProperty().isNotEqualTo(paramsPano.parametersProperty()).get());
+        paramsPano.parametersProperty().addListener((b, o, n) -> updateNotice.setVisible(computPano.parametersProperty().isNotEqualTo(paramsPano.parametersProperty()).get()));
         updateNotice.setOnMouseClicked(e -> { computPano.setParameters(paramsPano.parametersProperty().get());
             updateNotice.visibleProperty().setValue(computPano.parametersProperty().isNotEqualTo(paramsPano.parametersProperty()).get());
         });
 
-        paramsPano.parametersProperty().addListener((b, o, n) -> updateNotice.setVisible(computPano.parametersProperty().isNotEqualTo(paramsPano.parametersProperty()).get()));
 
+        //What we do here is simply grouping the main Pane.
         StackPane panoGroup = new StackPane(panoView, labelsPane);
-
         ScrollPane panoScrollPane = new ScrollPane(panoGroup);
-
         StackPane panoPane = new StackPane(panoScrollPane, updateNotice);
 
+        //Here we want to create the area that embeds the info on the Panorama
         StringConverter<Integer> FixedPointstringConverter = new FixedPointStringConverter(4);
         StringConverter<Integer> IntegerstringConverter = new IntegerStringConverter();
 
@@ -124,7 +130,6 @@ public final class Alpano extends Application {
         Label h = new Label("Hauteur (px) : ");
         TextField hT = createField(paramsPano.heightProperty(), 4, IntegerstringConverter);
         Label samplingIndex = new Label("Suréchantillonage : ");
-
         ChoiceBox<Integer> choiceBox = new ChoiceBox<>();
         choiceBox.getItems().addAll(0, 1, 2);
         choiceBox.getSelectionModel().selectFirst();
@@ -136,9 +141,11 @@ public final class Alpano extends Application {
         text.setPrefRowCount(2);
         text.setEditable(false);
 
+        //Here we create two methods that deal with the mouse events.
         mouseClickOnPointEventHandler(panoView, computPano);
         mouseMoveEventHandler(panoView, computPano, text);
 
+        //Here we arrange the panorama so that it can be in the right layout
         GridPane paramsGrid = new GridPane();
         paramsGrid.setAlignment(Pos.CENTER);
         paramsGrid.setHgap(10);
@@ -147,7 +154,6 @@ public final class Alpano extends Application {
         paramsGrid.addRow(1, az, azT, hfv, hfvT, visibility, visibilityT);
         paramsGrid.addRow(2, w, wT, h, hT, samplingIndex, choiceBox);
         paramsGrid.add(text, 6, 0, 1, 3);
-
         setHalignment(lat, HPos.RIGHT);
         setHalignment(lon, HPos.RIGHT);
         setHalignment(alt, HPos.RIGHT);
@@ -158,19 +164,24 @@ public final class Alpano extends Application {
         setHalignment(h, HPos.RIGHT);
         setHalignment(samplingIndex, HPos.RIGHT);
 
+        //Again we assemble the main part of the window in a scene.
         BorderPane root = new BorderPane();
         root.setCenter(panoPane);
         root.setBottom(paramsGrid);
-
         Scene scene = new Scene(root);
-        
         primaryStage.setTitle("Alpano");
         primaryStage.setScene(scene);
         primaryStage.show();
     }
 
-    private TextField createField(ObjectProperty<Integer> object, int col,
-            StringConverter<Integer> stringConverter) {
+    /**
+     * Creates a TextField for the infos about the panorama
+     * @param ObjectProperty<Integer> object
+     * @param int col
+     * @param StringConverter<Integer> stringConverter
+     * @return TextField
+     */
+    private TextField createField(ObjectProperty<Integer> object, int col, StringConverter<Integer> stringConverter) {
         TextField textField = new TextField();
         TextFormatter<Integer> formater = new TextFormatter<>(stringConverter);
         textField.setTextFormatter(formater);
@@ -180,32 +191,34 @@ public final class Alpano extends Application {
         return textField;
     }
 
+    /**
+     * If the mouse moves this method takes care of the change in the textArea field.
+     * @param imageView
+     * @param computPano
+     * @param text
+     */
     private void mouseMoveEventHandler(ImageView imageView,
             PanoramaComputerBean computPano, TextArea text) {
         imageView.setOnMouseMoved(e -> {
             int x;
             int y;
-            // TODO : Demander par rapport au suréchantillonage !
-            if (computPano.getParamaters().exp() == 0) {
-                x = (int) e.getX();
-                y = (int) e.getY();
-            } else {
-                x = (int) e.getX() * computPano.getParamaters().exp();
-                y = (int) e.getY() * computPano.getParamaters().exp();
-            }
+
+            x =(int) (Math.scalb(e.getX(), computPano.parametersProperty().get().exp()));
+            y =(int) (Math.scalb(e.getY(), computPano.parametersProperty().get().exp()));
+
             Panorama p = computPano.getPanorama();
             double az = p.parameters().azimuthForX(x);
-            double alt = p.parameters().altitudeForY(y);
+            double alt = p.elevationAt(x, y);
             double dist = p.distanceAt(x, y);
             double lon = p.longitudeAt(x, y);
             double lat = p.latitudeAt(x, y);
-            double el = p.elevationAt(x, y);
+            double el = p.parameters().altitudeForY(y);
 
             String lonFormat = String.format((Locale) null, "%.4f", toDegrees(lon));
             String latFormat = String.format((Locale) null, "%.4f", toDegrees(lat));
 
 
-            String s = "Position : " + lonFormat + "°N " + latFormat + "°E" +
+            String s = "Position : " + latFormat + "°N " + lonFormat + "°E" +
                     "\n" +
                     "Distance : " + dist/1000.0 + " km" +
                     "\n" +
@@ -216,19 +229,19 @@ public final class Alpano extends Application {
         });
     }
 
+    /**
+     * This method takes care of the click event and redirects the user to his default web browser.
+     * @param imageView
+     * @param computPano
+     */
     private void mouseClickOnPointEventHandler(ImageView imageView, PanoramaComputerBean computPano) {
         imageView.setOnMouseClicked(e -> {
-            System.out.println("Salut");
             int x;
             int y;
-            // TODO : Demander par rapport au suréchantillonage !
-            if (computPano.getParamaters().exp() == 0) {
-                x = (int) e.getX();
-                y = (int) e.getY();
-            } else {
-                x = (int) e.getX() * computPano.getParamaters().exp();
-                y = (int) e.getY() * computPano.getParamaters().exp();
-            }
+
+            x =(int) (Math.scalb(e.getX(), computPano.parametersProperty().get().exp()));
+            y =(int) (Math.scalb(e.getY(), computPano.parametersProperty().get().exp()));
+
             Panorama p = computPano.getPanorama();
 
             double lon = p.longitudeAt(x, y);
@@ -247,7 +260,6 @@ public final class Alpano extends Application {
             try {
 
                 URI osmURI = new URI("http", "www.openstreetmap.org", "/", qy, fg);
-
                 java.awt.Desktop.getDesktop().browse(osmURI);
             } catch (URISyntaxException | IOException e2) {
                 throw new Error(e2);
