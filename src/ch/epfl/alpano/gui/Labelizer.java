@@ -18,7 +18,7 @@ import java.util.function.DoubleUnaryOperator;
 
 import static ch.epfl.alpano.Math2.angularDistance;
 import static ch.epfl.alpano.Math2.firstIntervalContainingRoot;
-import static java.lang.Double.compare;
+import static java.lang.Integer.compare;
 import static java.lang.Math.*;
 import static java.util.Objects.requireNonNull;
 

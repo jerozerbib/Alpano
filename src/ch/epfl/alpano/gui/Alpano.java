@@ -83,12 +83,8 @@ public final class Alpano extends Application {
         labelsPane.prefHeightProperty().bind(paramsPano.heightProperty());
         bindContent(labelsPane.getChildren(), computPano.getLabels());
         labelsPane.setMouseTransparent(true);
-        if(labels.labels(paramsPano.parametersProperty().get().panoramaParameters()) instanceof Text){
-            System.out.println(((Text) labels.labels(paramsPano.parametersProperty().get().panoramaParameters())).getX());
-        }
 
-        Text updateText = new Text(
-                "Les paramètres du panorama ont changé.\n Cliquez ici pour mettre le dessin à jour.");
+        Text updateText = new Text("Les paramètres du panorama ont changé.\n Cliquez ici pour mettre le dessin à jour.");
         updateText.setFont(new Font(FONT_SIZE));
         updateText.setTextAlignment(CENTER);
 
@@ -134,6 +130,7 @@ public final class Alpano extends Application {
         choiceBox.getSelectionModel().selectFirst();
         StringConverter<Integer> stringConverter = new LabeledListStringConverter("non", "2x", "4x");
         choiceBox.setConverter(stringConverter);
+        choiceBox.valueProperty().bindBidirectional(paramsPano.superSamplingExponentProperty());
 
         TextArea text = new TextArea();
         text.setPrefRowCount(2);
