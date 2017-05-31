@@ -82,8 +82,14 @@ public interface ChannelPainter {
      * @param i
      *            the value by which we divide
      * @return ChannelPainter with the divided value
+     * 
+     * @throws IllegalArgumentException
+     *             if i is equal to 0 (division by 0)
      */
     default ChannelPainter div(float i) {
+        if (i == 0) {
+            throw new IllegalArgumentException("Impossible de diviser par 0");
+        }
         return (x, y) -> valueAt(x, y) / i;
     }
 

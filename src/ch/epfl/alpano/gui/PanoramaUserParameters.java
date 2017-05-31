@@ -19,10 +19,9 @@ import static java.lang.Math.toRadians;
  */
 public final class PanoramaUserParameters {
 
-    private Map<UserParameter, Integer> map = new EnumMap<>(UserParameter.class);
-    //TODO Pourquoi 14690 et pas 4000 ?
-    private final int MAX_HEIGHT = 14690; // From the instructions given by the
-                                          // teacher
+    private Map<UserParameter, Integer> map = new EnumMap<>(
+            UserParameter.class);
+    private final int MAX_HEIGHT = 4000;
 
     /**
      * PanoramaUserParameters's constructor, check that all parameters all valid
@@ -31,10 +30,11 @@ public final class PanoramaUserParameters {
      * 
      * @param map
      *            the map to set
+     * @throws IllegalArgumentException
+     *             if the map is empty
      */
-    //TODO : require non null ?
     public PanoramaUserParameters(Map<UserParameter, Integer> map) {
-        checkArgument(!map.isEmpty(),"La map est vide");
+        checkArgument(!map.isEmpty(), "La map est vide");
         Map<UserParameter, Integer> map1 = new EnumMap<>(UserParameter.class);
 
         for (Map.Entry<UserParameter, Integer> e : map.entrySet()) {

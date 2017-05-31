@@ -6,8 +6,9 @@ import javafx.util.StringConverter;
 
 /**
  * @author : Jeremy Zerbib (257715)
+ * @author : Etienne Caquot (249949)
  */
-public class LabeledListStringConverter extends StringConverter<Integer> {
+public final class LabeledListStringConverter extends StringConverter<Integer> {
 
     private final String[] list;
 
@@ -16,6 +17,8 @@ public class LabeledListStringConverter extends StringConverter<Integer> {
      * 
      * @param list
      *            the list of string to set
+     * @throws IllegalArgumentException
+     *             if the list si empty
      */
     public LabeledListStringConverter(String... list) {
         checkArgument(list.length > 0, "La liste ne peut pas etre vide");
@@ -23,8 +26,8 @@ public class LabeledListStringConverter extends StringConverter<Integer> {
     }
 
     @Override
-    public String toString(Integer object) {
-        return list[object];
+    public String toString(Integer integer) {
+        return list[integer];
     }
 
     @Override

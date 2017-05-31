@@ -16,12 +16,6 @@ import static java.util.Objects.requireNonNull;
  * @author : Jeremy Zerbib (257715)
  * @author : Etienne Caquot (249949)
  */
-
-/**
- * Représente un profil altimétrique, comprenant l'atlitude, la pente et la
- * position, suivant un arc de grand cercle
- *
- */
 public final class ElevationProfile{
 
     private final ContinuousElevationModel elevationModel;

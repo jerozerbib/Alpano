@@ -21,9 +21,9 @@ import static java.util.Objects.requireNonNull;
  * @author : Jeremy Zerbib (257715)
  * @author : Etienne Caquot (249949)
  */
-
-public class PanoramaComputerBean {
-    private final int HUE_DIV = 100_000, HUE_MUL = 360, SAT_DIV = 200_000, BR_MUL1 = 2;
+public final class PanoramaComputerBean {
+    private final int HUE_DIV = 100_000, HUE_MUL = 360, SAT_DIV = 200_000,
+            BR_MUL1 = 2;
     private final float BR_MUL2 = 0.7f, BR_ADD = 0.3f;
     private final ObjectProperty<Panorama> panorama;
     private final ObjectProperty<PanoramaUserParameters> pUserParameters;
@@ -36,18 +36,20 @@ public class PanoramaComputerBean {
      * PanoramaComputerBean's constructor
      * 
      * @param summits
-     *  the list of summits to set
+     *            the list of summits to set
      * @param cDEM
-     *  the ContiuoursElevationModel to set 
-     *  
+     *            the ContiuoursElevationModel to set
+     * @throws IllegalArgumentException
+     *             if the Summits or the cDEM is null
      */
-    public PanoramaComputerBean(List<Summit> summits, ContinuousElevationModel cDEM) {
+    public PanoramaComputerBean(List<Summit> summits,
+            ContinuousElevationModel cDEM) {
         this.cDEM = requireNonNull(cDEM);
         this.summits = requireNonNull(summits);
 
         panorama = new SimpleObjectProperty<>();
-        //ObservableList<Node> labels = FXCollections.observableArrayList();
-        //this.labels = FXCollections.unmodifiableObservableList(labels);
+        // ObservableList<Node> labels = FXCollections.observableArrayList();
+        // this.labels = FXCollections.unmodifiableObservableList(labels);
         labels = FXCollections.observableArrayList();
         image = new SimpleObjectProperty<>();
         pUserParameters = new SimpleObjectProperty<>();
@@ -57,7 +59,7 @@ public class PanoramaComputerBean {
     /**
      * Gets the PanoramaUserParameters as an ObjectProperty.
      * 
-     * @return ObjectProperty<PanoramaUserParameters>
+     * @return the PanoramaUserParameters Property
      */
     public ObjectProperty<PanoramaUserParameters> parametersProperty() {
         return pUserParameters;
@@ -66,7 +68,7 @@ public class PanoramaComputerBean {
     /**
      * Gets the PanoramaUserParameters as themselves
      * 
-     * @return PanoramaUserParameters
+     * @return the PanoramaUserParameters
      */
     public PanoramaUserParameters getParamaters() {
         return parametersProperty().get();
@@ -76,6 +78,7 @@ public class PanoramaComputerBean {
      * Sets the ParoramaUserParameters with new ones
      * 
      * @param newParameters
+     *            the new parameters to set
      */
     public void setParameters(PanoramaUserParameters newParameters) {
         parametersProperty().set(newParameters);
@@ -84,7 +87,7 @@ public class PanoramaComputerBean {
     /**
      * Gets the Panorama as a ReadOnlyObjectProperty
      * 
-     * @return ReadOnlyObjectProperty<Panorama>
+     * @return the Panorama Property
      */
     public ReadOnlyObjectProperty<Panorama> panoramaProperty() {
         return panorama;
@@ -93,7 +96,7 @@ public class PanoramaComputerBean {
     /**
      * Gets the Panoramt as himself
      * 
-     * @return Panorama
+     * @return the Panorama
      */
     public Panorama getPanorama() {
         return panoramaProperty().get();
@@ -102,7 +105,7 @@ public class PanoramaComputerBean {
     /**
      * Gets the Image as a ReadOnlyObjectProperty
      * 
-     * @return ReadOnlyObjectProperty<Image>
+     * @return the Image Property
      */
     public ReadOnlyObjectProperty<Image> imageProperty() {
         return image;
@@ -111,7 +114,7 @@ public class PanoramaComputerBean {
     /**
      * Gets the Image as itself
      * 
-     * @return Image
+     * @return the Image
      */
     public Image getImage() {
         return imageProperty().get();
@@ -120,23 +123,30 @@ public class PanoramaComputerBean {
     /**
      * Gets the labels as a non modifiable list
      * 
-     * @return ObservableList<Node>
+     * @return the Node Property
      */
     public ObservableList<Node> getLabels() {
         return labels;
     }
 
-    private void synchronizeAllProps(){
-        panorama.set(new PanoramaComputer(cDEM).computePanorama(getParamaters().panoramaParameters()));
-        List<Node> newNodeList = new Labelizer(cDEM, summits).labels(getParamaters().panoramaDisplayParameters());
+    /**
+     * Synchronized all the properties if the pUserParameters changed
+     */
+    private void synchronizeAllProps() {
+        panorama.set(new PanoramaComputer(cDEM)
+                .computePanorama(getParamaters().panoramaParameters()));
+        List<Node> newNodeList = new Labelizer(cDEM, summits)
+                .labels(getParamaters().panoramaDisplayParameters());
         labels.setAll(newNodeList);
 
         ChannelPainter distance = getPanorama()::distanceAt;
         ChannelPainter slope = getPanorama()::slopeAt;
         ChannelPainter h = distance.div(HUE_DIV).cycling().mul(HUE_MUL);
         ChannelPainter s = distance.div(SAT_DIV).clamped().inverted();
-        ChannelPainter br = slope.mul(BR_MUL1).div((float) Math.PI).inverted().mul(BR_MUL2).add(BR_ADD);
-        ChannelPainter opacity = distance.map(d -> d == Float.POSITIVE_INFINITY ? 0 : 1);
+        ChannelPainter br = slope.mul(BR_MUL1).div((float) Math.PI).inverted()
+                .mul(BR_MUL2).add(BR_ADD);
+        ChannelPainter opacity = distance
+                .map(d -> d == Float.POSITIVE_INFINITY ? 0 : 1);
         ImagePainter painter = ImagePainter.hsb(h, s, br, opacity);
 
         image.set(renderPanorama(getPanorama(), painter));

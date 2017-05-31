@@ -18,6 +18,7 @@ import static java.lang.Math.toRadians;
 
 /**
  * @author : Jeremy Zerbib (257715)
+ * @author : Etienne Caquot (249949)
  */
 public class DrawBW {
 

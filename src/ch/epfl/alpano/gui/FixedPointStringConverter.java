@@ -12,8 +12,7 @@ import static ch.epfl.alpano.Preconditions.checkArgument;
  * @author : Jeremy Zerbib (257715)
  * @author : Etienne Caquot (249949)
  */
-
-public class FixedPointStringConverter extends StringConverter<Integer> {
+public final class FixedPointStringConverter extends StringConverter<Integer> {
 
     private final int fixedDecimal;
 
@@ -22,15 +21,18 @@ public class FixedPointStringConverter extends StringConverter<Integer> {
      * 
      * @param fixedDecimal
      *            the number of decimal to set
+     * @throws IllegalArgumentException
+     *             if the fixedDecimal is negative
      */
     public FixedPointStringConverter(int fixedDecimal) {
-        checkArgument(fixedDecimal >= 0, "FixedDecimal ne peut pas etre un nombre negatif");
+        checkArgument(fixedDecimal >= 0,
+                "FixedDecimal ne peut pas etre un nombre negatif");
         this.fixedDecimal = fixedDecimal;
     }
 
     @Override
     public String toString(Integer integer) {
-        if (integer == null){
+        if (integer == null) {
             return "";
         }
         BigDecimal b = new BigDecimal(integer);
