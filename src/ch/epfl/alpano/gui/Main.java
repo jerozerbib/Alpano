@@ -22,23 +22,15 @@ public final class Main {
 
         Labelizer labelizer = new Labelizer(cDEM, listSummits);
 
-        PanoramaParameters p = PredefinedPanoramas.NIESEN.panoramaParameters();
+        PanoramaParameters p = PredefinedPanoramas.JURA.panoramaParameters();
 
-        List<Node> list = labelizer.labels(p);
+        List<Summit> list = labelizer.visibleSummits(p);
 
-        for (int i = 0; i < 10; ++i) {
-            if (list.get(i) instanceof Text) {
-                System.out.println(i +" Text[ text = ' " + list.get(i).toString()
-                        + "', x=" + ((Text) list.get(i)).getX() + ", y="
-                        + ((Text) list.get(i)).getY() + "]");
-            } else {
-                System.out.println(i +
-                        " Line[ startX = " + ((Line) list.get(i)).getStartX()
-                                + "startY = " + ((Line) list.get(i)).getStartY()
-                                + "endX = " + ((Line) list.get(i)).getEndX()
-                                + "endY =" + ((Line) list.get(i)).getEndY());
-            }
-        }
+        System.out.println(list.get(25).name() + " " + list.get(25).elevation()  + " " + labelizer.yRounded(list.get(25),p));
+        System.out.println(list.get(26).name() + " " + list.get(26).elevation()  + " " + labelizer.yRounded(list.get(26),p));
+        System.out.println(list.get(27).name() + " " + list.get(27).elevation()  + " " + labelizer.yRounded(list.get(27),p));
+        System.out.println(list.get(28).name() + " " + list.get(28).elevation()  + " " + labelizer.yRounded(list.get(28),p));
+       
 
     }
 }

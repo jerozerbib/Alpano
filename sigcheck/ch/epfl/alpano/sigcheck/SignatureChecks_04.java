@@ -9,8 +9,7 @@ import ch.epfl.alpano.dem.ElevationProfile;
 import ch.epfl.alpano.dem.HgtDiscreteElevationModel;
 
 final class SignatureChecks_04 {
-    private SignatureChecks_04() {
-    }
+    private SignatureChecks_04() {}
 
     void checkHgtDiscreteElevationModel() {
         File f = null;

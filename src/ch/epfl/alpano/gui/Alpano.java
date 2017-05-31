@@ -41,6 +41,7 @@ import static javafx.scene.text.TextAlignment.CENTER;
 
 /**
  * @author : Jeremy Zerbib (257715)
+ * @author : Etienne Caquot (249949)
  */
 public final class Alpano extends Application {
 
@@ -52,13 +53,15 @@ public final class Alpano extends Application {
     private final static HgtDiscreteElevationModel HGT6 = new HgtDiscreteElevationModel(new File("N46E007.hgt"));
     private final static HgtDiscreteElevationModel HGT7 = new HgtDiscreteElevationModel(new File("N46E008.hgt"));
     private final static HgtDiscreteElevationModel HGT8 = new HgtDiscreteElevationModel(new File("N46E009.hgt"));
-    private final static Color WHITE_BG = rgb(255, 255, 255, 0.90);
     private final static DiscreteElevationModel line1 = HGT1.union(HGT2).union(HGT3).union(HGT4);
     private final static DiscreteElevationModel line2 = HGT5.union(HGT6).union(HGT7).union(HGT8);
     private final static ContinuousElevationModel cDEM1 = new ContinuousElevationModel(line1.union(line2));
-    private final static PanoramaUserParameters JURA = PredefinedPanoramas.JURA;
+    
+    private final static Color WHITE_BG = rgb(255, 255, 255, 0.90);
     private final static int FONT_SIZE = 40;
     private final static BackgroundFill fill = new BackgroundFill(WHITE_BG, CornerRadii.EMPTY, Insets.EMPTY);
+    
+    private final static PanoramaUserParameters JURA = PredefinedPanoramas.JURA;
 
 
     /**
@@ -98,10 +101,8 @@ public final class Alpano extends Application {
 
         StackPane updateNotice = new StackPane(updateText);
         updateNotice.setBackground(new Background(fill));
-        paramsPano.parametersProperty().addListener((b, o, n) -> updateNotice.setVisible(computPano.parametersProperty().isNotEqualTo(paramsPano.parametersProperty()).get()));
-        updateNotice.setOnMouseClicked(e -> { computPano.setParameters(paramsPano.parametersProperty().get());
-            updateNotice.visibleProperty().setValue(computPano.parametersProperty().isNotEqualTo(paramsPano.parametersProperty()).get());
-        });
+        updateNotice.visibleProperty().bind(computPano.parametersProperty().isNotEqualTo(paramsPano.parametersProperty()));
+        updateNotice.setOnMouseClicked(e -> { computPano.setParameters(paramsPano.parametersProperty().get());});
 
 
         //What we do here is simply grouping the main Pane.
@@ -149,7 +150,8 @@ public final class Alpano extends Application {
         GridPane paramsGrid = new GridPane();
         paramsGrid.setAlignment(Pos.CENTER);
         paramsGrid.setHgap(10);
-        paramsGrid.setVgap(5);
+        paramsGrid.setVgap(3);
+        paramsGrid.setPadding(new Insets(7, 5, 5, 5));
         paramsGrid.addRow(0, lat, latT, lon, lonT, alt, altT);
         paramsGrid.addRow(1, az, azT, hfv, hfvT, visibility, visibilityT);
         paramsGrid.addRow(2, w, wT, h, hT, samplingIndex, choiceBox);
@@ -249,17 +251,13 @@ public final class Alpano extends Application {
             String lonFormat = String.format((Locale) null, "%.4f", toDegrees(lon));
             String latFormat = String.format((Locale) null, "%.4f", toDegrees(lat));
 
-            String qy = "?mlat=" + latFormat + "&mlon=" + lonFormat; // "query"
-                                                                     // : partie
-                                                                     // après le
-                                                                     // ?
-            String fg = "#map=15/" + latFormat + "/" + lonFormat; // "fragment"
-                                                                  // : partie
-
+            String qy = "mlat=" + latFormat + "&mlon=" + lonFormat;
+            String fg = "map=15/" + latFormat + "/" + lonFormat;
 
             try {
 
                 URI osmURI = new URI("http", "www.openstreetmap.org", "/", qy, fg);
+                System.out.println(osmURI);
                 java.awt.Desktop.getDesktop().browse(osmURI);
             } catch (URISyntaxException | IOException e2) {
                 throw new Error(e2);

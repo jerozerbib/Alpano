@@ -6,12 +6,10 @@ import ch.epfl.alpano.dem.ContinuousElevationModel;
 import ch.epfl.alpano.dem.DiscreteElevationModel;
 
 final class SignatureChecks_03 {
-    private SignatureChecks_03() {
-    }
+    private SignatureChecks_03() {}
 
     String checkDiscElevationModel(DiscreteElevationModel d) throws Exception {
-        double a = DiscreteElevationModel.SAMPLES_PER_DEGREE
-                * DiscreteElevationModel.SAMPLES_PER_RADIAN;
+        double a = DiscreteElevationModel.SAMPLES_PER_DEGREE * DiscreteElevationModel.SAMPLES_PER_RADIAN;
         a = DiscreteElevationModel.sampleIndex(a);
         Interval2D e = d.extent();
         int v = 0;

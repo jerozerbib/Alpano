@@ -62,7 +62,7 @@ public final class Labelizer {
      * @return the rounded y index for the position of the summit on a panorama
      */
 
-    private int yRounded(Summit s, PanoramaParameters p) {
+    public int yRounded(Summit s, PanoramaParameters p) {
         GeoPoint obsPos = p.observerPosition();
         double distanceToSummit = obsPos.distanceTo(s.position());
         double azimuthToSummit = obsPos.azimuthTo(s.position());
@@ -82,7 +82,7 @@ public final class Labelizer {
      *            the parameters of the panorama
      * @return the rounded x index for the position of the summit on a panorama
      */
-    private int xRounded(Summit s, PanoramaParameters p) {
+    public int xRounded(Summit s, PanoramaParameters p) {
         GeoPoint obsPos = p.observerPosition();
         double azimuthToSummit = obsPos.azimuthTo(s.position());
         return (int) round(p.xForAzimuth(azimuthToSummit));
@@ -153,7 +153,7 @@ public final class Labelizer {
      *            the parameters of the panorama
      * @return the list of visible summits
      */
-    private List<Summit> visibleSummits(PanoramaParameters p) {
+    public List<Summit> visibleSummits(PanoramaParameters p) {
         ArrayList<Summit> visibleSummits = new ArrayList<>();
         for (Summit s : summits) {
             GeoPoint obsPos = p.observerPosition();
@@ -181,14 +181,11 @@ public final class Labelizer {
         visibleSummits.sort((a, b) -> {
             int yARounded = yRounded(a, p);
             int yBRounded = yRounded(b, p);
-
             if (yARounded == yBRounded) {
-                return compare(a.elevation(), b.elevation());
+                return compare(b.elevation(), a.elevation());
             }
-
             return compare(yARounded, yBRounded);
         });
-
         return visibleSummits;
     }
 
