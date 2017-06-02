@@ -1,8 +1,8 @@
 package ch.epfl.alpano.gui;
 
-import static ch.epfl.alpano.Preconditions.checkArgument;
-
 import javafx.util.StringConverter;
+
+import static ch.epfl.alpano.Preconditions.checkArgument;
 
 /**
  * @author : Jeremy Zerbib (257715)
@@ -27,6 +27,7 @@ public final class LabeledListStringConverter extends StringConverter<Integer> {
 
     @Override
     public String toString(Integer integer) {
+        checkArgument(integer >= 0 && integer < list.length, "L'index n'est pas dans les bornes.");
         return list[integer];
     }
 
@@ -37,7 +38,6 @@ public final class LabeledListStringConverter extends StringConverter<Integer> {
                 return i;
             }
         }
-        throw new IllegalArgumentException(
-                "La chaine n'est pas dans le tableau initial");
+        throw new IllegalArgumentException("La chaine n'est pas dans le tableau initial");
     }
 }

@@ -1,7 +1,6 @@
 package ch.epfl.alpano.gui;
 
 import ch.epfl.alpano.GeoPoint;
-import ch.epfl.alpano.PanoramaComputer;
 import ch.epfl.alpano.PanoramaParameters;
 import ch.epfl.alpano.dem.ContinuousElevationModel;
 import ch.epfl.alpano.dem.ElevationProfile;
@@ -18,8 +17,10 @@ import java.util.function.DoubleUnaryOperator;
 
 import static ch.epfl.alpano.Math2.angularDistance;
 import static ch.epfl.alpano.Math2.firstIntervalContainingRoot;
+import static ch.epfl.alpano.PanoramaComputer.rayToGroundDistance;
 import static java.lang.Integer.compare;
 import static java.lang.Math.*;
+import static java.util.Collections.unmodifiableList;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -74,9 +75,11 @@ public final class Labelizer {
         bitSet.set(0, MARGIN);
         bitSet.set(p.width() - MARGIN, p.width());
 
+        // We want to go through the list of visible summits and label them if we can.
         for (Summit s : visibleSummits) {
             int roundedY = yRounded(s, p);
 
+            //If the y value of the summit is smaller than the limit then we do not label it.
             if (roundedY >= VERTICAL_LIMIT) {
 
                 if (roundedY < yHighestRounded) {
@@ -86,6 +89,7 @@ public final class Labelizer {
                 int roundedX = xRounded(s, p);
                 BitSet subBitSet = bitSet.get(roundedX, (roundedX + MARGIN));
 
+                //If we did already label a summit in a 20 pixel range then we cannot label this summit
                 if (subBitSet.isEmpty()) {
                     bitSet.set(roundedX, roundedX + MARGIN, true);
 
@@ -95,8 +99,7 @@ public final class Labelizer {
                     line.setEndY(roundedY);
                     line.setEndX(roundedX);
 
-                    Text name = new Text(0, 0,
-                            s.name() + " (" + s.elevation() + " m)");
+                    Text name = new Text(s.name() + " (" + s.elevation() + " m)");
                     name.getTransforms().addAll(new Rotate(ANGLE, 0, 0));
                     name.setTranslateX(roundedX);
                     name.setTranslateY(yHighestRounded - LINE_SIZE - SPACE);
@@ -125,24 +128,16 @@ public final class Labelizer {
             GeoPoint obsPos = p.observerPosition();
             double distanceToSummit = obsPos.distanceTo(s.position());
             double azimuthToSummit = obsPos.azimuthTo(s.position());
-            double angularDistanceToSummit = angularDistance(azimuthToSummit,
-                    p.centerAzimuth());
+            double angularDistanceToSummit = angularDistance(azimuthToSummit, p.centerAzimuth());
             double maxD = p.maxDistance();
 
-            if (distanceToSummit <= maxD
-                    && abs(angularDistanceToSummit) <= p.horizontalFieldOfView()
-                            / 2.0) {
-                ElevationProfile e = new ElevationProfile(cDEM, obsPos,
-                        azimuthToSummit, distanceToSummit);
-                DoubleUnaryOperator f = PanoramaComputer.rayToGroundDistance(e,
-                        p.observerElevation(), 0);
+            if (distanceToSummit <= maxD && abs(angularDistanceToSummit) <= p.horizontalFieldOfView() / 2.0) {
+                ElevationProfile e = new ElevationProfile(cDEM, obsPos, azimuthToSummit, distanceToSummit);
+                DoubleUnaryOperator f = rayToGroundDistance(e, p.observerElevation(), 0);
                 double summitElevation = -f.applyAsDouble(distanceToSummit);
                 double slope = atan2(summitElevation, distanceToSummit);
                 if (abs(slope) <= p.verticalFieldOfView() / 2.0) {
-
-                    DoubleUnaryOperator f1 = PanoramaComputer
-                            .rayToGroundDistance(e, p.observerElevation(),
-                                    summitElevation / distanceToSummit);
+                    DoubleUnaryOperator f1 = rayToGroundDistance(e, p.observerElevation(), summitElevation / distanceToSummit);
                     double rayToGround = firstIntervalContainingRoot(f1, 0,
                             distanceToSummit, STEP);
                     if (rayToGround >= distanceToSummit - TOLERANCE) {
@@ -160,7 +155,7 @@ public final class Labelizer {
             }
             return compare(yARounded, yBRounded);
         });
-        return visibleSummits;
+        return unmodifiableList(visibleSummits);
     }
 
     /**
@@ -177,10 +172,8 @@ public final class Labelizer {
         GeoPoint obsPos = p.observerPosition();
         double distanceToSummit = obsPos.distanceTo(s.position());
         double azimuthToSummit = obsPos.azimuthTo(s.position());
-        ElevationProfile e = new ElevationProfile(cDEM, obsPos, azimuthToSummit,
-                distanceToSummit);
-        DoubleUnaryOperator f = PanoramaComputer.rayToGroundDistance(e,
-                p.observerElevation(), 0);
+        ElevationProfile e = new ElevationProfile(cDEM, obsPos, azimuthToSummit, distanceToSummit);
+        DoubleUnaryOperator f = rayToGroundDistance(e, p.observerElevation(), 0);
         double summitElevation = -f.applyAsDouble(distanceToSummit);
         double slope = atan2(summitElevation, distanceToSummit);
         return (int) round(p.yForAltitude(slope));

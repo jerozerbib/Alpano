@@ -32,10 +32,8 @@ public interface ImagePainter {
      *            the opacity ChannelPainter
      * @return ImagePainter from several ChannelPainter
      */
-    static ImagePainter hsb(ChannelPainter h, ChannelPainter s,
-            ChannelPainter b, ChannelPainter op) {
-        return (x, y) -> Color.hsb(h.valueAt(x, y), s.valueAt(x, y),
-                b.valueAt(x, y), op.valueAt(x, y));
+    static ImagePainter hsb(ChannelPainter h, ChannelPainter s, ChannelPainter b, ChannelPainter op) {
+        return (x, y) -> Color.hsb(h.valueAt(x, y), s.valueAt(x, y), b.valueAt(x, y), op.valueAt(x, y));
     }
 
     /**
