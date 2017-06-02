@@ -224,11 +224,7 @@ public final class PanoramaUserParameters {
 
     @Override
     public boolean equals(Object that) {
-        if (that instanceof PanoramaUserParameters) {
-            return this.map.equals(((PanoramaUserParameters) that).map);
-        } else {
-            return false;
-        }
+        return (that instanceof PanoramaUserParameters) && map.equals(((PanoramaUserParameters) that).map);
     }
 
     @Override
