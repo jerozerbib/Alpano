@@ -94,14 +94,16 @@ public final class Alpano extends Application {
         StackPane panoGroup = new StackPane(panoView, labelsPane);
         ScrollPane panoScrollPane = new ScrollPane(panoGroup);
         StackPane panoPane = new StackPane(panoScrollPane, updateNotice);
+        
+        TextArea text = createTextArea();
 
         //Here we create two methods that deal with the mouse events.
         mouseClickOnPointEventHandler(panoView, computPano);
-        mouseMoveEventHandler(panoView, computPano, createTextArea());
+        mouseMoveEventHandler(panoView, computPano, text);
 
         //Here we arrange the panorama so that it can be in the right layout
         //Here we want to create the area that embeds the info on the Panorama
-        GridPane paramsGrid = createParamsGrid(paramsPano);
+        GridPane paramsGrid = createParamsGrid(paramsPano,text);
 
         //Again we assemble the main part of the window in a scene.
         BorderPane root = new BorderPane();
@@ -124,7 +126,7 @@ public final class Alpano extends Application {
      * @param paramsPano
      * @return GridPano
      */
-    private GridPane createParamsGrid(PanoramaParametersBean paramsPano){
+    private GridPane createParamsGrid(PanoramaParametersBean paramsPano, TextArea text){
         Label lat = new Label("Latitude (°) : ");
         TextField latT = createField(paramsPano.observerLatitudeProperty(), 7, FixedPointstringConverter);
         
@@ -156,8 +158,6 @@ public final class Alpano extends Application {
         StringConverter<Integer> stringConverter = new LabeledListStringConverter("non", "2x", "4x");
         choiceBox.setConverter(stringConverter);
         choiceBox.valueProperty().bindBidirectional(paramsPano.superSamplingExponentProperty());
-
-        TextArea text = createTextArea();
         
         GridPane paramsGrid = new GridPane();
         paramsGrid.setAlignment(Pos.CENTER);
