@@ -16,8 +16,7 @@ import static javafx.application.Platform.runLater;
  */
 public final class PanoramaParametersBean {
 
-    private final Map<UserParameter, ObjectProperty<Integer>> objectsProperty = new EnumMap<>(
-            UserParameter.class);
+    private final Map<UserParameter, ObjectProperty<Integer>> objectsProperty = new EnumMap<>(UserParameter.class);
     private final ObjectProperty<PanoramaUserParameters> parametersProperty;
 
     /**
@@ -32,11 +31,9 @@ public final class PanoramaParametersBean {
         parametersProperty = new SimpleObjectProperty<>(
                 requireNonNull(parameters));
         for (UserParameter userParam : UserParameter.values()) {
-            ObjectProperty<Integer> property = new SimpleObjectProperty<>(
-                    parameters.get(userParam));
+            ObjectProperty<Integer> property = new SimpleObjectProperty<>(parameters.get(userParam));
             objectsProperty.put(userParam, property);
-            property.addListener(
-                    (b, o, n) -> runLater(this::synchronizeParameters));
+            property.addListener((b, o, n) -> runLater(this::synchronizeParameters));
         }
     }
 

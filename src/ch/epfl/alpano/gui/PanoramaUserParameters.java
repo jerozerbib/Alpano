@@ -7,9 +7,8 @@ import java.util.Collections;
 import java.util.EnumMap;
 import java.util.Map;
 
-import static ch.epfl.alpano.gui.UserParameter.*;
 import static ch.epfl.alpano.Preconditions.checkArgument;
-
+import static ch.epfl.alpano.gui.UserParameter.*;
 import static java.lang.Math.pow;
 import static java.lang.Math.toRadians;
 
@@ -19,9 +18,11 @@ import static java.lang.Math.toRadians;
  */
 public final class PanoramaUserParameters {
 
-    private Map<UserParameter, Integer> map = new EnumMap<>(
-            UserParameter.class);
+    private final Map<UserParameter, Integer> map;
     private final int MAX_HEIGHT = 4000;
+    private final int MAX_VERTICAL_FOV = 170;
+    private final double CONVERT_ANGLE = 10_000.0;
+    private final int CONVERT_METERS = 1000;
 
     /**
      * PanoramaUserParameters's constructor, check that all parameters all valid
@@ -41,12 +42,12 @@ public final class PanoramaUserParameters {
             map1.put(e.getKey(), e.getKey().sanitize(e.getValue()));
         }
 
-        int h = map1.get(UserParameter.HEIGHT);
-        int hfv = map1.get(UserParameter.HORIZONTAL_FIELD_OF_VIEW);
-        int w = map1.get(UserParameter.WIDTH);
+        int h = map1.get(HEIGHT);
+        int hfv = map1.get(HORIZONTAL_FIELD_OF_VIEW);
+        int w = map1.get(WIDTH);
 
-        if (!(h <= (170 * (w - 1) / hfv) + 1)) {
-            map1.replace(UserParameter.HEIGHT, h, MAX_HEIGHT);
+        if (!(h <= (MAX_VERTICAL_FOV * (w - 1) / hfv) + 1)) {
+            map1.replace(HEIGHT, h, MAX_HEIGHT);
         }
 
         this.map = Collections.unmodifiableMap(map1);
@@ -76,8 +77,7 @@ public final class PanoramaUserParameters {
      */
     public PanoramaUserParameters(int observerLon, int observerLat,
             int observerEl, int az, int hfv, int maxD, int w, int h, int exp) {
-        this(fillMap(observerLon, observerLat, observerEl, az, hfv, maxD, w, h,
-                exp));
+        this(fillMap(observerLon, observerLat, observerEl, az, hfv, maxD, w, h, exp));
     }
 
     /**
@@ -194,13 +194,13 @@ public final class PanoramaUserParameters {
      * @return the parameters of the panorama as they will computed
      */
     public PanoramaParameters panoramaParameters() {
-        double convertedLon = toRadians(observerLon() / 10_000.0);
-        double convertedLat = toRadians(observerLat() / 10_000.0);
+        double convertedLon = toRadians(observerLon() / CONVERT_ANGLE);
+        double convertedLat = toRadians(observerLat() / CONVERT_ANGLE);
         double convertedAz = toRadians(az());
         double convertedHFV = toRadians(hfv());
         int wp = (int) (w() * pow(2, exp()));
         int hp = (int) (h() * pow(2, exp()));
-        int convertedmaxD = maxD() * 1000;
+        int convertedmaxD = maxD() * CONVERT_METERS;
         return new PanoramaParameters(new GeoPoint(convertedLon, convertedLat),
                 observerEl(), convertedAz, convertedHFV, convertedmaxD, wp, hp);
     }
@@ -212,11 +212,11 @@ public final class PanoramaUserParameters {
      * @return the parameters of the panorama as they will be displayed
      */
     public PanoramaParameters panoramaDisplayParameters() {
-        double convertedLon = toRadians(observerLon() / 10_000.0);
-        double convertedLat = toRadians(observerLat() / 10_000.0);
+        double convertedLon = toRadians(observerLon() / CONVERT_ANGLE);
+        double convertedLat = toRadians(observerLat() / CONVERT_ANGLE);
         double convertedAz = toRadians(az());
         double convertedHFV = toRadians(hfv());
-        int convertedmaxD = maxD() * 1000;
+        int convertedmaxD = maxD() * CONVERT_METERS;
         return new PanoramaParameters(new GeoPoint(convertedLon, convertedLat),
                 observerEl(), convertedAz, convertedHFV, convertedmaxD, w(),
                 h());

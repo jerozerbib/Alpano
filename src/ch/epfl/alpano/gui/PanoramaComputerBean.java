@@ -15,6 +15,7 @@ import javafx.scene.image.Image;
 import java.util.List;
 
 import static ch.epfl.alpano.gui.PanoramaRenderer.renderPanorama;
+import static java.lang.Float.POSITIVE_INFINITY;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -22,8 +23,7 @@ import static java.util.Objects.requireNonNull;
  * @author : Etienne Caquot (249949)
  */
 public final class PanoramaComputerBean {
-    private final int HUE_DIV = 100_000, HUE_MUL = 360, SAT_DIV = 200_000,
-            BR_MUL1 = 2;
+    private final int HUE_DIV = 100_000, HUE_MUL = 360, SAT_DIV = 200_000, BR_MUL1 = 2;
     private final float BR_MUL2 = 0.7f, BR_ADD = 0.3f;
     private final ObjectProperty<Panorama> panorama;
     private final ObjectProperty<PanoramaUserParameters> pUserParameters;
@@ -48,8 +48,6 @@ public final class PanoramaComputerBean {
         this.summits = requireNonNull(summits);
 
         panorama = new SimpleObjectProperty<>();
-        // ObservableList<Node> labels = FXCollections.observableArrayList();
-        // this.labels = FXCollections.unmodifiableObservableList(labels);
         labels = FXCollections.observableArrayList();
         image = new SimpleObjectProperty<>();
         pUserParameters = new SimpleObjectProperty<>();
@@ -133,20 +131,16 @@ public final class PanoramaComputerBean {
      * Synchronized all the properties if the pUserParameters changed
      */
     private void synchronizeAllProps() {
-        panorama.set(new PanoramaComputer(cDEM)
-                .computePanorama(getParamaters().panoramaParameters()));
-        List<Node> newNodeList = new Labelizer(cDEM, summits)
-                .labels(getParamaters().panoramaDisplayParameters());
+        panorama.set(new PanoramaComputer(cDEM).computePanorama(getParamaters().panoramaParameters()));
+        List<Node> newNodeList = new Labelizer(cDEM, summits).labels(getParamaters().panoramaDisplayParameters());
         labels.setAll(newNodeList);
 
         ChannelPainter distance = getPanorama()::distanceAt;
         ChannelPainter slope = getPanorama()::slopeAt;
         ChannelPainter h = distance.div(HUE_DIV).cycling().mul(HUE_MUL);
         ChannelPainter s = distance.div(SAT_DIV).clamped().inverted();
-        ChannelPainter br = slope.mul(BR_MUL1).div((float) Math.PI).inverted()
-                .mul(BR_MUL2).add(BR_ADD);
-        ChannelPainter opacity = distance
-                .map(d -> d == Float.POSITIVE_INFINITY ? 0 : 1);
+        ChannelPainter br = slope.mul(BR_MUL1).div((float) Math.PI).inverted().mul(BR_MUL2).add(BR_ADD);
+        ChannelPainter opacity = distance.map(d -> d == POSITIVE_INFINITY ? 0 : 1);
         ImagePainter painter = ImagePainter.hsb(h, s, br, opacity);
 
         image.set(renderPanorama(getPanorama(), painter));

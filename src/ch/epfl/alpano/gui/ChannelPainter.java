@@ -4,10 +4,11 @@ import ch.epfl.alpano.Panorama;
 
 import java.util.function.DoubleUnaryOperator;
 
+import static ch.epfl.alpano.Math2.floorMod;
+
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 
-import static ch.epfl.alpano.Math2.floorMod;
 
 /**
  * @author : Jeremy Zerbib (257715)
@@ -109,17 +110,8 @@ public interface ChannelPainter {
     }
 
     /**
-     * Inverts the value of the ChannelPainter
-     * 
-     * @return ChannelPainter with its inverted value
-     */
-    default ChannelPainter inverted() {
-        return (x, y) -> 1 - valueAt(x, y);
-    }
-
-    /**
      * Clamps the value of the ChannelPainter
-     * 
+     *
      * @return ChannelPainter with its clamped value
      */
     default ChannelPainter clamped() {
@@ -128,11 +120,20 @@ public interface ChannelPainter {
 
     /**
      * Cycles the value of the ChannelPainter
-     * 
+     *
      * @return ChannelPainter with its cycled value
      */
     default ChannelPainter cycling() {
         return (x, y) -> (float) floorMod(valueAt(x, y), 1);
+    }
+
+    /**
+     * Inverts the value of the ChannelPainter
+     *
+     * @return ChannelPainter with its inverted value
+     */
+    default ChannelPainter inverted() {
+        return (x, y) -> 1 - valueAt(x, y);
     }
 
 }

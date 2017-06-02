@@ -25,8 +25,7 @@ public final class FixedPointStringConverter extends StringConverter<Integer> {
      *             if the fixedDecimal is negative
      */
     public FixedPointStringConverter(int fixedDecimal) {
-        checkArgument(fixedDecimal >= 0,
-                "FixedDecimal ne peut pas etre un nombre negatif");
+        checkArgument(fixedDecimal >= 0, "FixedDecimal ne peut pas etre un nombre negatif");
         this.fixedDecimal = fixedDecimal;
     }
 
@@ -42,7 +41,6 @@ public final class FixedPointStringConverter extends StringConverter<Integer> {
     @Override
     public Integer fromString(String string) {
         BigDecimal b = new BigDecimal(string);
-        return b.setScale(fixedDecimal, HALF_UP).movePointRight(fixedDecimal)
-                .stripTrailingZeros().intValueExact();
+        return b.setScale(fixedDecimal, HALF_UP).movePointRight(fixedDecimal).stripTrailingZeros().intValueExact();
     }
 }
