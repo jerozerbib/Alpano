@@ -103,7 +103,7 @@ public final class PanoramaUserParameters {
      * @return the value that corresponds
      */
     public int get(UserParameter userParameter) {
-        return this.map.get(userParameter);
+        return map.get(userParameter);
     }
 
     /**

@@ -129,6 +129,10 @@ public final class Labelizer {
                     p.centerAzimuth());
             double maxD = p.maxDistance();
 
+            // we check if the distance to the sumit is less than the
+            // maxDistance and if the angularDistance between the observer and
+            // the summit is less than the horizontal field of view divided by
+            // two
             if (distanceToSummit <= maxD
                     && abs(angularDistanceToSummit) <= p.horizontalFieldOfView()
                             / 2.0) {
@@ -138,6 +142,8 @@ public final class Labelizer {
                         p.observerElevation(), 0);
                 double summitElevation = -f.applyAsDouble(distanceToSummit);
                 double slope = atan2(summitElevation, distanceToSummit);
+
+                // we ckeck if the slope is in the vertical field of view
                 if (abs(slope) <= p.verticalFieldOfView() / 2.0) {
 
                     DoubleUnaryOperator f1 = PanoramaComputer
@@ -145,6 +151,10 @@ public final class Labelizer {
                                     summitElevation / distanceToSummit);
                     double rayToGround = firstIntervalContainingRoot(f1, 0,
                             distanceToSummit, STEP);
+
+                    // if the distance with the rayToGround is bigger than
+                    // distance to sommit minus the tolerance we add the summit
+                    // to the list
                     if (rayToGround >= distanceToSummit - TOLERANCE) {
                         visibleSummits.add(s);
                     }

@@ -1,6 +1,5 @@
 package ch.epfl.alpano.gui;
 
-import ch.epfl.alpano.Math2;
 import ch.epfl.alpano.Panorama;
 
 import java.util.function.DoubleUnaryOperator;
@@ -8,10 +7,14 @@ import java.util.function.DoubleUnaryOperator;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 
+import static ch.epfl.alpano.Math2.floorMod;
+
 /**
  * @author : Jeremy Zerbib (257715)
  * @author : Etienne Caquot (249949)
  */
+
+@FunctionalInterface
 public interface ChannelPainter {
 
     /**
@@ -129,7 +132,7 @@ public interface ChannelPainter {
      * @return ChannelPainter with its cycled value
      */
     default ChannelPainter cycling() {
-        return (x, y) -> (float) Math2.floorMod(valueAt(x, y), 1);
+        return (x, y) -> (float) floorMod(valueAt(x, y), 1);
     }
 
 }
