@@ -10,8 +10,7 @@ import static java.util.Objects.requireNonNull;
  * @author : Etienne Caquot (249949)
  */
 
-public final class CompositeDiscreteElevationModel
-        implements DiscreteElevationModel {
+final class CompositeDiscreteElevationModel implements DiscreteElevationModel {
 
     private final DiscreteElevationModel dem1;
     private final DiscreteElevationModel dem2;

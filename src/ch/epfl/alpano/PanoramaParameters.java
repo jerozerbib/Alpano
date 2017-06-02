@@ -19,6 +19,11 @@ public final class PanoramaParameters {
     private final double centerAzimuth, horizontalFieldOfView;
     private final double delta;
     private final double arcDelta;
+    private final double verticalFieldOfView;
+    private final double indexForCenterAzimuth;
+    private final double indexForAltZero;
+
+
 
     /**
      * PanoramaParameters' constructor
@@ -60,7 +65,9 @@ public final class PanoramaParameters {
         this.height = height;
         this.delta = this.horizontalFieldOfView / (this.width - 1);
         this.arcDelta = 1.0 / delta;
-
+        this.indexForCenterAzimuth = (width - 1) / 2.0;
+        this.indexForAltZero = (height- 1) / 2.0;
+        this.verticalFieldOfView = delta * (height - 1);
     }
 
     /**
@@ -132,7 +139,7 @@ public final class PanoramaParameters {
      * @return the verticalFieldOfView
      */
     public double verticalFieldOfView() {
-        return delta * (height - 1);
+        return verticalFieldOfView;
     }
 
     /**
@@ -158,11 +165,8 @@ public final class PanoramaParameters {
      * @return the index
      */
     public double xForAzimuth(double a) {
-        checkArgument(
-                (a <= centerAzimuth + horizontalFieldOfView() / 2.0)
-                        && (a >= centerAzimuth - horizontalFieldOfView() / 2.0),
+        checkArgument((a <= centerAzimuth + horizontalFieldOfView() / 2.0) && (a >= centerAzimuth - horizontalFieldOfView() / 2.0),
                 "L'angle de vue est en dehors des limites");
-        double indexForCenterAzimuth = (width() - 1) / 2.0;
         return indexForCenterAzimuth
                 - angularDistance(a, centerAzimuth) * arcDelta;
     }
@@ -175,9 +179,7 @@ public final class PanoramaParameters {
      * @return the altitude
      */
     public double altitudeForY(double y) {
-        checkArgument(y >= 0 && y <= height - 1,
-                "La hauteur n'est pas dans les bornes");
-        double indexForAltZero = (height() - 1) / 2.0;
+        checkArgument(y >= 0 && y <= height - 1, "La hauteur n'est pas dans les bornes");
         return (indexForAltZero - y) * delta;
     }
 
@@ -185,13 +187,12 @@ public final class PanoramaParameters {
      * Returns the y index for a given altitude.
      * 
      * @param a
-     *            the azimuth
+     *            the altitude in radians
      * @return the altitude
      */
     public double yForAltitude(double a) {
         checkArgument(abs(a) <= verticalFieldOfView() / 2.0,
                 "L'angle de vue n'est pas dans les bornes");
-        double indexForAltZero = (height() - 1) / 2.0;
         return indexForAltZero - angularDistance(0, a) * arcDelta;
     }
 

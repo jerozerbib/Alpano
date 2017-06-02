@@ -18,9 +18,10 @@ import static java.util.Objects.requireNonNull;
  */
 public final class PanoramaComputer {
     private final ContinuousElevationModel dem;
-    private final int dX = 64;
-    private final int epsilon = 4;
-    private static final double k = 0.13;
+    private final static int dX = 64;
+    private final static int epsilon = 4;
+    private final static double k = 0.13;
+    private final static double K_RATIO = (1d - k) / (2d * EARTH_RADIUS);
 
     /**
      * Panorama's Constructor
@@ -47,24 +48,23 @@ public final class PanoramaComputer {
         Panorama.Builder p = new Panorama.Builder(parameters);
         for (int i = 0; i < parameters.width(); i++) {
             double rayX = 0;
-            ElevationProfile e = new ElevationProfile(dem, obsPos,
-                    parameters.azimuthForX(i), maxD);
-            for (int j = parameters.height() - 1; j >= 0; j--) {
+            ElevationProfile e = new ElevationProfile(dem, obsPos, parameters.azimuthForX(i), maxD);
+            boolean exit = false;
+            for (int j = parameters.height() - 1; j > -1 && !exit; j--) {
                 double raySlope = parameters.altitudeForY(j);
-                DoubleUnaryOperator f = rayToGroundDistance(e, ray0,
-                        tan(raySlope));
-                double lowerBoundFirst = firstIntervalContainingRoot(f, rayX,
-                        maxD, dX);
+                DoubleUnaryOperator f = rayToGroundDistance(e, ray0, tan(raySlope));
+                double lowerBoundFirst = firstIntervalContainingRoot(f, rayX, maxD, dX);
                 double upperBound = lowerBoundFirst + dX;
                 if (lowerBoundFirst != POSITIVE_INFINITY) {
                     rayX = improveRoot(f, lowerBoundFirst, upperBound, epsilon);
+                    GeoPoint position = e.positionAt(rayX);
                     p.setDistanceAt(i, j, (float) (rayX / cos(raySlope)))
-                            .setElevationAt(i, j, (float) e.elevationAt(rayX))
-                            .setSlopeAt(i, j, (float) e.slopeAt(rayX))
-                            .setLongitudeAt(i, j,
-                                    (float) e.positionAt(rayX).longitude())
-                            .setLatitudeAt(i, j,
-                                    (float) e.positionAt(rayX).latitude());
+                            .setElevationAt(i, j, (float) dem.elevationAt(position))
+                            .setSlopeAt(i, j, (float) dem.slopeAt(position))
+                            .setLongitudeAt(i, j, (float) position.longitude())
+                            .setLatitudeAt(i, j, (float) position.latitude());
+                }else {
+                    exit = true;
                 }
             }
         }
@@ -83,9 +83,7 @@ public final class PanoramaComputer {
      *            the slope of the ray
      * @return DoubleUnaryOperator a function that calculates the distance
      */
-    public static DoubleUnaryOperator rayToGroundDistance(
-            ElevationProfile profile, double ray0, double raySlope) {
-        return x -> ray0 + x * raySlope - (profile.elevationAt(x)
-                - ((1 - k) / (2 * EARTH_RADIUS)) * sq(x));
+    public static DoubleUnaryOperator rayToGroundDistance(ElevationProfile profile, double ray0, double raySlope) {
+        return x -> (ray0 + x * raySlope) - (profile.elevationAt(x) - K_RATIO * sq(x));
     }
 }

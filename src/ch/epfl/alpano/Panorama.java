@@ -169,14 +169,13 @@ public final class Panorama {
     }
 
     public static final class Builder {
-        final PanoramaParameters parameters;
-        final int size;
-        final float[] tabDistance;
-        final float[] tabLongitude;
-        final float[] tabLatitude;
-        final float[] tabAltitude;
-        final float[] tabSlope;
-        boolean ticker;
+        private final PanoramaParameters parameters;
+        private final float[] tabDistance;
+        private final float[] tabLongitude;
+        private final float[] tabLatitude;
+        private final float[] tabAltitude;
+        private final float[] tabSlope;
+        private boolean ticker;
 
         /**
          * Builder's constructor create and fill with default values the 5
@@ -187,17 +186,13 @@ public final class Panorama {
          */
         public Builder(PanoramaParameters parameters) {
             this.parameters = requireNonNull(parameters);
-            size = parameters.height() * parameters.width();
+            int size = parameters.height() * parameters.width();
             tabDistance = new float[size];
             tabLongitude = new float[size];
             tabLatitude = new float[size];
             tabAltitude = new float[size];
             tabSlope = new float[size];
             Arrays.fill(this.tabDistance, POSITIVE_INFINITY);
-            Arrays.fill(this.tabLongitude, 0);
-            Arrays.fill(this.tabLatitude, 0);
-            Arrays.fill(this.tabAltitude, 0);
-            Arrays.fill(this.tabSlope, 0);
             ticker = false;
         }
 

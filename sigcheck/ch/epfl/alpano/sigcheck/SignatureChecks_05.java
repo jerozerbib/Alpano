@@ -10,8 +10,7 @@ import ch.epfl.alpano.summit.GazetteerParser;
 import ch.epfl.alpano.summit.Summit;
 
 final class SignatureChecks_05 {
-    private SignatureChecks_05() {
-    }
+    private SignatureChecks_05() {}
 
     void checkSummit() {
         GeoPoint p = null;

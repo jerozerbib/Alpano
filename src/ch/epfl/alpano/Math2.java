@@ -2,10 +2,9 @@ package ch.epfl.alpano;
 
 import java.util.function.DoubleUnaryOperator;
 
+import static ch.epfl.alpano.Preconditions.checkArgument;
 import static java.lang.Double.POSITIVE_INFINITY;
-import static java.lang.Math.PI;
-import static java.lang.Math.floor;
-import static java.lang.Math.sin;
+import static java.lang.Math.*;
 
 /**
  * @author : Jeremy Zerbib (257715)
@@ -115,13 +114,15 @@ public interface Math2 {
      *            the end of searching
      * @param dX
      *            the size of the interval
+     * @throws IllegalArgumentException
+     *             min is bigger than max or dx is 0 or less
      * @return the lower bound of the interval if it exists, infinity otherwise.
      */
 
-    static double firstIntervalContainingRoot(DoubleUnaryOperator f,
-            double minX, double maxX, double dX) {
+    static double firstIntervalContainingRoot(DoubleUnaryOperator f, double minX, double maxX, double dX) {
+        checkArgument(!(minX > maxX || dX <= 0), "min est plus grand que max ou dX <= 0");
         for (double i = minX; i <= (maxX - dX); i += dX) {
-            if (f.applyAsDouble(i) * f.applyAsDouble(i + dX) < 0) {
+            if (f.applyAsDouble(i) * f.applyAsDouble(i + dX) <= 0) {
                 return i;
             }
         }
@@ -152,10 +153,8 @@ public interface Math2 {
                     "f(x1) et f(x2) sont du même signe.");
         }
         while (x2 - x1 > epsilon) {
-            double xm = (x1 + x2) / 2;
-            if (f.applyAsDouble(xm) == 0) {
-                return xm;
-            } else if (f.applyAsDouble(x1) * f.applyAsDouble(xm) < 0) {
+            double xm = (x1 + x2) / 2.0;
+            if (f.applyAsDouble(x1) * f.applyAsDouble(xm) <= 0) {
                 x2 = xm;
             } else {
                 x1 = xm;

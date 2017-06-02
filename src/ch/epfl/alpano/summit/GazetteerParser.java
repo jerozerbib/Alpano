@@ -42,8 +42,7 @@ public class GazetteerParser {
             while ((line = b.readLine()) != null) {
                 summits.add(correspondingSummit(line));
             }
-        } catch (IOException | NumberFormatException
-                | StringIndexOutOfBoundsException e) {
+        } catch (IOException | NumberFormatException | StringIndexOutOfBoundsException e) {
             throw new IOException(e);
         }
         return Collections.unmodifiableList(new ArrayList<>(summits));
