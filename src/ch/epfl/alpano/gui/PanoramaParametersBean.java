@@ -135,18 +135,18 @@ public final class PanoramaParametersBean {
      * l'utilisateur
      */
     private void synchronizeParameters() {
-        Map<UserParameter, Integer> paramMap = new EnumMap<>(
+        Map<UserParameter, Integer> map = new EnumMap<>(
                 UserParameter.class);
 
-        for (UserParameter up : UserParameter.values()) {
-            paramMap.put(up, objectsProperty.get(up).get());
+        for (UserParameter u : UserParameter.values()) {
+            map.put(u, objectsProperty.get(u).get());
         }
-        PanoramaUserParameters pup = new PanoramaUserParameters(paramMap);
+        PanoramaUserParameters paramPano = new PanoramaUserParameters(map);
 
-        parametersProperty.set(pup);
+        parametersProperty.set(paramPano);
 
-        for (UserParameter up : UserParameter.values()) {
-            objectsProperty.get(up).set(pup.get(up));
+        for (UserParameter u : UserParameter.values()) {
+            objectsProperty.get(u).set(paramPano.get(u));
         }
 
     }
